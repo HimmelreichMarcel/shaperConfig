@@ -1,0 +1,95 @@
+Untersuchung:
+Setup Loadbalancing NGINX vs Traefik
+
+
+
+
+
+
+
+Platform creation:
+
+Interfaces:
+Superset
+Jupyter
+Grafana
+
+
+Databases:
+
+SQL:
+mysql
+postgres
+crate
+
+KeyValue:
+redis
+
+Document Store
+MongoDB
+CouchDB
+
+Graph Database
+Neo4J
+orientDB
+
+Object Storage
+minio
+couchbase
+memcached
+owncloud
+
+Services:
+Reverse Proxy NGINX
+Prometheus Monitoring
+
+
+
+
+Pipeline
+{
+docker-compose.yml
+traefik.toml
+}
+
+
+Config File
+
+[admin]
+user
+password
+
+[security]
+email
+domain
+provider
+apikey
+
+[manager]
+ip
+[worker]
+ip
+ip
+
+[services]
+ [servicename]
+  frontend
+  backend
+  port
+  network
+  weight
+  protocol
+  replica
+  manager
+
+  #Mit Swarm
+      req: frontend, port, network
+
+      deploy:
+      labels:
+        traefik.docker.network: traefik
+
+
+[monitoring]
+
+[cluster]

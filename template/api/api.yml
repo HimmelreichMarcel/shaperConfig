@@ -1,0 +1,11 @@
+api:
+  restart: always
+  image: api
+  build: ./api
+  container_name: api
+  environment:
+    - VIRTUAL_HOST=sampleapi.example.com
+    - VIRTUAL_NETWORK=nginx-proxy
+    - VIRTUAL_PORT=3000
+    - LETSENCRYPT_HOST=sampleapi.example.com
+    - LETSENCRYPT_EMAIL=email@example.com

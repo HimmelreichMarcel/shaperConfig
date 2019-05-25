@@ -1,0 +1,14 @@
+database:
+  image: mariadb:latest
+  environment:
+    MYSQL_ROOT_PASSWORD: ${PWD}
+    MYSQL_DATABASE: ${DATABASE}
+    MYSQL_USER: ${USER}
+    MYSQL_PASSWORD: ${PWD}
+  logging:
+    driver: syslog
+    options:
+      tag: "{{.DaemonName}}(image={{.ImageName}};name={{.Name}};id={{.ID}})"
+  restart: on-failure
+  volumes:
+    - database:/var/lib/mysql

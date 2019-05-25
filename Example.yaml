@@ -1,0 +1,6 @@
+jupyter:
+  image: "path"
+
+postgres:
+  image: "path"
+

@@ -1,5 +1,3 @@
-
-
 from Generator.TraefikGenerator import TraefikGenerator as traefik
 from Generator.DockerComposeGenerator import ComposeGenerator as composer
 from Generator.EnvironmentGenerator import EnvironmentGenerator as environment
@@ -55,9 +53,11 @@ class Optimizer(object):
         proxy["traefik"] = self.import_yaml("./template/proxy/traefik.yml")
         return proxy
 
+    def load_consul(self):
+        return self.import_yaml("./template/proxy/consul.yml")
+
     def load_notebook(self):
         return self.import_yaml("./template/frontend/notebook.yml")
-
 
     def create_projects(self):
         databases = self.load_databases()
@@ -70,6 +70,8 @@ class Optimizer(object):
         configuration_name = "configExample_"
         for database_key, database_value in databases.items():
             for proxy_key, proxy_value in proxy.items():
+                if proxy_key == "consul":
+                    continue
                 for api_key, api_value in apis.items():
                     project_path = self._output_path+configuration_name+configuration_sample
                     os.makedirs(project_path)
@@ -79,23 +81,20 @@ class Optimizer(object):
                     services = {}
                     services["services"] = [proxy_value, database_value, notebook, api_value]
                     services["services"].extend(monitoring)
+                    if proxy_key == "traefik":
+                        services["services"].extend(self.load_consul())
 
                     # Create Config Element
-                    # TODO Change Config System
                     config = Config(self._shaper_config, services)
 
                     # Create Compose File
-                    # TODO Change Template Services System
-                    # TODO Add Network to Services
-                    # TODO Add Port to API and Frontend
-                    compose_generator = composer(Config)
+                    compose_generator = composer(config=Config, proxy=proxy_key)
                     compose_file = compose_generator.generate()
                     self.export_yaml(compose_file, project_path + '/docker-compose.yaml')
 
                     if proxy_key == "nginx":
                         # NGINX Proxy
                         os.makedirs(project_path + "/nginx/")
-                        # TODO CHECK NGINX GENERATION
                         nginx_gen = nginx(config)
                         nginx_data = nginx_gen.generate()
                         self.export_nginx_conf(nginx_data, project_path + "/nginx")
@@ -104,7 +103,6 @@ class Optimizer(object):
                         prometheus = self.import_yaml("./template/monitoring/prometheus/prometheus_nginx.yml")
                     elif proxy_key == "traefik":
                         # Traefik Proxy
-                        # TODO CHECK TRAEFIK GENERATION
                         traefik_gen = traefik(config)
                         traefik_data = traefik_gen.generate()
                         self.export_toml(traefik_data, project_path)
@@ -116,7 +114,7 @@ class Optimizer(object):
                         # Monitoring
                         prometheus = self.import_yaml("./template/monitoring/prometheus/prometheus_nginx.yml")
 
-                    self.export_yaml(prometheus, project_path + "/prometheus.yml")
+                    self.export_yaml(prometheus, project_path + "/prometheus/prometheus.yml")
 
                     # API
                     # TODO FastAPI Connect to Database
@@ -126,15 +124,18 @@ class Optimizer(object):
                     os.makedirs(project_path + "/api")
                     if api_key == "flaks":
                         copyfile("./template/api/fastapi/Dockerfile", project_path + "/api")
-                        copyfile("./template/api/fastapi/fastapi.py", project_path + "/api")
+                        copyfile("./template/api/fastapi/app/app.py", project_path + "/api/app")
+                        copyfile("./template/api/fastapi/app/requirements.txt", project_path + "/api/app")
                     elif api_key == "fastapi":
                         copyfile("./template/api/flask/Dockerfile", project_path + "/api")
-                        copyfile("./template/api/flask/flask.py", project_path + "/api")
+                        copyfile("./template/api/flask/app/app.py", project_path + "/api/app")
+                        copyfile("./template/api/flask/app/requirements.txt", project_path + "/api/app")
 
                     # Environment File
-                    # TODO ENVIRONMENT
                     environment_gen = environment(services)
                     environment_data = environment_gen.generate()
+                    print("Environment Data:")
+                    print(environment_data)
                     self.export_environment(environment_data)
 
     def import_yaml(self, path):

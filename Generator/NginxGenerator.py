@@ -5,27 +5,24 @@ import Modules.Service.Service as Service
 
 
 class NGINX_Generator(object):
-    def __init__(self, services=[], ip_list=[], frontend=[]):
-        self._services = services
+    def __init__(self, domain="", manager_list=[], ip_list=[]):
+        self._domain = domain
         self._ip_list = ip_list
-        self._frontend = frontend
+        self._manager = manager_list
 
-    def create_ssl_path(self, service):
-        domain = service._domain
+    def create_ssl_path(self, domain):
         path = "/etc/letsencrypt/live/" + str(domain) + "/fullchain.pem;"
         return path
 
-    def create_ssl_key_path(self, service):
-        domain = service._domain
+    def create_ssl_key_path(self, domain):
         path = "/etc/letsencrypt/live/" + str(domain) + "/privkey.pem;"
         return path
 
-    def create_location(self, service):
-        start = "location " + str(service._location) + "{"
+    def create_location(self, location, name, port):
+        start = "location " + str(location) + "{"
         metric = "stub_stash;"
         proxy_set_header = "proxy_set_header Host $host;"
-        proxy_pass = "proxy_pass http://" + str(service._name).lower() + ":" + service._remote_port + str(
-            service._remote_path) + ";"
+        proxy_pass = "proxy_pass http://" + str(name).lower() + ":" + str(port) + ";"
         proxy_http = "proxy_http_version 1.1;"
         proxy_set_header_connection = "proxy_set_header Connection \"\";"
         proxy_buffering = "proxy_buffering off;"
@@ -42,38 +39,49 @@ class NGINX_Generator(object):
         location.append(end)
         return location
 
-    def create_server(self, service):
+    def create_server(self, protocol="https"):
         server = []
         server.append("server {")
 
-        if service._ssl:
+        if protocol == "https":
+            server.append("listen 443;")
+            server.append("server_name " + self._domain + ":")
+            server.append("ssl on;")
+            server.append("ssl_ciphers \"AES128+EECDH:AES128+EDH\";")
+            server.append("ssl_protocols TLSv1 TLSv1.1 TLSv1.2;")
+            server.append("ssl_prefer_server_ciphers on;")
+            server.append("ssl_session_cache shared:SSL:10m;")
+            server.append("ssl_certificate" + self.create_ssl_path(self._domain))
+            server.append("ssl_certificate_key" + self.create_ssl_key_path(self._domain))
+            server.append("include /etc/letsencrypt/options-ssl-nginx.conf;")
+        else:
             server.append("listen 80;")
             server.append("listen [::]:80 ipv6only=on;")
-        else:
-            server.append("listen 443;")
 
-        if service._ssl:
-            server.append(self.create_ssl_path(service))
-            server.append(self.create_ssl_key_path(service))
-            server.append("include /etc/letsencrypt/options-ssl-nginx.conf;")
-            server.append("ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;")
+        # Create Jupyter
+        location = self.create_location("/notebook", "notebook", "8888")
+        server.extend(location)
+        # Create API
+        location = self.create_location("/api", "api", "80")
+        server.extend(location)
 
-        if service._location:
-            location = self.create_location(service)
-            server.extend(location)
+        # Create Monitoring
+        location = self.create_location("/grafana", "grafana", "3333")
+        server.extend(location)
+        location = self.create_location("/prometheus", "prometheus", "9090")
+        server.extend(location)
+
         server.append("}")
         return server
 
-    def create_upstream(self, service):
+    def create_upstream(self, name, ip_list, ip_hash=False):
         upstream = []
-        start = "upstream " + service._name + "{"
-        upstream.append(start)
-        if service._ip_hash:
+        upstream.append("upstream " + name + "{")
+        if ip_hash:
             upstream.append("ip_hash;")
-        for x in range(service._size):
-            upstream.append(service._name + str(x) + "." + service._domain + ";")
-        end = "}"
-        upstream.append(end)
+        for ip in ip_list:
+            upstream.append("server " + str(ip) + ":")
+        upstream.append("}")
         return upstream
 
     def create_events(self):
@@ -85,11 +93,26 @@ class NGINX_Generator(object):
 
     def generate_config(self):
         config = []
-        for service in self._frontend:
-            config.extend(self.create_upstream(service))
 
-        for service in self._services:
-            config.extend(self.create_server(service))
+        config.append("events {")
+
+        config.append(" worker_connections 1024;")
+
+        config.append("}")
+
+        # Jupyter
+        config.extend(self.create_upstream("notebook", self._ip_list))
+        # API
+        config.extend(self.create_upstream("api", self._ip_list))
+        # Prometheus
+        config.extend(self.create_upstream("prometheus", self._manager))
+        # Grafana
+        config.extend(self.create_upstream("grafana", self._manager))
+
+        # 80 Server
+        config.extend(self.create_server("http"))
+        # 443 Server
+        config.extend(self.create_server("https"))
         return config
 
 

@@ -1,9 +1,8 @@
 
 class Config(object):
-    def __init__(self, config, services, templates, networks, volumes):
+    def __init__(self, config, services, networks, volumes):
         self.__config = config
         self.__compose_services = services
-        self.__templates = templates
         self.__networks = networks
         self.__volumes = volumes
         print(config)
@@ -36,9 +35,6 @@ class Config(object):
     def get_volume(self, name):
         return self.__volumes[name]
 
-    def get_templates(self):
-        return self.__templates
-
     def set_config(self, config):
         self.__config = config
 
@@ -54,5 +50,3 @@ class Config(object):
     def set_volumes(self, volumes):
         self.__volumes = volumes
 
-    def set_templates(self, templates):
-        self.__templates = templates

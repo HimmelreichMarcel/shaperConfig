@@ -1,0 +1,30 @@
+# This file is used by pip to install required python packages
+# Usage: pip install -r requirements.txt
+
+#FastAPI
+fastapi[all]
+starlette
+pydantic
+uvicorn
+gunicorn
+ujson
+email_validator
+requests
+aiofiles
+jinja2
+python-multipart
+itsdangerous
+pyyaml
+graphene
+ujson
+
+# Automated tests
+pytest
+pytest
+
+#Postgres
+psycopg2
+pygresql
+
+#MySQL MariaDB
+

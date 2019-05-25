@@ -50,7 +50,7 @@ services:
         mode: host
 
   traefik-cluster:
-    image: traefik:1.5:latest
+    image: traefik:latest
     depends_on:
       - traefik_init
       - consul

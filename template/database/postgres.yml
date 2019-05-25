@@ -8,4 +8,4 @@ database:
     POSTGRES_USER: ${USER}
     POSTGRES_PASSWORD: ${PWD}
   volumes:
-    - /srv/docker/postgresql:/var/lib/postgresql
+    - database:/var/lib/postgresql

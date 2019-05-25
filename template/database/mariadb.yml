@@ -5,6 +5,8 @@ database:
     MYSQL_DATABASE: ${DATABASE}
     MYSQL_USER: ${USER}
     MYSQL_PASSWORD: ${PWD}
+  port:
+    - 3306:3306
   logging:
     driver: syslog
     options:

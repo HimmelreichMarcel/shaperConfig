@@ -1,5 +1,5 @@
-traefik-cluster:
-  image: traefik:1.5:latest
+traefik:
+  image: traefik:latest
   depends_on:
     - consul
   volumes:

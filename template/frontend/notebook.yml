@@ -1,4 +1,4 @@
-datascience-notebook:
+notebook:
     image:    jupyter/datascience-notebook
     volumes:
       - ${LOCAL_WORKING_DIR}:/home/jovyan/work
@@ -7,7 +7,6 @@ datascience-notebook:
       - ${LOCAL_SSL_CERTS}:/etc/ssl/notebook
     ports:
       - 8888:8888
-    container_name:   jupyter_notebook
     command: "start-notebook.sh \
       --NotebookApp.password=${ACCESS_TOKEN} \
       --NotebookApp.certfile=/etc/ssl/notebook/jupyter.pem"

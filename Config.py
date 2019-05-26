@@ -1,6 +1,6 @@
 
 class Config(object):
-    def __init__(self, config, services, networks, volumes):
+    def __init__(self, config, services, networks=[], volumes=[]):
         self.__config = config
         self.__compose_services = services
         self.__networks = networks

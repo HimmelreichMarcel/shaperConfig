@@ -25,9 +25,6 @@ pd.read_sql_query('''SELECT * FROM pokemon LIMIT 5;''', cnx)
 poke_weights = pd.read_sql_query('''SELECT _pk as pokemon, weight_kg as weight FROM pokemon''', cnx)
 poke_weights.head()
 
-
-
-
 {
   "database": "db_name",
   "schema": "schema_name",

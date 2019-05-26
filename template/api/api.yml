@@ -4,10 +4,4 @@ api:
   build: ./api
   container_name: api
   ports:
-    -8000:8000
-  environment:
-    - VIRTUAL_HOST=sampleapi.example.com
-    - VIRTUAL_NETWORK=nginx-proxy
-    - VIRTUAL_PORT=3000
-    - LETSENCRYPT_HOST=sampleapi.example.com
-    - LETSENCRYPT_EMAIL=email@example.com
+    - 8000:8000

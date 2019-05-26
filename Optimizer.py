@@ -28,17 +28,16 @@ class Optimizer(object):
         databases["maria"] = self.import_yaml("./template/database/mariadb.yml")
         databases["mongo"] = self.import_yaml("./template/database/mongodb.yml")
         databases["mysql"] = self.import_yaml("./template/database/mysql.yml")
+        databases["None"] = None
         return databases
 
     def load_monitoring(self):
-        monitoring = []
-        monitoring.append(self.import_yaml("./template/monitoring/cadvisor.yml"))
-
+        monitoring = {}
+        monitoring.update(self.import_yaml("./template/monitoring/cadvisor.yml"))
         # Different Export for Database
-        monitoring.append(self.import_yaml("./template/monitoring/exporter.yml"))
-
-        monitoring.append(self.import_yaml("./template/monitoring/grafana.yml"))
-        monitoring.append(self.import_yaml("./template/monitoring/prometheus.yml"))
+        monitoring.update(self.import_yaml("./template/monitoring/exporter.yml"))
+        monitoring.update(self.import_yaml("./template/monitoring/grafana.yml"))
+        monitoring.update(self.import_yaml("./template/monitoring/prometheus.yml"))
         return monitoring
 
     def load_api(self):
@@ -59,6 +58,13 @@ class Optimizer(object):
     def load_notebook(self):
         return self.import_yaml("./template/frontend/notebook.yml")
 
+    def create_directory(self, path):
+        if not os.path.exists(path):
+            os.mkdir(path)
+            print("Directory ", path, " Created ")
+        else:
+            print("Directory ", path, " already exists")
+
     def create_projects(self):
         databases = self.load_databases()
         monitoring = self.load_monitoring()
@@ -70,31 +76,34 @@ class Optimizer(object):
         configuration_name = "configExample_"
         for database_key, database_value in databases.items():
             for proxy_key, proxy_value in proxy.items():
-                if proxy_key == "consul":
-                    continue
                 for api_key, api_value in apis.items():
-                    project_path = self._output_path+configuration_name+configuration_sample
-                    os.makedirs(project_path)
+                    project_path = self._output_path+configuration_name+str(configuration_sample)
+
+                    self.create_directory(project_path)
                     configuration_sample = configuration_sample + 1
 
                     # Create Services
                     services = {}
-                    services["services"] = [proxy_value, database_value, notebook, api_value]
-                    services["services"].extend(monitoring)
+                    if database_key != "None":
+                        services.update(database_value)
+                    services.update(proxy_value)
+                    services.update(api_value)
+                    services.update(monitoring)
+                    services.update(notebook)
                     if proxy_key == "traefik":
-                        services["services"].extend(self.load_consul())
+                        services.update(self.load_consul())
 
                     # Create Config Element
                     config = Config(self._shaper_config, services)
 
                     # Create Compose File
-                    compose_generator = composer(config=Config, proxy=proxy_key)
+                    compose_generator = composer(config=config, proxy=proxy_key)
                     compose_file = compose_generator.generate()
                     self.export_yaml(compose_file, project_path + '/docker-compose.yaml')
 
                     if proxy_key == "nginx":
                         # NGINX Proxy
-                        os.makedirs(project_path + "/nginx/")
+                        self.create_directory(project_path + "/nginx/")
                         nginx_gen = nginx(config)
                         nginx_data = nginx_gen.generate()
                         self.export_nginx_conf(nginx_data, project_path + "/nginx")
@@ -114,29 +123,30 @@ class Optimizer(object):
                         # Monitoring
                         prometheus = self.import_yaml("./template/monitoring/prometheus/prometheus_nginx.yml")
 
+                    self.create_directory(project_path + "/prometheus")
                     self.export_yaml(prometheus, project_path + "/prometheus/prometheus.yml")
 
                     # API
-                    # TODO FastAPI Connect to Database
                     # TODO FastAPI Load Data into Table
                     # TODO FLASK Connect to Database
                     # TODO FLASK  Load Data into Table
-                    os.makedirs(project_path + "/api")
-                    if api_key == "flaks":
-                        copyfile("./template/api/fastapi/Dockerfile", project_path + "/api")
-                        copyfile("./template/api/fastapi/app/app.py", project_path + "/api/app")
-                        copyfile("./template/api/fastapi/app/requirements.txt", project_path + "/api/app")
+                    self.create_directory(project_path + "/api")
+                    self.create_directory(project_path + "/api/app")
+                    if api_key == "flask":
+                        copyfile("./template/api/fastapi/Dockerfile", project_path + "/api/Dockerfile")
+                        copyfile("./template/api/fastapi/app/app.py", project_path + "/api/app/app.py")
+                        copyfile("./template/api/fastapi/app/requirements.txt", project_path + "/api/app/requirements.txt")
                     elif api_key == "fastapi":
-                        copyfile("./template/api/flask/Dockerfile", project_path + "/api")
-                        copyfile("./template/api/flask/app/app.py", project_path + "/api/app")
-                        copyfile("./template/api/flask/app/requirements.txt", project_path + "/api/app")
+                        copyfile("./template/api/flask/Dockerfile", project_path + "/api/Dockerfile")
+                        copyfile("./template/api/flask/app/app.py", project_path + "/api/app/app.py")
+                        copyfile("./template/api/flask/app/requirements.txt", project_path + "/api/app/requirements.txt")
 
                     # Environment File
-                    environment_gen = environment(services)
+                    environment_gen = environment(self._shaper_config)
                     environment_data = environment_gen.generate()
                     print("Environment Data:")
                     print(environment_data)
-                    self.export_environment(environment_data)
+                    self.export_environment(environment_data, project_path)
 
     def import_yaml(self, path):
         with open(path, 'r') as stream:

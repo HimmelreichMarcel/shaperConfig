@@ -1,7 +1,6 @@
 """
 
 """
-import Modules.Service.Service as Service
 
 
 class NGINX_Generator(object):
@@ -45,7 +44,7 @@ class NGINX_Generator(object):
 
         if protocol == "https":
             server.append("listen 443;")
-            server.append("server_name " + self._domain + ":")
+            server.append("server_name " + str(self._domain) + ":")
             server.append("ssl on;")
             server.append("ssl_ciphers \"AES128+EECDH:AES128+EDH\";")
             server.append("ssl_protocols TLSv1 TLSv1.1 TLSv1.2;")
@@ -91,7 +90,7 @@ class NGINX_Generator(object):
         events.append("}")
         return events
 
-    def generate_config(self):
+    def generate(self):
         config = []
 
         config.append("events {")

@@ -1,13 +1,11 @@
 notebook:
     image:    jupyter/datascience-notebook
     volumes:
-      - ${LOCAL_WORKING_DIR}:/home/jovyan/work
-      - ${LOCAL_DATASETS}:/home/jovyan/work/datasets
-      - ${LOCAL_MODULES}:/home/jovyan/work/modules
-      - ${LOCAL_SSL_CERTS}:/etc/ssl/notebook
+      - ./jupyter/working:/home/jovyan/work
+      - ./jupyter/dataset:/home/jovyan/work/datasets
+      - ./jupyter/module:/home/jovyan/work/modules
+      - ./jupyter/ssl:/etc/ssl/notebook
     ports:
       - 8888:8888
-    command: "start-notebook.sh \
-      --NotebookApp.password=${ACCESS_TOKEN} \
-      --NotebookApp.certfile=/etc/ssl/notebook/jupyter.pem"
+
 

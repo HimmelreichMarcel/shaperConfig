@@ -72,11 +72,11 @@ class TraefikGenerator(object):
         config.append("defaultEntryPoints = [\"https\",\"http\"]")
         config.extend(self.create_entry_points())
         config.extend(self.create_docker())
-        if "security" in self.__config.get_config():
+        if self.__config.get_security():
             config.extend(self.create_acme())
-        if "monitoring" in self.__config.get_config():
+        if self.__config.get_monitoring():
             config.extend(self.create_metrics())
-        if "cluster" in self.__config.get_config():
+        if self.__config.get_cluster():
             config.extend(self.create_consul())
         return config
 

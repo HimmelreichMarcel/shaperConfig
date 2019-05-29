@@ -1,4 +1,4 @@
-cadvisor:
+cadvisor-cluster:
   image: google/cadvisor
   volumes:
     - /:/rootfs:ro
@@ -8,4 +8,5 @@ cadvisor:
   ports:
     - 8088:8088
   restart: always
-
+  deploy:
+    mode: global

@@ -1,0 +1,9 @@
+docker-compose down
+docker rm -fv $(docker ps -aq)
+sudo lsof -i -P -n | grep 5432
+
+
+
+    command: "start-notebook.sh \
+      --NotebookApp.password=${ACCESS_TOKEN} \
+      --NotebookApp.certfile=/etc/ssl/notebook/jupyter.pem"

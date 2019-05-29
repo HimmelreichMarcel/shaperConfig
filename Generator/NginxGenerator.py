@@ -1,6 +1,26 @@
 """
 
 """
+import Config as conf
+
+
+class NGINX_Service_Generator(object):
+    def __init(self, name, service, config, https=False):
+        self._name = name
+        self._service = service
+        self._config = config
+        self._https = https
+
+    def generate(self):
+        environment = []
+        environment.append("VIRTUAL_HOST=" + str(self._name) + "." + str(self._config.get_domain()))
+        if self._https:
+            environment.append("VIRTUAL_PROTO=https")
+        if len(self._service["ports"]) > 1:
+            environment.append("VIRTUAL_PORT=" + str(self._service["ports"][0]))
+        self._service["environment"].extend(environment)
+        self._service["expose"] = self._service["ports"]
+        return self._service
 
 
 class NGINX_Generator(object):

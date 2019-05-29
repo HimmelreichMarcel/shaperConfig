@@ -58,6 +58,9 @@ class Optimizer(object):
     def load_notebook(self):
         return self.import_yaml("./template/frontend/notebook.yml")
 
+    def load_nginx_letsencrypt(self):
+        return self.import_yaml("./template/proxy/nginx_letsencrypt.yml")
+
     def create_directory(self, path):
         if not os.path.exists(path):
             os.mkdir(path)
@@ -74,79 +77,104 @@ class Optimizer(object):
 
         configuration_sample = 0
         configuration_name = "configExample_"
+
+
+        #Cluster Replica Config
+        replica = {"proxy": [1, 5, 10], "api": [1, 10, 25]}
+
+
         for database_key, database_value in databases.items():
             for proxy_key, proxy_value in proxy.items():
                 for api_key, api_value in apis.items():
-                    project_path = self._output_path+configuration_name+str(configuration_sample)
+                    for proxy_replica in replica["proxy"]:
+                        for api_replica in replica["api"]:
+                            project_name = "config_" + str(database_key) + "_" + str(proxy_key) + "_" + str(api_key) + "_" + str(proxy_replica) + "_" + str(api_replica)
+                            #project_path = self._output_path+configuration_name+str(configuration_sample)
+                            project_path = self._output_path + project_name
+                            project_path_compose = project_path + "/compose/"
+                            self.create_directory(project_path)
+                            self.create_directory(project_path_compose)
+                            configuration_sample = configuration_sample + 1
 
-                    self.create_directory(project_path)
-                    configuration_sample = configuration_sample + 1
+                            # Create Services
+                            services = {}
+                            if database_key != "None":
+                                services.update(database_value)
+                            services.update(proxy_value)
+                            services.update(api_value)
+                            services.update(monitoring)
+                            services.update(notebook)
+                            if proxy_key == "traefik" and "cluster" in self._shaper_config:
+                                services.update(self.load_consul())
+                            elif proxy_key == "nginx" and "security" in self._shaper_config:
+                                services.update(self.load_nginx_letsencrypt())
+                            # Create Config Element
+                            config = Config(self._shaper_config, services)
 
-                    # Create Services
-                    services = {}
-                    if database_key != "None":
-                        services.update(database_value)
-                    services.update(proxy_value)
-                    services.update(api_value)
-                    services.update(monitoring)
-                    services.update(notebook)
-                    if proxy_key == "traefik":
-                        services.update(self.load_consul())
+                            # Create Compose File
+                            compose_generator = composer(config=config, proxy=proxy_key,
+                                                         proxy_replica=proxy_replica, api_replica=api_replica)
+                            compose_file = compose_generator.generate()
+                            self.export_yaml(compose_file, project_path_compose + '/docker-compose.yaml')
 
-                    # Create Config Element
-                    config = Config(self._shaper_config, services)
+                            # PROXY
+                            self.generate_proxy(config, api_key, project_path_compose)
 
-                    # Create Compose File
-                    compose_generator = composer(config=config, proxy=proxy_key)
-                    compose_file = compose_generator.generate()
-                    self.export_yaml(compose_file, project_path + '/docker-compose.yaml')
+                            #Monitoring
+                            self.generate_monitoring(api_key, project_path_compose)
 
-                    if proxy_key == "nginx":
-                        # NGINX Proxy
-                        self.create_directory(project_path + "/nginx/")
-                        nginx_gen = nginx(config)
-                        nginx_data = nginx_gen.generate()
-                        self.export_nginx_conf(nginx_data, project_path + "/nginx")
+                            # API
+                            self.generate_API(api_key, project_path_compose)
 
-                        # Monitoring
-                        prometheus = self.import_yaml("./template/monitoring/prometheus/prometheus_nginx.yml")
-                    elif proxy_key == "traefik":
-                        # Traefik Proxy
-                        traefik_gen = traefik(config)
-                        traefik_data = traefik_gen.generate()
-                        self.export_toml(traefik_data, project_path)
+                            # Environment File
+                            environment_gen = environment(self._shaper_config)
+                            environment_data = environment_gen.generate()
+                            print("Environment Data:")
+                            print(environment_data)
+                            self.export_environment(environment_data, project_path_compose)
 
-                        # Monitoring
-                        prometheus = self.import_yaml("./template/monitoring/prometheus/prometheus_traefik.yml")
-                    else:
+    def generate_monitoring(self, key, project_path_compose):
+        if key == "traefik":
+            # Monitoring
+            prometheus = self.import_yaml("./template/monitoring/prometheus/prometheus_traefik.yml")
+        else:
+            # Monitoring
+            prometheus = self.import_yaml("./template/monitoring/prometheus/prometheus_nginx.yml")
 
-                        # Monitoring
-                        prometheus = self.import_yaml("./template/monitoring/prometheus/prometheus_nginx.yml")
+        self.create_directory(project_path_compose + "/prometheus")
+        self.export_yaml(prometheus, project_path_compose + "/prometheus/prometheus.yml")
 
-                    self.create_directory(project_path + "/prometheus")
-                    self.export_yaml(prometheus, project_path + "/prometheus/prometheus.yml")
 
-                    # API
-                    # TODO FastAPI Load Data into Table
-                    # TODO FLASK Connect to Database
-                    # TODO FLASK  Load Data into Table
-                    self.create_directory(project_path + "/api")
-                    self.create_directory(project_path + "/api/app")
-                    if api_key == "flask":
-                        copyfile("./template/api/fastapi/Dockerfile", project_path + "/api/Dockerfile")
-                        copyfile("./template/api/fastapi/app/app.py", project_path + "/api/app/app.py")
-                        copyfile("./template/api/fastapi/app/requirements.txt", project_path + "/api/app/requirements.txt")
-                    elif api_key == "fastapi":
-                        copyfile("./template/api/flask/Dockerfile", project_path + "/api/Dockerfile")
-                        copyfile("./template/api/flask/app/app.py", project_path + "/api/app/app.py")
-                        copyfile("./template/api/flask/app/requirements.txt", project_path + "/api/app/requirements.txt")
+    def generate_proxy(self, config,  proxy_key, project_path_compose):
+        if proxy_key == "nginx":
+            # NGINX Proxy
+            self.create_directory(project_path_compose + "/nginx/")
+            nginx_gen = nginx(config)
+            nginx_data = nginx_gen.generate()
+            self.export_nginx_conf(nginx_data, project_path_compose + "/nginx")
 
-                    # Environment File
-                    environment_gen = environment(self._shaper_config)
-                    environment_data = environment_gen.generate()
-                    print("Environment Data:")
-                    print(environment_data)
-                    self.export_environment(environment_data, project_path)
+            # Monitoring
+            prometheus = self.import_yaml("./template/monitoring/prometheus/prometheus_nginx.yml")
+        elif proxy_key == "traefik":
+            # Traefik Proxy
+            traefik_gen = traefik(config)
+            traefik_data = traefik_gen.generate()
+            self.export_toml(traefik_data, project_path_compose)
+
+
+
+    def generate_API(self, api_key, project_path_compose):
+        # API
+        self.create_directory(project_path_compose + "/api")
+        self.create_directory(project_path_compose + "/api/app")
+        if api_key == "flask":
+            copyfile("./template/api/fastapi/Dockerfile", project_path_compose + "/api/Dockerfile")
+            copyfile("./template/api/fastapi/app/app.py", project_path_compose + "/api/app/app.py")
+            copyfile("./template/api/fastapi/app/requirements.txt", project_path_compose + "/api/app/requirements.txt")
+        elif api_key == "fastapi":
+            copyfile("./template/api/flask/Dockerfile", project_path_compose + "/api/Dockerfile")
+            copyfile("./template/api/flask/app/app.py", project_path_compose + "/api/app/app.py")
+            copyfile("./template/api/flask/app/requirements.txt", project_path_compose + "/api/app/requirements.txt")
 
     def import_yaml(self, path):
         with open(path, 'r') as stream:

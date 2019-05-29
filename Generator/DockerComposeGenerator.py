@@ -2,10 +2,12 @@
 from Config import Config
 
 class ComposeGenerator:
-    def __init__(self, config=None, proxy="nginx", cluster=True):
+    def __init__(self, config=None, proxy="nginx", cluster=True, proxy_replica=1, api_replica=1):
         self.__config = config
         self._proxy = proxy
         self._cluster = cluster
+        self.__api_rep = api_replica
+        self.__proxy_rep = proxy_replica
         print(config)
 
     def generate(self):
@@ -18,9 +20,9 @@ class ComposeGenerator:
 
     def create_services(self):
         compose_services = {}
-        config = self.__config.get_config()
-        if "monitoring" in config:
-            compose_services.update(self.create_traefik_monitoring_service())
+        config = self.__config
+        #if config.get_security():
+        #    compose_services.update(self.create_traefik_monitoring_service())
 
         print("SERVICES: ")
         print(self.__config.get_compose_services())
@@ -39,9 +41,18 @@ class ComposeGenerator:
             # Create Service Network
             compose_service["networks"] = self.create_service_network(key)
 
+            #Create Deploy  Config
+            if config.get_cluster():
+                compose_service["deploy"] = self.create_deploy(key, value)
+
             #Create Traefik Labels
-            if self._proxy == "traefik":
-                if key == "api" or key == "notebook":
+            if self._proxy == "traefik" and not config.get_cluster():
+                if config.get_cluster():
+                    labels = []
+                    labels = self.create_traefik_labels(key, value)
+                    print(labels)
+                    compose_service["labels"] = labels
+                elif key == "api" or key == "notebook":
                     labels = []
                     labels = self.create_traefik_labels(key, value)
                     print(labels)
@@ -53,7 +64,7 @@ class ComposeGenerator:
         networks = []
         if key == "api" or key == "notebook":
             networks.append("web")
-        elif key == "traefik" or key == "nginx":
+        elif key == "traefik" or key == "nginx" or key == "nginx_letsencrypt":
             networks.append("web")
             networks.append("proxy")
         elif key == "prometheus" or key == "grafana" or key == "cadvisor":
@@ -67,7 +78,7 @@ class ComposeGenerator:
     def create_traefik_labels(self, name, service):
         labels = []
         labels.append("traefik.enable=true")
-        domain = self.__config.get_config()["security"]["domain"]
+        domain = self.__config.get_domain()
         labels.append("traefik.backend=" + name)
         labels.append("traefik.frontend.rule=Host:" + name + "." + str(domain) + "\"")
         if "network" in service:
@@ -78,9 +89,9 @@ class ComposeGenerator:
 
     def create_traefik_monitoring_service(self):
         services = {}
-        domain = self.__config.get_config()["security"]["domain"]
+        domain = self.__config.get_domain()
         for key, value in self.__config.get_compose_services().items():
-            service = self.__config.get_compose_services()[key]
+            service = self.__config.get_compose_service(key)
             if key == "prometheus" or key == "grafana" or key == "cadvisor":
                 labels = []
                 labels.append("traefik.enable=true")
@@ -90,22 +101,58 @@ class ComposeGenerator:
                 services[key] = service
         return services
 
+    def create_nginx_environment(self, name, service):
+        environment = []
+
+    def create_deploy(self, key, value):
+        deploy = {}
+
+        if key == "api" or key == "notebook":
+            deploy["replicas"] = self.__api_rep
+            deploy["placements"] = ["node.role==worker"]
+        elif key== "traefik" or key == "nginx":
+            deploy["placements"] = ["node.role==manager"]
+            deploy["replicas"] = self.__proxy_rep
+            deploy["restart_policy"] = {}
+            deploy["restart_policy"]["condition"] = "any"
+        elif key == "prometheus" or key == "grafana" or key == "cadvisor":
+            deploy["placements"] = ["node.role==manager"]
+            deploy["replicas"] = 1
+        else:
+            deploy["placements"] = ["node.role==worker"]
+            deploy["replicas"] = 1
+
+        if self._proxy == "traefik":
+            if self.__config.get_cluster():
+                labels = []
+                labels = self.create_traefik_labels(key, value)
+                print(labels)
+                deploy["labels"] = labels
+            elif key == "api" or key == "notebook" or key == "prometheus" or key == "grafana" or key == "cadvisor":
+                labels = []
+                labels = self.create_traefik_labels(key, value)
+                print(labels)
+                deploy["labels"] = labels
+
+        return deploy
+
+
     def create_network(self):
         networks = {}
         networks["web"] = {}
         networks["proxy"] = {}
         networks["web"]["external"] = True
 
-        if self._cluster:
+        if self.__config.get_cluster():
             for key, value in networks.items():
                 network = value
-                #network["driver"] = "overlay"
+                network["driver"] = "overlay"
                 networks[key] = network
         return networks
 
     def create_volumes(self):
         volumes = {}
-        if self._proxy == "traefik":
+        if self._proxy == "traefik" and self.__config.get_cluster():
             volumes["consul-data"] = {}
             volumes["consul-data"]["driver"] = "[not local]"
         volumes["prometheus_data"] = {}

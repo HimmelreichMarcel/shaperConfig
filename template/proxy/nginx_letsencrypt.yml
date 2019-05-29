@@ -1,0 +1,5 @@
+nginx_letsencrypt:
+  image: jrcs/letsencrypt-nginx-proxy-companion
+  container_name: nginx_letsencrypt
+  volumes:
+    - '/var/run/docker.sock:/var/run/docker.sock:ro'

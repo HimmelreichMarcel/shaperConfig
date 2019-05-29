@@ -3,14 +3,12 @@ user="admin"
 password="admin"
 database= "test"
 
-[cluster]
-manager = ["141.54.159.91"]
-worker = ["141.54.159.97"]
-
 [security]
 email="test@mail.com"
-domain="shaperconfig.duckdns.org"
-provider="duckdns"
-apikey="58983ccc-41e3-402d-8caa-838612af67ec"
+domain="localhost"
 
 [monitoring]
+
+[cluster]
+manager = "localhost"
+worker = "localhost"

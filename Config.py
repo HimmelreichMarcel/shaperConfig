@@ -21,6 +21,22 @@ class Config(object):
         else:
             self._monitoring = False
 
+        if "ssh" in self.__config:
+            self._ssh = True
+            if "manager" in self.__config["ssh"]:
+                self._ssh_manager_users = self._config["ssh"]["manager"]["users"]
+                self._ssh_manager_hosts = self._config["ssh"]["manager"]["hosts"]
+            if "worker" in self.__config["ssh"]:
+                self._ssh_worker_users = self._config["ssh"]["worker"]["users"]
+                self._ssh_worker_hosts = self._config["ssh"]["worker"]["hosts"]
+        else:
+            self._ssh = False
+            self._ssh_manager_users = None
+            self._ssh_manager_hosts = None
+            self._ssh_worker_users = None
+            self._ssh_worker_hosts = None
+
+
         if "admin" in self.__config:
             self._user = self.__config["admin"]["user"]
             self._password = self.__config["admin"]["password"]
@@ -91,6 +107,21 @@ class Config(object):
 
     def get_volume(self, name):
         return self.__volumes[name]
+
+    def get_ssh(self):
+        return self._ssh
+
+    def get_manager_users(self):
+        return self._ssh_manager_users
+
+    def get_manager_hosts(self):
+        return self._ssh_manager_hosts
+
+    def get_worker_users(self):
+        return self._ssh_worker_users
+
+    def get_worker_hosts(self):
+        return self._ssh_worker_hosts
 
     def set_config(self, config):
         self.__config = config

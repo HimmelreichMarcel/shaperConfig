@@ -5,8 +5,8 @@ nginx:
     - "80:80"
     - "443:443"
   volumes:
-    - /etc/nginx/certs
-    - /etc/nginx/vhost.d
-    - /usr/share/nginx/html
+    - proxy:/etc/nginx/certs
+    - proxy:/etc/nginx/vhost.d
+    - proxy:/usr/share/nginx/html
     - '/var/run/docker.sock:/tmp/docker.sock:ro'
 

@@ -1,26 +1,69 @@
-Project Folder
+
+
+Tool:
+
+More Configuration
+
+
+Docker:
+
+Jupyter Exporter
+
+More Prometheus Exporter
+
+Check Exporter
+
+
+Jupyter:
+
+Save Token
+
+
+Ansible:
+SSH Connection
+
+Install Docker
+
+Install Dependencies
+
+Deploy Docker Swarm
+
+Create Docker Manager
+
+Create Docker Worker
+
+Copy Docker Data
+
+Deploy Docker Stack on Manager
+
+
+Deploy Stack Compose Folder
+Check Network Creation
 
 
 
-Docker Compose
 
-Add Traefik Labels
-Create Networks
+Dienstag
 
+Jupyter Exporter
 
+SQL Exporter
 
+Configuration Options
 
-Treafik
-
-
-
-
-Monitoring
-
-prometheus.yml
+Jupyter Token Output
 
 
-Cluster
 
-Get Host Maschines
-Add Consul
+Learning Preparation
+
+Mittwoch
+
+
+
+
+Donnerstag
+
+
+
+Freitag

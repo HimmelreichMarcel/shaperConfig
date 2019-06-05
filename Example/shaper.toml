@@ -2,13 +2,20 @@
 user="admin"
 password="admin"
 database= "test"
+domain="docker.localhost"
 
-[security]
-email="test@mail.com"
-domain="localhost"
+[ssh]
+[ssh.manager]
+users=["marcel"]
+hosts=["peru.medien.uni-weimar.de"]
+[ssh.worker]
+users=["marcel"]
+hosts=["china.medien.uni-weimar.de"]
 
 [monitoring]
 
-[cluster]
-manager = "localhost"
-worker = "localhost"
+[services]
+database=["mysql"]
+proxy=["traefik"]
+api=["fastapi"]
+

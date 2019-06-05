@@ -10,11 +10,12 @@ class TraefikGenerator(object):
         entry.append("[entryPoints]")
         entry.append("\t [entryPoints.http]")
         entry.append("\t address = \":80\"")
-        entry.append("\t \t [entryPoints.http.redirect]")
-        entry.append("\t \t entryPoint = \"https\"")
-        entry.append("\t [entryPoints.https]")
-        entry.append("\t address = \":443\"")
-        entry.append("\t [entryPoints.https.tls]")
+        if self.__config.get_security():
+            entry.append("\t \t [entryPoints.http.redirect]")
+            entry.append("\t \t entryPoint = \"https\"")
+            entry.append("\t [entryPoints.https]")
+            entry.append("\t address = \":443\"")
+            entry.append("\t [entryPoints.https.tls]")
         return entry
 
     def create_api(self):
@@ -52,7 +53,7 @@ class TraefikGenerator(object):
         docker = []
         docker.append("[docker]")
         docker.append("endpoint = \"unix:///var/run/docker.sock\" ")
-        docker.append("domain = \"" + str(self.__config.get_config()["security"]["domain"]) + "\"")
+        docker.append("domain = \"" + str(self.__config.get_config()["admin"]["domain"]) + "\"")
         docker.append("watch = true")
         docker.append("exposedByDefault = false")
         if "cluster" in self.__config.get_config():
@@ -69,7 +70,10 @@ class TraefikGenerator(object):
         config = []
         config.append("debug = false")
         config.append("logLevel = \"ERROR\"")
-        config.append("defaultEntryPoints = [\"https\",\"http\"]")
+        if self.__config.get_security():
+            config.append("defaultEntryPoints = [\"https\",\"http\"]")
+        else:
+            config.append("defaultEntryPoints = [\"http\"]")
         config.extend(self.create_entry_points())
         config.extend(self.create_docker())
         if self.__config.get_security():

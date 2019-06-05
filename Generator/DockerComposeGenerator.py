@@ -2,12 +2,13 @@
 from Config import Config
 
 class ComposeGenerator:
-    def __init__(self, config=None, proxy="nginx", cluster=True, proxy_replica=1, api_replica=1):
+    def __init__(self, config=None, proxy="nginx", cluster=True, proxy_replica=1, api_replica=1, https=False):
         self.__config = config
         self._proxy = proxy
         self._cluster = cluster
         self.__api_rep = api_replica
         self.__proxy_rep = proxy_replica
+        self._https = https
         print(config)
 
     def generate(self):
@@ -41,6 +42,10 @@ class ComposeGenerator:
             # Create Service Network
             compose_service["networks"] = self.create_service_network(key)
 
+            if self._proxy == "nginx" and key not in ["nginx", "exporter", "nginx_letsencrypt"]:
+                environment = self.create_nginx_environment(key, compose_service)
+                compose_service["environment"] = environment
+
             #Create Deploy  Config
             if config.get_cluster():
                 compose_service["deploy"] = self.create_deploy(key, value)
@@ -59,6 +64,18 @@ class ComposeGenerator:
                     compose_service["labels"] = labels
             compose_services[key] = compose_service
         return compose_services
+
+    def create_nginx_environment(self, key, service):
+        environment = []
+        environment.append("VIRTUAL_HOST=" + str(key) + "." + str(self.__config.get_domain()))
+        if self._https:
+            environment.append("VIRTUAL_PROTO=https")
+        if "ports" in service:
+            if len(service["ports"]) > 1 or len(service["ports"]) == 1:
+                environment.append("VIRTUAL_PORT=" + str(service["ports"][0]))
+            elif not isinstance(service["ports"], list):
+                environment.append("VIRTUAL_PORT=" + str(service["ports"]))
+        return environment
 
     def create_service_network(self, key):
         networks = []
@@ -101,25 +118,22 @@ class ComposeGenerator:
                 services[key] = service
         return services
 
-    def create_nginx_environment(self, name, service):
-        environment = []
-
     def create_deploy(self, key, value):
         deploy = {}
-
+        deploy["placement"] = {}
         if key == "api" or key == "notebook":
             deploy["replicas"] = self.__api_rep
-            deploy["placements"] = ["node.role==worker"]
+            deploy["placement"]["constraints"] = ["node.role==worker"]
         elif key== "traefik" or key == "nginx":
-            deploy["placements"] = ["node.role==manager"]
+            deploy["placement"]["constraints"] = ["node.role==manager"]
             deploy["replicas"] = self.__proxy_rep
             deploy["restart_policy"] = {}
             deploy["restart_policy"]["condition"] = "any"
         elif key == "prometheus" or key == "grafana" or key == "cadvisor":
-            deploy["placements"] = ["node.role==manager"]
+            deploy["placement"]["constraints"] = ["node.role==manager"]
             deploy["replicas"] = 1
         else:
-            deploy["placements"] = ["node.role==worker"]
+            deploy["placement"]["constraints"] = ["node.role==worker"]
             deploy["replicas"] = 1
 
         if self._proxy == "traefik":
@@ -136,18 +150,19 @@ class ComposeGenerator:
 
         return deploy
 
-
     def create_network(self):
         networks = {}
         networks["web"] = {}
         networks["proxy"] = {}
         networks["web"]["external"] = True
 
-        if self.__config.get_cluster():
-            for key, value in networks.items():
-                network = value
+        for key, value in networks.items():
+            network = value
+            if self.__config.get_cluster():
                 network["driver"] = "overlay"
-                networks[key] = network
+            else:
+                network["driver"] = "bridge"
+            networks[key] = network
         return networks
 
     def create_volumes(self):
@@ -158,4 +173,6 @@ class ComposeGenerator:
         volumes["prometheus_data"] = {}
         volumes["grafana_data"] = {}
         volumes["database"] = {}
+        volumes["proxy"] = {}
+        volumes["notebook"] = {}
         return volumes

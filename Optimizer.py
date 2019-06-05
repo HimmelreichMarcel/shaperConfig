@@ -1,7 +1,9 @@
 from Generator.TraefikGenerator import TraefikGenerator as traefik
 from Generator.DockerComposeGenerator import ComposeGenerator as composer
 from Generator.EnvironmentGenerator import EnvironmentGenerator as environment
-from Generator.NginxGenerator import NGINX_Generator as nginx
+#from Generator.NginxGenerator import NGINX_Generator as nginx
+from Generator.NginxGenerator import NGINX_Service_Generator as nginx
+from Generator.AnsibleGenerator import AnsibleGenerator as ansible
 
 import os
 from shutil import copyfile
@@ -24,11 +26,23 @@ class Optimizer(object):
 
     def load_databases(self):
         databases = {}
-        databases["postgres"] = self.import_yaml("./template/database/postgres.yml")
-        databases["maria"] = self.import_yaml("./template/database/mariadb.yml")
-        databases["mongo"] = self.import_yaml("./template/database/mongodb.yml")
-        databases["mysql"] = self.import_yaml("./template/database/mysql.yml")
-        databases["None"] = None
+        if "services" in self._shaper_config and "database" in self._shaper_config["services"]:
+            if "mysql" in self._shaper_config["services"]["database"]:
+                databases["mysql"] = self.import_yaml("./template/database/mysql.yml")
+            if "postgres" in self._shaper_config["services"]["database"]:
+                databases["mysql"] = self.import_yaml("./template/database/postgres.yml")
+            if "maria" in self._shaper_config["services"]["database"]:
+                databases["mysql"] = self.import_yaml("./template/database/maria.yml")
+            if "mongo" in self._shaper_config["services"]["database"]:
+                databases["mysql"] = self.import_yaml("./template/database/mongo.yml")
+            if "None" in self._shaper_config["services"]["database"]:
+                databases["None"] = None
+        else:
+            databases["postgres"] = self.import_yaml("./template/database/postgres.yml")
+            databases["maria"] = self.import_yaml("./template/database/mariadb.yml")
+            databases["mongo"] = self.import_yaml("./template/database/mongodb.yml")
+            databases["mysql"] = self.import_yaml("./template/database/mysql.yml")
+            databases["None"] = None
         return databases
 
     def load_monitoring(self):
@@ -42,14 +56,26 @@ class Optimizer(object):
 
     def load_api(self):
         api = {}
-        api["flask"] = self.import_yaml("./template/api/api.yml")
-        api["fastapi"] = self.import_yaml("./template/api/api.yml")
+        if "services" in self._shaper_config and "api" in self._shaper_config["services"]:
+            if "fastapi" in self._shaper_config["services"]["api"]:
+                api["fastapi"] = self.import_yaml("./template/api/api.yml")
+            if "flask" in self._shaper_config["services"]["api"]:
+                api["flask"] = self.import_yaml("./template/api/api.yml")
+        else:
+            api["flask"] = self.import_yaml("./template/api/api.yml")
+            api["fastapi"] = self.import_yaml("./template/api/api.yml")
         return api
 
     def load_proxy(self):
         proxy = {}
-        proxy["nginx"] = self.import_yaml("./template/proxy/nginx.yml")
-        proxy["traefik"] = self.import_yaml("./template/proxy/traefik.yml")
+        if "services" in self._shaper_config and "proxy" in self._shaper_config["services"]:
+            if "nginx" in self._shaper_config["services"]["proxy"]:
+                proxy["nginx"] = self.import_yaml("./template/proxy/nginx.yml")
+            if "traefik" in self._shaper_config["services"]["proxy"]:
+                proxy["traefik"] = self.import_yaml("./template/proxy/traefik.yml")
+        else:
+            proxy["nginx"] = self.import_yaml("./template/proxy/nginx.yml")
+            proxy["traefik"] = self.import_yaml("./template/proxy/traefik.yml")
         return proxy
 
     def load_consul(self):
@@ -78,10 +104,8 @@ class Optimizer(object):
         configuration_sample = 0
         configuration_name = "configExample_"
 
-
         #Cluster Replica Config
         replica = {"proxy": [1, 5, 10], "api": [1, 10, 25]}
-
 
         for database_key, database_value in databases.items():
             for proxy_key, proxy_value in proxy.items():
@@ -118,10 +142,10 @@ class Optimizer(object):
                             self.export_yaml(compose_file, project_path_compose + '/docker-compose.yaml')
 
                             # PROXY
-                            self.generate_proxy(config, api_key, project_path_compose)
+                            self.generate_proxy(config, proxy_key, project_path_compose)
 
                             #Monitoring
-                            self.generate_monitoring(api_key, project_path_compose)
+                            self.generate_monitoring(proxy_key, project_path_compose)
 
                             # API
                             self.generate_API(api_key, project_path_compose)
@@ -132,6 +156,11 @@ class Optimizer(object):
                             print("Environment Data:")
                             print(environment_data)
                             self.export_environment(environment_data, project_path_compose)
+
+
+                            #Create Ansible Project
+                            #ansible = ansible()
+
 
     def generate_monitoring(self, key, project_path_compose):
         if key == "traefik":
@@ -144,14 +173,13 @@ class Optimizer(object):
         self.create_directory(project_path_compose + "/prometheus")
         self.export_yaml(prometheus, project_path_compose + "/prometheus/prometheus.yml")
 
-
-    def generate_proxy(self, config,  proxy_key, project_path_compose):
+    def generate_proxy(self, config, proxy_key, project_path_compose):
         if proxy_key == "nginx":
             # NGINX Proxy
-            self.create_directory(project_path_compose + "/nginx/")
-            nginx_gen = nginx(config)
-            nginx_data = nginx_gen.generate()
-            self.export_nginx_conf(nginx_data, project_path_compose + "/nginx")
+            #self.create_directory(project_path_compose + "/nginx/")
+            #nginx_gen = nginx(config)
+            #nginx_data = nginx_gen.generate()
+            #self.export_nginx_conf(nginx_data, project_path_compose + "/nginx")
 
             # Monitoring
             prometheus = self.import_yaml("./template/monitoring/prometheus/prometheus_nginx.yml")

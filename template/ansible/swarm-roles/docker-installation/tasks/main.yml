@@ -1,0 +1,36 @@
+---
+- name: Get Docker GPG Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  tags: docker
+
+- name: reset source list
+  command: mv /etc/apt/sources.list.d/download_docker_com_linux_ubuntu.list ~/
+
+- name: create source list
+  command: touch /etc/apt/sources.list.d/download_docker_com_linux_ubuntu.list
+
+- name: Update and upgrade apt packages
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: Install basic list of packages
+  apt:
+    name: ["apt-transport-https", "ca-certificates", "curl", "gnupg2", "software-properties-common"]
+    state: present
+    update_cache: true
+  tags: docker
+
+- name: Add Docker packages to Repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
+  tags: docker
+
+- name: Install Docker-CE
+  apt:
+    name: ["docker-ce", "docker-ce-cli"]
+    state: latest
+    update_cache: yes
+  tags: docker

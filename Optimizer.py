@@ -3,7 +3,7 @@ from Generator.DockerComposeGenerator import ComposeGenerator as composer
 from Generator.EnvironmentGenerator import EnvironmentGenerator as environment
 #from Generator.NginxGenerator import NGINX_Generator as nginx
 from Generator.NginxGenerator import NGINX_Service_Generator as nginx
-from Generator.AnsibleGenerator import AnsibleGenerator as ansible
+from Generator.AnsibleGenerator import AnsibleGenerator as Ansible
 
 import os
 from shutil import copyfile
@@ -90,7 +90,7 @@ class Optimizer(object):
     def create_directory(self, path):
         if not os.path.exists(path):
             os.mkdir(path)
-            print("Directory ", path, " Created ")
+            #print("Directory ", path, " Created ")
         else:
             print("Directory ", path, " already exists")
 
@@ -115,7 +115,7 @@ class Optimizer(object):
                             project_name = "config_" + str(database_key) + "_" + str(proxy_key) + "_" + str(api_key) + "_" + str(proxy_replica) + "_" + str(api_replica)
                             #project_path = self._output_path+configuration_name+str(configuration_sample)
                             project_path = self._output_path + project_name
-                            project_path_compose = project_path + "/compose/"
+                            project_path_compose = project_path
                             self.create_directory(project_path)
                             self.create_directory(project_path_compose)
                             configuration_sample = configuration_sample + 1
@@ -153,13 +153,15 @@ class Optimizer(object):
                             # Environment File
                             environment_gen = environment(self._shaper_config)
                             environment_data = environment_gen.generate()
-                            print("Environment Data:")
-                            print(environment_data)
+                            #print("Environment Data:")
+                            #print(environment_data)
                             self.export_environment(environment_data, project_path_compose)
 
 
                             #Create Ansible Project
-                            #ansible = ansible()
+                            self.create_directory(project_path + "/roles/")
+                            ansible = Ansible(config, project_path)
+                            ansible.generate()
 
 
     def generate_monitoring(self, key, project_path_compose):

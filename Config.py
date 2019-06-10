@@ -24,11 +24,11 @@ class Config(object):
         if "ssh" in self.__config:
             self._ssh = True
             if "manager" in self.__config["ssh"]:
-                self._ssh_manager_users = self._config["ssh"]["manager"]["users"]
-                self._ssh_manager_hosts = self._config["ssh"]["manager"]["hosts"]
+                self._ssh_manager_users = self.__config["ssh"]["manager"]["users"]
+                self._ssh_manager_hosts = self.__config["ssh"]["manager"]["hosts"]
             if "worker" in self.__config["ssh"]:
-                self._ssh_worker_users = self._config["ssh"]["worker"]["users"]
-                self._ssh_worker_hosts = self._config["ssh"]["worker"]["hosts"]
+                self._ssh_worker_users = self.__config["ssh"]["worker"]["users"]
+                self._ssh_worker_hosts = self.__config["ssh"]["worker"]["hosts"]
         else:
             self._ssh = False
             self._ssh_manager_users = None
@@ -50,6 +50,8 @@ class Config(object):
             self._cluster = True
             self._manager = self.__config["cluster"]["manager"]
             self._worker = self.__config["cluster"]["worker"]
+            self._ssh_user = self.__config["cluster"]["user"]
+            self._ssh_password = self.__config["cluster"]["password"]
         else:
             self._cluster = False
             self._manager = []
@@ -122,6 +124,18 @@ class Config(object):
 
     def get_worker_hosts(self):
         return self._ssh_worker_hosts
+
+    def get_manager(self):
+        return self._manager
+
+    def get_worker(self):
+        return self._worker
+
+    def get_ssh_user(self):
+        return self._ssh_user
+
+    def get_ssh_password(self):
+        return self._ssh_password
 
     def set_config(self, config):
         self.__config = config

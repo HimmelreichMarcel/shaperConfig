@@ -1,25 +1,30 @@
 ---
 - name: install docker
+  become: true
   hosts: nodes
   roles:
     - docker-installation
 
 - name: initialize docker swarm
+  become: true
   hosts: manager
   roles:
     - docker-swarm-init
 
 - name: add workers to the swarm
+  become: true
   hosts: worker
   roles:
     - docker-swarm-add-worker
 
 - name: create docker networks
+  become: true
   hosts: manager
   roles:
     - create-network
 
 - name: deploy docker stack
+  become: true
   hosts: worker
   roles:
     - deploy-docker-stack

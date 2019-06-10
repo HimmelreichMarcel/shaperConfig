@@ -111,7 +111,7 @@ collection = db.people
 
 #Import Data
 collection.drop()
-os.system('mongoimport -d test -c people dummyData.json')
+os.system('mongoimport -d swarm-roles -c people dummyData.json')
 
 #Check Access
 cursor = collection.find().sort('Age',pymongo.ASCENDING).limit(3)

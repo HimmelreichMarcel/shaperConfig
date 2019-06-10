@@ -25,8 +25,8 @@ class ComposeGenerator:
         #if config.get_security():
         #    compose_services.update(self.create_traefik_monitoring_service())
 
-        print("SERVICES: ")
-        print(self.__config.get_compose_services())
+        #print("SERVICES: ")
+        #print(self.__config.get_compose_services())
 
         for key, value in self.__config.get_compose_services().items():
             compose_service = self.__config.get_compose_service(key)
@@ -55,12 +55,12 @@ class ComposeGenerator:
                 if config.get_cluster():
                     labels = []
                     labels = self.create_traefik_labels(key, value)
-                    print(labels)
+                    #print(labels)
                     compose_service["labels"] = labels
                 elif key == "api" or key == "notebook":
                     labels = []
                     labels = self.create_traefik_labels(key, value)
-                    print(labels)
+                    #print(labels)
                     compose_service["labels"] = labels
             compose_services[key] = compose_service
         return compose_services
@@ -140,12 +140,12 @@ class ComposeGenerator:
             if self.__config.get_cluster():
                 labels = []
                 labels = self.create_traefik_labels(key, value)
-                print(labels)
+                #print(labels)
                 deploy["labels"] = labels
             elif key == "api" or key == "notebook" or key == "prometheus" or key == "grafana" or key == "cadvisor":
                 labels = []
                 labels = self.create_traefik_labels(key, value)
-                print(labels)
+                #print(labels)
                 deploy["labels"] = labels
 
         return deploy

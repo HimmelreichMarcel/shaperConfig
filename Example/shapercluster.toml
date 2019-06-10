@@ -1,0 +1,15 @@
+[admin]
+user="admin"
+password="admin"
+database="test"
+domain="localhost"
+
+[ssh]
+[ssh.manager]
+users=["marcel"]
+hosts=["peru.medien.uni-weimar.de"]
+[ssh.worker]
+users=["marcel"]
+hosts=["china.medien.uni-weimar.de"]
+
+[monitoring]

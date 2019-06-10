@@ -20,6 +20,16 @@ Save Token
 
 
 Ansible:
+
+
+Local Host Inventory
+Local Docker Install
+Local Application Install
+Local Deploy Compose
+Local Leave Compose
+
+
+
 SSH Connection
 
 Install Docker

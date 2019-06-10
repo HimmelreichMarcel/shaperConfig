@@ -139,6 +139,7 @@ class Optimizer(object):
                             compose_generator = composer(config=config, proxy=proxy_key,
                                                          proxy_replica=proxy_replica, api_replica=api_replica)
                             compose_file = compose_generator.generate()
+                            network = compose_generator.create_network()
                             self.export_yaml(compose_file, project_path_compose + '/docker-compose.yaml')
 
                             # PROXY
@@ -160,7 +161,9 @@ class Optimizer(object):
 
                             #Create Ansible Project
                             self.create_directory(project_path + "/roles/")
-                            ansible = Ansible(config, project_path)
+                            self.create_directory(project_path + "/roles/create-network/")
+                            self.create_directory(project_path + "/roles/create-network/tasks")
+                            ansible = Ansible(config, project_path, network)
                             ansible.generate()
 
 

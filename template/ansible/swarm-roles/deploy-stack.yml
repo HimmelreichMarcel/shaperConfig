@@ -5,6 +5,12 @@
   roles:
     - docker-installation
 
+- name: install modules
+  become: true
+  hosts: nodes
+  roles:
+    - install-modules
+
 - name: initialize docker swarm
   become: true
   hosts: manager

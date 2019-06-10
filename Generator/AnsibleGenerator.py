@@ -1,12 +1,15 @@
-
+import os
+import yaml
+import io
 from shutil import copyfile
 import os
 from distutils.dir_util import copy_tree
 
 class AnsibleGenerator(object):
-    def __init__(self, config, project_path):
+    def __init__(self, config, project_path, networks):
         self._config = config
         self._project_path = project_path
+        self._networks = networks
 
     def deploy_swarm(self):
         print()
@@ -27,7 +30,12 @@ class AnsibleGenerator(object):
             path = self._project_path + "/roles/"
             copyfile(up_path + "./template/ansible/swarm-roles/deploy-stack.yml", self._project_path + "/deploy-stack.yml")
             copyfile(up_path + "./template/ansible/swarm-roles/delete-swarm.yml", self._project_path + "/delete-swarm.yml")
-            copy_tree(up_path + "./template/ansible/swarm-roles/create-network", path + "/create-network/")
+
+            network = self.create_network()
+            self.export_ansible_network(network, path + "/create-network/tasks/main.yml")
+
+            copy_tree(up_path + "./template/ansible/swarm-roles/install-modules", path + "/install-modules/")
+
             copy_tree(up_path + "./template/ansible/swarm-roles/deploy-docker-stack", path + "/deploy-docker-stack/")
             copy_tree(up_path + "./template/ansible/swarm-roles/docker-installation", path + "/docker-installation/")
             copy_tree(up_path + "./template/ansible/swarm-roles/docker-swarm-add-manager", path + "/docker-swarm-add-manager/")
@@ -42,8 +50,20 @@ class AnsibleGenerator(object):
     def create_site(self):
         print()
 
-    def create_group_vars(self):
-        print()
+    def create_network(self):
+        network = []
+        network.append("---")
+        for key, value in self._networks.items():
+            network.append("- name: Create Network " + str(key))
+            network.append("  docker_network:")
+            network.append("    name: " + str(key))
+            network.append("    driver: " + str(value["driver"]))
+            if "external" in value:
+                network.append("    internal: no")
+            else:
+                network.append("    internal: yes")
+            network.append("\n")
+        return network
 
     def create_ansible_config(self):
         config = []
@@ -98,3 +118,8 @@ class AnsibleGenerator(object):
                 f.write(line + "\n")
         f.close()
 
+    def export_ansible_network(self, data, path):
+        with open(path, 'w') as f:
+            for line in data:
+                f.write(line + "\n")
+        f.close()

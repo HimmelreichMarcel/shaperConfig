@@ -1,10 +1,16 @@
 ---
 - name: Install Packages
-  apt: name={{ item }} state=latest update_cache=yes
-  with_items:
-    - ntp
-    - python
-    - tcpdump
-    - wget
-    - openssl
-    - curl
+  apt:
+    name: ["ntp", "python", "tcpdump", "wget", "openssl", "curl", "python-pip"]
+    state: latest
+    update_cache: yes
+
+- name: Deinstall Docker-py
+  pip:
+    name: "docker-py"
+    state: absent
+
+- name: Install Python Packages
+  pip:
+    name: ["docker"]
+    state: latest

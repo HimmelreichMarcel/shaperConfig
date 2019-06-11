@@ -1,16 +1,16 @@
 ---
 - name: Install Packages
   apt:
-    name: ["ntp", "python", "tcpdump", "wget", "openssl", "curl", "python-pip"]
+    name: ["ntp", "python", "tcpdump", "wget", "openssl", "curl", "python-pip", "python3", "python3-pip"]
     state: latest
     update_cache: yes
 
-- name: Deinstall Docker-py
+- name: Deinstall Docker Python Packages
   pip:
-    name: "docker-py"
+    name: "docker"
     state: absent
 
 - name: Install Python Packages
   pip:
-    name: ["docker"]
+    name: ["docker-py", "requests"]
     state: latest

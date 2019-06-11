@@ -1,0 +1,19 @@
+---
+- name: Get Docker Meta Data
+  shell: docker system df
+  register: swarm_meta
+  ignore_errors: true
+  tags: swarm
+
+- name: Remove Stack
+  shell: docker stack rm {{swarm_name}}
+  ignore_errors: true
+  tags: swarm
+
+- debug: var{{item}}
+  with_items: swarm_meta.stdout_lines
+
+- name: Remove Stopped Content
+  shell: docker system prune
+  ignore_errors: true
+  tags: swarm

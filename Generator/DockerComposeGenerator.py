@@ -9,10 +9,10 @@ class ComposeGenerator:
         self.__api_rep = api_replica
         self.__proxy_rep = proxy_replica
         self._https = https
-        print(config)
 
     def generate(self):
         compose = {}
+        print("Generate Compose File ")
         compose["version"] = "3.7"
         compose["services"] = self.create_services()
         compose["networks"] = self.create_network()

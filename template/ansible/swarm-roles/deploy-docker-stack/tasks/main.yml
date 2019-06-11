@@ -1,16 +1,6 @@
 ---
-- name: Create a directory
-  file:
-    path: /home/ec2-user/deploy
-    state: directory
-
-- name: Copy docker-compose-test.yml to master
-  copy:
-    src: docker-compose-test.yml
-    dest: /home/ec2-user/deploy
-
 - name: Deploy on Swarm
-  shell: cd infra-problem && docker stack deploy -c docker-compose.yaml testapp
+  shell: cd /home/marcel/deploy && docker stack deploy -c docker-compose.yaml {{swarm_name}}
   register: stack_deploy
 
 - debug: var={{item}}

@@ -1,11 +1,12 @@
 
 class Config(object):
-    def __init__(self, config, services, networks=[], volumes=[], replicas={}):
+    def __init__(self, config, services, networks=[], volumes=[], replicas={}, metadata={}):
         self.__config = config
         self.__compose_services = services
         self.__networks = networks
         self.__volumes = volumes
         self.__replicas = replicas
+        self.__metadata = metadata
 
         if "security" in self.__config:
             self._security = True
@@ -48,6 +49,7 @@ class Config(object):
 
         if "cluster" in self.__config:
             self._cluster = True
+            self._cluster_name = self.__config["cluster"]["name"]
             self._manager = self.__config["cluster"]["manager"]
             self._worker = self.__config["cluster"]["worker"]
             self._ssh_user = self.__config["cluster"]["user"]
@@ -56,8 +58,6 @@ class Config(object):
             self._cluster = False
             self._manager = []
             self._worker = []
-
-        print(self.__compose_services)
 
     def get_domain(self):
         return self._domain
@@ -79,6 +79,12 @@ class Config(object):
 
     def get_database(self):
         return self._database
+
+    def get_cluster_name(self):
+        return self._cluster_name
+
+    def get_metadata(self):
+        return self.__metadata
 
     def get_cluster(self):
         return self._cluster

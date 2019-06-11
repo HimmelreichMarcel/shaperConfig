@@ -1,0 +1,12 @@
+---
+- name: install docker
+  become: true
+  hosts: nodes
+  roles:
+    - docker-installation
+
+- name: install modules
+  become: true
+  hosts: nodes
+  roles:
+    - install-modules

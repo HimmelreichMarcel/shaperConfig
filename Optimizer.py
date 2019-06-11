@@ -90,11 +90,9 @@ class Optimizer(object):
     def create_directory(self, path):
         if not os.path.exists(path):
             os.mkdir(path)
-            #print("Directory ", path, " Created ")
-        else:
-            print("Directory ", path, " already exists")
 
     def create_projects(self):
+        print("Generate Configs")
         databases = self.load_databases()
         monitoring = self.load_monitoring()
         apis = self.load_api()
@@ -106,13 +104,22 @@ class Optimizer(object):
 
         #Cluster Replica Config
         replica = {"proxy": [1, 5, 10], "api": [1, 10, 25]}
-
+        config_list = []
         for database_key, database_value in databases.items():
             for proxy_key, proxy_value in proxy.items():
                 for api_key, api_value in apis.items():
                     for proxy_replica in replica["proxy"]:
                         for api_replica in replica["api"]:
+                            print("Generate Config")
+                            print("Reverse Proxy:\t" + str(proxy_key))
+                            print("Replica;\t" + str(proxy_replica))
+                            print("Database:\t" + str(database_key))
+                            print("API:\t" + str(api_key))
+                            print("Replica:\t" + str(api_replica))
+
+
                             project_name = "config_" + str(database_key) + "_" + str(proxy_key) + "_" + str(api_key) + "_" + str(proxy_replica) + "_" + str(api_replica)
+                            config_list.append(project_name)
                             #project_path = self._output_path+configuration_name+str(configuration_sample)
                             project_path = self._output_path + project_name
                             project_path_compose = project_path
@@ -163,8 +170,21 @@ class Optimizer(object):
                             self.create_directory(project_path + "/roles/")
                             self.create_directory(project_path + "/roles/create-network/")
                             self.create_directory(project_path + "/roles/create-network/tasks")
-                            ansible = Ansible(config, project_path, network)
+
+                            self.create_directory(project_path + "/roles/copy-docker-stack/")
+                            self.create_directory(project_path + "/roles/copy-docker-stack/tasks")
+
+                            self.create_directory(project_path + "/roles/deploy-docker-stack/")
+                            self.create_directory(project_path + "/roles/deploy-docker-stack/tasks")
+                            ansible = Ansible(config, project_path, network, project_name)
                             ansible.generate()
+
+        print("Create Ansible for Testing All Configs")
+        inventory = ansible.create_inventory()
+        ansible.export_file(inventory, self._output_path + "/inventory.ini")
+        config = ansible.create_all_config(config_list, self._output_path)
+        ansible.export_file(config, self._output_path + "/test-all.yml")
+        print("Total Configs Created: " + str(configuration_sample))
 
 
     def generate_monitoring(self, key, project_path_compose):

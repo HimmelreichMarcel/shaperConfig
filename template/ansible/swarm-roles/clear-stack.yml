@@ -1,0 +1,6 @@
+---
+- name: Clear Swarm Stack
+  become: true
+  hosts: nodes
+  roles:
+    - clear-stack

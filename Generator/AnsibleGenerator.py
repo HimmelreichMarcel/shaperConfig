@@ -6,16 +6,17 @@ import os
 from distutils.dir_util import copy_tree
 
 class AnsibleGenerator(object):
-    def __init__(self, config, project_path, networks):
+    def __init__(self, config, project_path, networks, project_name):
         self._config = config
         self._project_path = project_path
         self._networks = networks
+        self._project_name = project_name
 
     def deploy_swarm(self):
         print()
 
     def generate(self):
-        print("Create Ansible Files")
+        print("Create Ansible Files...")
         #Create Inventory
         inventory = self.create_inventory()
         self.export_inventory(inventory)
@@ -25,30 +26,91 @@ class AnsibleGenerator(object):
 
         if self._config.get_cluster():
             up_path = ""#os.path.dirname(os.getcwd())
-            print("UP PATH")
-            print(up_path)
             path = self._project_path + "/roles/"
             copyfile(up_path + "./template/ansible/swarm-roles/deploy-stack.yml", self._project_path + "/deploy-stack.yml")
-            copyfile(up_path + "./template/ansible/swarm-roles/delete-swarm.yml", self._project_path + "/delete-swarm.yml")
+            copyfile(up_path + "./template/ansible/swarm-roles/leave-swarm.yml", self._project_path + "/leave-swarm.yml")
+            copyfile(up_path + "./template/ansible/swarm-roles/clear-stack.yml", self._project_path + "/clear-stack.yml")
+            copyfile(up_path + "./template/ansible/swarm-roles/install-requirements.yml", self._project_path + "/install-requirements.yml")
 
             network = self.create_network()
-            self.export_ansible_network(network, path + "/create-network/tasks/main.yml")
+            self.export_file(network, path + "/create-network/tasks/main.yml")
+
+            stack = self.copy_stack()
+            self.export_file(stack, path + "/copy-docker-stack/tasks/main.yml")
+
+            deploy = self.deploy_stack()
+            self.export_file(deploy, path + "/deploy-docker-stack/tasks/main.yml")
 
             copy_tree(up_path + "./template/ansible/swarm-roles/install-modules", path + "/install-modules/")
-
-            copy_tree(up_path + "./template/ansible/swarm-roles/deploy-docker-stack", path + "/deploy-docker-stack/")
             copy_tree(up_path + "./template/ansible/swarm-roles/docker-installation", path + "/docker-installation/")
             copy_tree(up_path + "./template/ansible/swarm-roles/docker-swarm-add-manager", path + "/docker-swarm-add-manager/")
             copy_tree(up_path + "./template/ansible/swarm-roles/docker-swarm-add-worker", path + "/docker-swarm-add-worker/")
             copy_tree(up_path + "./template/ansible/swarm-roles/docker-swarm-init", path + "/docker-swarm-init/")
             copy_tree(up_path + "./template/ansible/swarm-roles/install-modules", path + "/install-modules/")
             copy_tree(up_path + "./template/ansible/swarm-roles/docker-swarm-leave", path + "/docker-swarm-leave/")
+            copy_tree(up_path + "./template/ansible/swarm-roles/clear-stack", path + "/clear-stack/")
+
 
     def create_role(self):
         print()
 
-    def create_site(self):
-        print()
+    def create_all_config(self, configs, path):
+        config = list()
+        config.append("---")
+        config.append("- name: Install Requirements ")
+        config.append("  import_playbook: " + path + "/" + str(configs[0]) + "/install-requirements.yml")
+        config.append("\n")
+        for config_name in configs:
+            config.append("- name: Deploy " + str(config_name))
+            config.append("  import_playbook: " + path + "/" + config_name + "/deploy-stack.yml")
+            config.append("\n")
+            config.append("- name: Clear Stack")
+            config.append("  import_playbook: " + path + "/" + config_name + "/clear-stack.yml")
+            config.append("\n")
+            config.append("- name: Leave Swarm" + str(config_name))
+            config.append("  import_playbook: " + path + "/" + config_name + "/leave-swarm.yml")
+            config.append("\n")
+        return config
+
+    def copy_stack(self):
+        stack = list()
+        stack.append("---")
+        stack.append("- name: Create a directory")
+        stack.append("  file:")
+        stack.append("    path: /home/" + str(self._config.get_ssh_user()) + "/deploy")
+        stack.append("    state: directory")
+        stack.append("\n")
+        stack.append("- name: Copy docker stack")
+        stack.append("  copy:")
+        stack.append("    src: " + str(self._project_path))
+        stack.append("    dest: /home/" + str(self._config.get_ssh_user()) + "/deploy")
+        return stack
+
+    def deploy_stack(self):
+        deploy = []
+        deploy.append("---")
+
+        deploy.append("- name: Deploy on Swarm")
+        deploy.append("  shell: cd /home/" + str(self._config.get_ssh_user()) + "/deploy/" + str(self._project_name) + " && docker stack deploy -c docker-compose.yaml testswarm")
+        deploy.append("  register: stack_deploy")
+        deploy.append("\n")
+        deploy.append("- debug: var={{item}}")
+        deploy.append("  with_items: stack_deploy.stdout_lines")
+        deploy.append("\n")
+        deploy.append("- name: Check list of services")
+        deploy.append("  command: docker service ls")
+        deploy.append("  register: service_list")
+        deploy.append("\n")
+        deploy.append("- debug: var={{item}}")
+        deploy.append("  with_items: service_list.stdout_lines")
+        deploy.append("\n")
+        deploy.append("- name: Check list of stack")
+        deploy.append("  command: docker stack ps testswarm")
+        deploy.append("  register: stack_ps")
+        deploy.append("\n")
+        deploy.append("- debug: var={{item}}")
+        deploy.append("  with_items: stack_ps.stdout_lines")
+        return deploy
 
     def create_network(self):
         network = []
@@ -102,6 +164,7 @@ class AnsibleGenerator(object):
             inventory.append("ansible_user=" + self._config.get_ssh_user())
             inventory.append("ansible_password=" + self._config.get_ssh_password())
             inventory.append("ansible_sudo_pass=" + self._config.get_ssh_password())
+            inventory.append("swarm_name=" + self._config.get_cluster_name())
         else:
             inventory = ["localhost"]
         return inventory
@@ -118,7 +181,7 @@ class AnsibleGenerator(object):
                 f.write(line + "\n")
         f.close()
 
-    def export_ansible_network(self, data, path):
+    def export_file(self, data, path):
         with open(path, 'w') as f:
             for line in data:
                 f.write(line + "\n")

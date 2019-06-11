@@ -1,16 +1,4 @@
 ---
-- name: install docker
-  become: true
-  hosts: nodes
-  roles:
-    - docker-installation
-
-- name: install modules
-  become: true
-  hosts: nodes
-  roles:
-    - install-modules
-
 - name: initialize docker swarm
   become: true
   hosts: manager
@@ -29,8 +17,14 @@
   roles:
     - create-network
 
+- name: copy docker stack
+  become: true
+  hosts: nodes
+  roles:
+    - copy-docker-stack
+
 - name: deploy docker stack
   become: true
-  hosts: worker
+  hosts: manager
   roles:
     - deploy-docker-stack

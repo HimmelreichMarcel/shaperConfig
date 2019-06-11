@@ -7,6 +7,7 @@ domain="localhost"
 [monitoring]
 
 [cluster]
+name="Machine Learning Platform"
 manager=["china.medien.uni-weimar.de"]
 worker=["peru.medien.uni-weimar.de"]
 user= "marcel"

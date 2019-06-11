@@ -18,6 +18,7 @@ def main():
     #config = parser.create_config()
 
     generator = Optimizer(load_shaper_config(shaper_path), output_path)
+    print("Done.")
     generator.create_projects()
 
     """
@@ -36,6 +37,7 @@ def main():
 def load_shaper_config(path):
     with open(path, 'r') as stream:
         try:
+            print("Loading Shaper Config...")
             return toml.load(stream)
         except yaml.YAMLError as exc:
             print(exc)

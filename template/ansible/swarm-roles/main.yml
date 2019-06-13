@@ -1,0 +1,54 @@
+---
+- name: install docker
+  become: true
+  hosts: nodes
+  roles:
+    - docker-installation
+
+- name: install modules
+  become: true
+  hosts: nodes
+  roles:
+    - install-modules
+
+- name: generate Ceritificate
+  become: true
+  hosts: manager
+  roles:
+    - generate-certificate
+
+- name: initialize Registry
+  become: true
+  hosts: nodes
+  roles:
+    - init-registry
+
+- name: initialize docker swarm
+  become: true
+  hosts: manager
+  roles:
+    - docker-swarm-init
+
+- name: add workers to the swarm
+  become: true
+  hosts: worker
+  roles:
+    - docker-swarm-add-worker
+
+- name: create docker networks
+  become: true
+  hosts: manager
+  roles:
+    - create-network
+
+- name: copy docker stack
+  become: true
+  hosts: nodes
+  roles:
+    - copy-docker-stack
+
+- name: deploy docker stack
+  become: true
+  hosts: manager
+  roles:
+    - deploy-docker-stack

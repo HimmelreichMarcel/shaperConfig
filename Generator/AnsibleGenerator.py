@@ -31,6 +31,7 @@ class AnsibleGenerator(object):
             copyfile(up_path + "./template/ansible/swarm-roles/leave-swarm.yml", self._project_path + "/leave-swarm.yml")
             copyfile(up_path + "./template/ansible/swarm-roles/clear-stack.yml", self._project_path + "/clear-stack.yml")
             copyfile(up_path + "./template/ansible/swarm-roles/install-requirements.yml", self._project_path + "/install-requirements.yml")
+            copyfile(up_path + "./template/ansible/swarm-roles/main.yml", self._project_path + "/main.yml")
 
             network = self.create_network()
             self.export_file(network, path + "/create-network/tasks/main.yml")
@@ -49,10 +50,19 @@ class AnsibleGenerator(object):
             copy_tree(up_path + "./template/ansible/swarm-roles/install-modules", path + "/install-modules/")
             copy_tree(up_path + "./template/ansible/swarm-roles/docker-swarm-leave", path + "/docker-swarm-leave/")
             copy_tree(up_path + "./template/ansible/swarm-roles/clear-stack", path + "/clear-stack/")
+            copy_tree(up_path + "./template/ansible/swarm-roles/init-registry", path + "/init-registry/")
+            copy_tree(up_path + "./template/ansible/swarm-roles/generate-certificate", path + "/generate-certificate/")
 
+            #Generate Nodes Group Vars
+            nodes_var = self.create_nodes_vars()
+            self.export_file(nodes_var, self._project_path + "/group_vars/nodes.yml")
 
-    def create_role(self):
-        print()
+    def create_nodes_vars(self):
+        vars = list()
+        vars.append("---")
+        vars.append("swarm_name: " + self._config.get_cluster_name())
+        vars.append("domain_name: " + self._config.get_domain())
+        return vars
 
     def create_all_config(self, configs, path):
         config = list()
@@ -91,7 +101,7 @@ class AnsibleGenerator(object):
         deploy.append("---")
 
         deploy.append("- name: Deploy on Swarm")
-        deploy.append("  shell: cd /home/" + str(self._config.get_ssh_user()) + "/deploy/" + str(self._project_name) + " && docker stack deploy -c docker-compose.yaml testswarm")
+        deploy.append("  shell: cd /home/" + str(self._config.get_ssh_user()) + "/deploy/" + str(self._project_name) + " && docker stack deploy -c docker-compose.yaml {{ swarm_name }}")
         deploy.append("  register: stack_deploy")
         deploy.append("\n")
         deploy.append("- debug: var={{item}}")
@@ -105,7 +115,7 @@ class AnsibleGenerator(object):
         deploy.append("  with_items: service_list.stdout_lines")
         deploy.append("\n")
         deploy.append("- name: Check list of stack")
-        deploy.append("  command: docker stack ps testswarm")
+        deploy.append("  command: docker stack ps {{ swarm_name }}")
         deploy.append("  register: stack_ps")
         deploy.append("\n")
         deploy.append("- debug: var={{item}}")
@@ -165,7 +175,6 @@ class AnsibleGenerator(object):
             inventory.append("ansible_user=" + self._config.get_ssh_user())
             inventory.append("ansible_password=" + self._config.get_ssh_password())
             inventory.append("ansible_sudo_pass=" + self._config.get_ssh_password())
-            inventory.append("swarm_name=" + self._config.get_cluster_name())
         else:
             inventory = ["localhost"]
         return inventory

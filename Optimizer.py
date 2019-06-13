@@ -168,6 +168,7 @@ class Optimizer(object):
 
                             #Create Ansible Project
                             self.create_directory(project_path + "/roles/")
+                            self.create_directory(project_path + "/group_vars/")
                             self.create_directory(project_path + "/roles/create-network/")
                             self.create_directory(project_path + "/roles/create-network/tasks")
 

@@ -10,3 +10,15 @@
   hosts: nodes
   roles:
     - install-modules
+
+- name: Generate Ceritificate
+  become: true
+  hosts: manager
+  roles:
+    - generate-certificate
+
+- name: Initialize Registry
+  become: true
+  hosts: nodes
+  roles:
+    - init-registry

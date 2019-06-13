@@ -3,9 +3,7 @@
   shell: mkdir -p /etc/docker/certs.d/{{ domain_name }}:5000
 
 - name: Copy Certificate
-  copy:
-    src: /etc/ssl/private/crt/{{ domain_name }}.crt
-    dest: /etc/docker/certs.d/{{ domain_name }}:5000/ca.crt
+  shell: cp /etc/ssl/private/{{ domain_name }}.csr /etc/docker/certs.d/{{ domain_name }}:5000/ca.crt
 
 - name: Change Host File
   shell: sh -c "echo ' {{ hostvars['manager']['ansible_default_ipv4']['address'] }} {{ domain_name ]}}' >> /etc/hosts"

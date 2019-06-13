@@ -10,11 +10,9 @@ class Config(object):
 
         if "security" in self.__config:
             self._security = True
-            self._domain = self.__config["security"]["domain"]
             self._email = self.__config["security"]["email"]
         else:
             self._security = False
-            self._domain = "localhost"
             self._email = ""
 
         if "monitoring" in self.__config:
@@ -39,10 +37,12 @@ class Config(object):
 
 
         if "admin" in self.__config:
+            self._domain = self.__config["admin"]["domain"]
             self._user = self.__config["admin"]["user"]
             self._password = self.__config["admin"]["password"]
             self._database = self.__config["admin"]["database"]
         else:
+            self._domain = "localhost"
             self._user = "admin"
             self._password = "admin"
             self._database = "database"

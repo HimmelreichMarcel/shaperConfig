@@ -179,6 +179,16 @@ class Optimizer(object):
                             ansible = Ansible(config, project_path, network, project_name)
                             ansible.generate()
 
+                            #Create Volume Directories
+                            self.create_directory(project_path + "/jupyter/")
+                            self.create_directory(project_path + "/jupyter/working/")
+                            self.create_directory(project_path + "/jupyter/dataset/")
+                            self.create_directory(project_path + "/jupyter/module/")
+                            self.create_directory(project_path + "/jupyter/ssl/")
+
+                            self.create_directory(project_path + "/grafana/")
+                            self.create_directory(project_path + "/grafana/provisioning")
+
         print("Create Ansible for Testing All Configs")
         inventory = ansible.create_inventory()
         ansible.export_file(inventory, self._output_path + "/inventory.ini")

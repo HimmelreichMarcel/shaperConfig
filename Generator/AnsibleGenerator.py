@@ -131,6 +131,7 @@ class AnsibleGenerator(object):
         config = []
         config.append("[defaults]")
         config.append("host_key_checking = false")
+        config.append("timeout = 10")
         #config.append("stdout_callback=minimal")
         return config
 

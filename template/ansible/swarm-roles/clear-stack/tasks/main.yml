@@ -5,6 +5,11 @@
   ignore_errors: true
   tags: swarm
 
+- name: Restart Docker
+  shell: service docker restart
+  ignore_errors: true
+  tags: swarm
+
 - name: Remove Stack
   shell: docker stack rm {{swarm_name}}
   ignore_errors: true

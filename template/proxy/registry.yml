@@ -1,5 +1,5 @@
 registry:
-  image: 'registry:latest'
+  image: 'registry:2'
   ports:
     - 5000:5000
   volumes:

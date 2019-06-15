@@ -5,3 +5,8 @@ sudo lsof -i -P -n | grep 5432
     command: "start-notebook.sh \
       --NotebookApp.password=${ACCESS_TOKEN} \
       --NotebookApp.certfile=/etc/ssl/notebook/jupyter.pem"
+
+
+
+- name: Change Daemon File
+  shell: sh -c "echo '{ \n  \"insecure-registries\":[\"{{domain_name}}:5000\"] \n}'  > /etc/docker/daemon.json"

@@ -1,6 +1,11 @@
 ---
+- name: Login to Docker Hub
+  docker_login:
+    username: "{{ dockerhub_user }}"
+    password: "{{ dockerhub_password }}"
+
 - name: Build Image
-  shell: cd /home/{{ansible_user}}/deploy/{{project_path}}/ && docker build ./api -t {{domain_name}}:5000/api
+  shell: cd /home/{{ansible_user}}/deploy/{{project_path}}/ && docker build ./api -t {{dockerhub_user}}/api
 
 - name: Push Image
-  shell: docker push {{domain_name}}:5000/api
+  shell: docker push {{dockerhub_user}}/api

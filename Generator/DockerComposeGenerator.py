@@ -17,6 +17,7 @@ class ComposeGenerator:
         compose["services"] = self.create_services()
         compose["networks"] = self.create_network()
         compose["volumes"] = self.create_volumes()
+        compose["secrets"] = self.create_secrets()
         return compose
 
     def create_services(self):
@@ -40,10 +41,10 @@ class ComposeGenerator:
             """
             environment = []
             if key == "api":
-                compose_service["image"] = str(self.__config.get_domain())+":5000/api"
+                compose_service["image"] = str(self.__config.get_docker_user())+"/api"
 
             if key == "registry":
-                environment.append("REGISTRY_HTTP_ADDR=" + str(self.__config.get_domain()) + ":5000")
+                environment.append("REGISTRY_HTTP_ADDR=0.0.0.0:5000") #+ str(self.__config.get_domain()) + ":5000")
                 environment.append("REGISTRY_HTTP_TLS_CERTIFICATE=/etc/ssl/crt/" + str(self.__config.get_domain()) + ".crt")
                 environment.append("REGISTRY_HTTP_TLS_KEY=/etc/ssl/private/" + str(self.__config.get_domain()) + ".pem")
 
@@ -143,8 +144,7 @@ class ComposeGenerator:
             deploy["placement"]["constraints"] = ["node.role==manager"]
             deploy["replicas"] = 1
         else:
-            deploy["placement"]["constraints"] = ["node.role==worker"]
-            deploy["replicas"] = 1
+            deploy["placement"]["constraints"] = ["node.role==manager"]
 
         if self._proxy == "traefik":
             if self.__config.get_cluster():
@@ -189,7 +189,7 @@ class ComposeGenerator:
         return volumes
 
     def create_secrets(self):
-        secrets = list()
-        secrets.append({"builder_domain.crt": {"file": "./certs/" + str(self.__config.get_domain()) + ".crt"}})
-        secrets.append({"builder_domain.key": {"file": "./certs/" + str(self.__config.get_domain()) + ".key"}})
+        secrets = {}
+        secrets["builder_domain.crt"]= {"file": "/etc/ssl/crt/" + str(self.__config.get_domain()) + ".crt"}
+        secrets["builder_domain.key"]= {"file": "/etc/ssl/private/" + str(self.__config.get_domain()) + ".pem"}
         return secrets

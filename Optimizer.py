@@ -130,6 +130,7 @@ class Optimizer(object):
                             self.create_directory(project_path_compose)
                             configuration_sample = configuration_sample + 1
 
+                            """
                             services = {}
                             services.update(self.load_registry())
                             # Create Config Element
@@ -141,7 +142,7 @@ class Optimizer(object):
                             compose_file = compose_generator.generate()
                             network = compose_generator.create_network()
                             self.export_yaml(compose_file, project_path_compose + '/docker-requirements.yaml')
-
+                            """
                             # Create Services
                             services = {}
                             if database_key != "None":

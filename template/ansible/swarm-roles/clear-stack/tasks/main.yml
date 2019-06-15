@@ -5,11 +5,6 @@
   ignore_errors: true
   tags: swarm
 
-- name: Restart Docker
-  shell: service docker restart
-  ignore_errors: true
-  tags: swarm
-
 - name: Remove Stack
   shell: docker stack rm {{swarm_name}}
   ignore_errors: true
@@ -18,7 +13,7 @@
 - debug: var{{item}}
   with_items: swarm_meta.stdout_lines
 
-- name: Remove Stopped Content
-  shell: docker system prune
+- name: Restart Docker
+  shell: service docker restart
   ignore_errors: true
   tags: swarm

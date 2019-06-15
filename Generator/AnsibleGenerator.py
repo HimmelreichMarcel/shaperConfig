@@ -65,6 +65,8 @@ class AnsibleGenerator(object):
         vars.append("swarm_name: " + self._config.get_cluster_name())
         vars.append("domain_name: " + self._config.get_domain())
         vars.append("project_path: " + self._project_name)
+        vars.append("dockerhub_user: " + self._config.get_docker_user())
+        vars.append("dockerhub_password: " + self._config.get_docker_password())
         return vars
 
     def create_all_config(self, configs, path):

@@ -41,6 +41,8 @@ class Config(object):
             self._user = self.__config["admin"]["user"]
             self._password = self.__config["admin"]["password"]
             self._database = self.__config["admin"]["database"]
+            self._docker_user = self.__config["admin"]["docker_user"]
+            self._docker_password = self.__config["admin"]["docker_password"]
         else:
             self._domain = "localhost"
             self._user = "admin"
@@ -142,6 +144,12 @@ class Config(object):
 
     def get_ssh_password(self):
         return self._ssh_password
+
+    def get_docker_user(self):
+        return self._docker_user
+
+    def get_docker_password(self):
+        return self._docker_password
 
     def set_config(self, config):
         self.__config = config

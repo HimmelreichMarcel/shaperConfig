@@ -1,0 +1,21 @@
+---
+- name: Deploy on Swarm
+  shell: cd /home/marcel/deploy && docker stack deploy -c docker-compose.yaml {{swarm_name}}
+  register: stack_deploy
+
+- debug: var={{item}}
+  with_items: stack_deploy.stdout_lines
+
+- name: Check list of services
+  command: docker service ls
+  register: service_list
+
+- debug: var={{item}}
+  with_items: service_list.stdout_lines
+
+- name: Check list of stack
+  command: docker stack ps infra
+  register: stack_ps
+
+- debug: var={{item}}
+  with_items: stack_ps.stdout_lines

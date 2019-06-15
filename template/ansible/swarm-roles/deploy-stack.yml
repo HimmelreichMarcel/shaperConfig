@@ -27,4 +27,6 @@
   become: true
   hosts: manager
   roles:
+    - deploy-docker-requirements
+    - push-image
     - deploy-docker-stack

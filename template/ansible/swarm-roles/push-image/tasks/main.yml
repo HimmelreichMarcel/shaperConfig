@@ -1,24 +1,6 @@
 ---
-- name: Get Docker Meta Data
-  shell: docker system df
-  register: swarm_meta
-  ignore_errors: true
-  tags: swarm
+- name: Build Image
+  shell: cd /home/{{ansible_user}}/deploy/{{project_path}}/ && docker build ./api -t {{domain_name}}:5000/api
 
-- name: Restart Docker
-  shell: service docker restart
-  ignore_errors: true
-  tags: swarm
-
-- name: Remove Stack
-  shell: docker stack rm {{swarm_name}}
-  ignore_errors: true
-  tags: swarm
-
-- debug: var{{item}}
-  with_items: swarm_meta.stdout_lines
-
-- name: Remove Stopped Content
-  shell: docker system prune
-  ignore_errors: true
-  tags: swarm
+- name: Push Image
+  shell: docker push {{domain_name}}:5000/api

@@ -1,7 +1,4 @@
 api:
   restart: always
-  image: api
-  build: ./api
-  container_name: api
   ports:
     - 8000:8000

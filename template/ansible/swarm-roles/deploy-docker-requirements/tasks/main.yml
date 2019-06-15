@@ -1,6 +1,6 @@
 ---
 - name: Deploy on Swarm
-  shell: cd /home/marcel/deploy && docker stack deploy -c docker-compose.yaml {{swarm_name}}
+  shell: cd /home/marcel/deploy/{{project_path}} && docker stack deploy --with-registry-auth -c docker-requirements.yaml {{swarm_name}}
   register: stack_deploy
 
 - debug: var={{item}}
@@ -14,7 +14,7 @@
   with_items: service_list.stdout_lines
 
 - name: Check list of stack
-  command: docker stack ps infra
+  command: docker stack ps {{swarm_name}}
   register: stack_ps
 
 - debug: var={{item}}

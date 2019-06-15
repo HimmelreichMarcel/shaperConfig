@@ -38,13 +38,23 @@ class ComposeGenerator:
                     compose_service["deploy"]["placement"]['contraints"'] = "node.role == manager"
             else:
             """
+            environment = []
+            if key == "api":
+                compose_service["image"] = str(self.__config.get_domain())+":5000/api"
+
+            if key == "registry":
+                environment.append("REGISTRY_HTTP_ADDR=" + str(self.__config.get_domain()) + ":5000")
+                environment.append("REGISTRY_HTTP_TLS_CERTIFICATE=/etc/ssl/crt/" + str(self.__config.get_domain()) + ".crt")
+                environment.append("REGISTRY_HTTP_TLS_KEY=/etc/ssl/private/" + str(self.__config.get_domain()) + ".pem")
 
             # Create Service Network
             compose_service["networks"] = self.create_service_network(key)
 
             if self._proxy == "nginx" and key not in ["nginx", "exporter", "nginx_letsencrypt"]:
-                environment = self.create_nginx_environment(key, compose_service)
+                environment = environment + self.create_nginx_environment(key, compose_service)
+            if len(environment) > 0:
                 compose_service["environment"] = environment
+
 
             #Create Deploy  Config
             if config.get_cluster():
@@ -84,7 +94,7 @@ class ComposeGenerator:
         elif key == "traefik" or key == "nginx" or key == "nginx_letsencrypt":
             networks.append("web")
             networks.append("proxy")
-        elif key == "prometheus" or key == "grafana" or key == "cadvisor":
+        elif key == "prometheus" or key == "grafana" or key == "cadvisor" or key == "registry":
             networks.append("web")
         elif key == "consul":
             networks.append("proxy")
@@ -129,7 +139,7 @@ class ComposeGenerator:
             deploy["replicas"] = self.__proxy_rep
             deploy["restart_policy"] = {}
             deploy["restart_policy"]["condition"] = "any"
-        elif key == "prometheus" or key == "grafana" or key == "cadvisor":
+        elif key == "prometheus" or key == "grafana" or key == "cadvisor" or key == "registry":
             deploy["placement"]["constraints"] = ["node.role==manager"]
             deploy["replicas"] = 1
         else:
@@ -175,4 +185,11 @@ class ComposeGenerator:
         volumes["database"] = {}
         volumes["proxy"] = {}
         volumes["notebook"] = {}
+        volumes["registry"] = {}
         return volumes
+
+    def create_secrets(self):
+        secrets = list()
+        secrets.append({"builder_domain.crt": {"file": "./certs/" + str(self.__config.get_domain()) + ".crt"}})
+        secrets.append({"builder_domain.key": {"file": "./certs/" + str(self.__config.get_domain()) + ".key"}})
+        return secrets

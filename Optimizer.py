@@ -81,6 +81,9 @@ class Optimizer(object):
     def load_consul(self):
         return self.import_yaml("./template/proxy/consul.yml")
 
+    def load_registry(self):
+        return self.import_yaml("./template/proxy/registry.yml")
+
     def load_notebook(self):
         return self.import_yaml("./template/frontend/notebook.yml")
 
@@ -126,6 +129,18 @@ class Optimizer(object):
                             self.create_directory(project_path)
                             self.create_directory(project_path_compose)
                             configuration_sample = configuration_sample + 1
+
+                            services = {}
+                            services.update(self.load_registry())
+                            # Create Config Element
+                            config = Config(self._shaper_config, services)
+
+                            # Create Compose File
+                            compose_generator = composer(config=config, proxy=proxy_key,
+                                                         proxy_replica=proxy_replica, api_replica=api_replica)
+                            compose_file = compose_generator.generate()
+                            network = compose_generator.create_network()
+                            self.export_yaml(compose_file, project_path_compose + '/docker-requirements.yaml')
 
                             # Create Services
                             services = {}

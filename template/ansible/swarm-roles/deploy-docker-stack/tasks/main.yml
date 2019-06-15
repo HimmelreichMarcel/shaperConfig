@@ -1,6 +1,6 @@
 ---
 - name: Deploy on Swarm
-  shell: cd /home/marcel/deploy && docker stack deploy -c docker-compose.yaml {{swarm_name}}
+  shell: cd /home/marcel/deploy && docker stack deploy --with-registry-auth -c docker-compose.yaml {{swarm_name}}
   register: stack_deploy
 
 - debug: var={{item}}

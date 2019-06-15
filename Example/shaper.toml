@@ -7,7 +7,7 @@ domain="platformexamplelearning.com"
 [monitoring]
 
 [cluster]
-name="Machine Learning Platform"
+name="MachineLearningPlatform"
 manager=["china.medien.uni-weimar.de"]
 worker=["peru.medien.uni-weimar.de"]
 user= "marcel"

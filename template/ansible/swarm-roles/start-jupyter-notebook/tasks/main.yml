@@ -1,0 +1,10 @@
+---
+- name: Get Jupyter Token
+  shell: docker exec {{jupyter_container}} jupyter notebook list
+  register: jupyter_token
+
+- name: Run Jupyter Notebook
+  shell: docker exec {{jupyter_container}} jupyter notebook {{notebook_script}}
+
+- name: Check Kernel
+  shell: docker exec {{jupyter_container}} ps aux | grep "ipython"

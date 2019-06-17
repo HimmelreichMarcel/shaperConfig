@@ -51,4 +51,5 @@
   become: true
   hosts: manager
   roles:
+    - push-image
     - deploy-docker-stack

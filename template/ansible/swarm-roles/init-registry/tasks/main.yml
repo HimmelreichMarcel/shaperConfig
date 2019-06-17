@@ -1,9 +1,26 @@
 ---
 - name: Create Directory
   shell: mkdir -p /etc/docker/certs.d/{{ domain_name }}:5000
+  ignore_errors: true
 
 - name: Copy Certificate
+<<<<<<< HEAD
   shell: cp /etc/ssl/private/{{ domain_name }}.csr /etc/docker/certs.d/{{ domain_name }}:5000/ca.crt
+=======
+  shell: cp /etc/ssl/private/{{ domain_name }}.csr  /etc/docker/certs.d/{{ domain_name }}:5000/ca.crt
+  ignore_errors: true
+>>>>>>> master
 
 - name: Change Host File
-  shell: sh -c "echo ' {{ hostvars['manager']['ansible_default_ipv4']['address'] }} {{ domain_name ]}}' >> /etc/hosts"
+  shell: sh -c "echo ' {{ hostvars['manager']['ansible_default_ipv4']['address'] }} {{ domain_name }}' >> /etc/hosts"
+  ignore_errors: true
+
+- name: Clean Daemon
+  file:
+    state: absent
+    path: "/etc/docker/daemon.json"
+  ignore_errors: true
+
+- name: Change Resolve Config
+  shell: sh -c "echo '{{domain_name}} {{hostvars['manager']['ansible_default_ipv4']['address']}}' >> /etc/resolv.conf"
+  ignore_errors: true

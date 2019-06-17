@@ -3,11 +3,13 @@ user="admin"
 password="admin"
 database= "test"
 domain="platformexamplelearning.com"
+docker_user = "projectgades"
+docker_password = "ShadoWsong000"
 
 [monitoring]
 
 [cluster]
-name="Machine Learning Platform"
+name="MachineLearningPlatform"
 manager=["china.medien.uni-weimar.de"]
 worker=["peru.medien.uni-weimar.de"]
 user= "marcel"

@@ -1,22 +1,32 @@
 ---
 - name: Ensure directory exists for local self-signed TLS certs.
   file:
-    path: /etc/letsencrypt/live/{{ domain_name }}
+    path: /etc/ssl/crt/
+    state: directory
+
+- name: Ensure directory exists for csr.
+  file:
+    path: /etc/ssl/csr/
+    state: directory
+
+- name: Ensure directory exists for private key.
+  file:
+    path: /etc/ssl/private/
     state: directory
 
 - name: Generate an OpenSSL private key.
   openssl_privatekey:
-    path: /etc/letsencrypt/live/{{ domain_name }}/privkey.pem
+    path: /etc/ssl/private/{{ domain_name }}.pem
 
 - name: Generate an OpenSSL CSR.
   openssl_csr:
-    path: /etc/ssl/private/{{ domain_name }}.csr
-    privatekey_path: /etc/letsencrypt/live/{{ domain_name }}/privkey.pem
+    path: /etc/ssl/csr/{{ domain_name }}.csr
+    privatekey_path: /etc/ssl/private/{{ domain_name }}.pem
     common_name: "{{ domain_name }}"
 
 - name: Generate a Self Signed OpenSSL certificate.
   openssl_certificate:
-    path: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
-    privatekey_path: /etc/letsencrypt/live/{{ domain_name }}/privkey.pem
-    csr_path: /etc/ssl/private/{{ domain_name }}.csr
+    path: /etc/ssl/crt/{{ domain_name }}.crt
+    privatekey_path: /etc/ssl/private/{{ domain_name }}.pem
+    csr_path: /etc/ssl/csr/{{ domain_name }}.csr
     provider: selfsigned

@@ -1,3 +1,11 @@
 registry:
-  ports: - '5000:5000'
-  image: 'registry:latest'
+  image: 'registry:2'
+  ports:
+    - 5000:5000
+  volumes:
+    - registry:/var/lib/registry
+  deploy:
+    placement:
+      constraints:
+        - 'node.role == manager'
+        - 'node.platform.os == linux'

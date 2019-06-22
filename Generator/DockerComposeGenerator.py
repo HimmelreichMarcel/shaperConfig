@@ -17,7 +17,7 @@ class ComposeGenerator:
         compose["services"] = self.create_services()
         compose["networks"] = self.create_network()
         compose["volumes"] = self.create_volumes()
-        compose["secrets"] = self.create_secrets()
+        #compose["secrets"] = self.create_secrets()
         return compose
 
     def create_services(self):
@@ -143,6 +143,9 @@ class ComposeGenerator:
         elif key == "prometheus" or key == "grafana" or key == "cadvisor" or key == "registry":
             deploy["placement"]["constraints"] = ["node.role==manager"]
             deploy["replicas"] = 1
+        elif key == "minio":
+            deploy["placement"]["constraints"] = ["node.role==worker"]
+            deploy["replicas"] = 1
         else:
             deploy["placement"]["constraints"] = ["node.role==manager"]
 
@@ -186,10 +189,11 @@ class ComposeGenerator:
         volumes["proxy"] = {}
         volumes["notebook"] = {}
         volumes["registry"] = {}
+        volumes["minio"] = {}
         return volumes
 
     def create_secrets(self):
         secrets = {}
-        secrets["builder_domain.crt"]= {"file": "/etc/ssl/crt/" + str(self.__config.get_domain()) + ".crt"}
-        secrets["builder_domain.key"]= {"file": "/etc/ssl/private/" + str(self.__config.get_domain()) + ".pem"}
+        secrets["builder_domain.crt"] = {"file": "/etc/ssl/crt/" + str(self.__config.get_domain()) + ".crt"}
+        secrets["builder_domain.key"] = {"file": "/etc/ssl/private/" + str(self.__config.get_domain()) + ".pem"}
         return secrets

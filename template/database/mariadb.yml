@@ -14,3 +14,4 @@ database:
   restart: on-failure
   volumes:
     - database:/var/lib/mysql
+    - ./db/init:/docker-entrypoint-initdb.d/

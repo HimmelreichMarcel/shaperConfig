@@ -25,6 +25,8 @@ pytest
 #Postgres
 psycopg2
 pygresql
+postgresql
 
 #MySQL MariaDB
-
+pymysql
+sqlalchemy

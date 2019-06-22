@@ -4,6 +4,7 @@ from Generator.EnvironmentGenerator import EnvironmentGenerator as environment
 #from Generator.NginxGenerator import NGINX_Generator as nginx
 from Generator.NginxGenerator import NGINX_Service_Generator as nginx
 from Generator.AnsibleGenerator import AnsibleGenerator as Ansible
+from Generator.DatabaseGenerator import DatabaseGenerator as DB
 
 import os
 from shutil import copyfile
@@ -90,6 +91,9 @@ class Optimizer(object):
     def load_nginx_letsencrypt(self):
         return self.import_yaml("./template/proxy/nginx_letsencrypt.yml")
 
+    def load_minio(self):
+        return self.import_yaml("./template/database/minio.yml")
+
     def create_directory(self, path):
         if not os.path.exists(path):
             os.mkdir(path)
@@ -151,6 +155,7 @@ class Optimizer(object):
                             services.update(api_value)
                             services.update(monitoring)
                             services.update(notebook)
+                            services.update(self.load_minio())
                             if proxy_key == "traefik" and "cluster" in self._shaper_config:
                                 services.update(self.load_consul())
                             elif proxy_key == "nginx" and "security" in self._shaper_config:
@@ -165,6 +170,15 @@ class Optimizer(object):
                             network = compose_generator.create_network()
                             self.export_yaml(compose_file, project_path_compose + '/docker-compose.yaml')
 
+                            #Database Schema
+                            database = DB(config, project_path)
+
+                            self.create_directory(project_path + "/db")
+                            self.create_directory(project_path + "/db/init")
+                            if database_key == "mysql" or database_key == "postgres" or database_key == "maria":
+                                database.create_mysql_scheme()
+
+
                             # PROXY
                             self.generate_proxy(config, proxy_key, project_path_compose)
 
@@ -175,7 +189,7 @@ class Optimizer(object):
                             self.generate_API(api_key, project_path_compose)
 
                             # Environment File
-                            environment_gen = environment(self._shaper_config)
+                            environment_gen = environment(config)
                             environment_data = environment_gen.generate()
                             #print("Environment Data:")
                             #print(environment_data)
@@ -193,7 +207,7 @@ class Optimizer(object):
 
                             self.create_directory(project_path + "/roles/deploy-docker-stack/")
                             self.create_directory(project_path + "/roles/deploy-docker-stack/tasks")
-                            ansible = Ansible(config, project_path, network, project_name)
+                            ansible = Ansible(config, project_path, network, project_name, self._output_path + "/small_dataset.csv")
                             ansible.generate()
 
                             #Create Volume Directories

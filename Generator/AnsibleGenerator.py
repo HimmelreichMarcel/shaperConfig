@@ -6,11 +6,12 @@ import os
 from distutils.dir_util import copy_tree
 
 class AnsibleGenerator(object):
-    def __init__(self, config, project_path, networks, project_name):
+    def __init__(self, config, project_path, networks, project_name, file_path):
         self._config = config
         self._project_path = project_path
         self._networks = networks
         self._project_name = project_name
+        self._file_path = file_path
 
     def deploy_swarm(self):
         print()
@@ -99,6 +100,10 @@ class AnsibleGenerator(object):
         stack.append("  copy:")
         stack.append("    src: " + str(self._project_path))
         stack.append("    dest: /home/" + str(self._config.get_ssh_user()) + "/deploy")
+        stack.append("- name: Copy Train Data")
+        stack.append("  copy:")
+        stack.append("    src: " + str(self._file_path))
+        stack.append("    dest: /home/" + str(self._config.get_ssh_user()) + "/data")
         return stack
 
     def deploy_stack(self):

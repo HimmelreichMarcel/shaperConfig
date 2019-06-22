@@ -1,15 +1,34 @@
 from fastapi import FastAPI
-
+from minio import Minio
+import sklearn
+from sklearn.externals import joblib
+import numpy as np
+import os
 app = FastAPI()
 
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+@app.get("/predict/{bucket}/{filename}/{predict_size}")
+async def random_predict(bucket: str, filename: str, predict_size: int):
+    try:
+        minio_client = Minio(
+            endpoint="minio:9000",
+            access_key=os.environ["ACCESS_KEY"],
+            secret_key=os.environ["SECRET_KEY"],
+            secure=False)
+        model = minio_client.get_object(bucket, filename).data.decode()
+        loaded_model = joblib.load(model)
+        data = np.random.randint(0, 2, size=(100, predict_size))
+        return loaded_model.predict(data)
+    except:
+        return "Failed to predict"
 
 
+
+
+
+    """
 @app.get("/add_table/{database}")
-def add_row(database: str, user: str = None, password: str = None, db_name: str = None, row: dict = None):
+async def add_row(database: str, user: str = None, password: str = None, db_name: str = None, row: dict = None):
     if database == "postgres":
         import psycopg2
         import sqlalchemy
@@ -54,7 +73,7 @@ def add_row(database: str, user: str = None, password: str = None, db_name: str 
         collection = db.people
 
 
-"""
+
 
 # Postgres
 import pandas as pd

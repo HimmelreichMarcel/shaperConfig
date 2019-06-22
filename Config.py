@@ -49,6 +49,9 @@ class Config(object):
             self._password = "admin"
             self._database = "database"
 
+        self._feature_count = 500
+        self._table = "train_table"
+
         if "cluster" in self.__config:
             self._cluster = True
             self._cluster_name = self.__config["cluster"]["name"]
@@ -60,6 +63,34 @@ class Config(object):
             self._cluster = False
             self._manager = []
             self._worker = []
+
+    def get_db_port(self):
+        if "postgres" in self.__compose_services.items():
+            return self.__compose_services["postgres"]["ports"].split(':')[0]
+        elif "mongo" in self.__compose_services.items():
+            return self.__compose_services["mongo"]["ports"].split(':')[0]
+        elif "mysql" in self.__compose_services.items():
+            return self.__compose_services["mysql"]["ports"].split(':')[0]
+        elif "maria" in self.__compose_services.items():
+            return self.__compose_services["maria"]["ports"].split(':')[0]
+
+    def get_db_adress(self):
+        if "postgres" in self.__compose_services.items():
+            return "postgres"
+        elif "mongo" in self.__compose_services.items():
+            return "mongo"
+        elif "mysql" in self.__compose_services.items():
+            return "mysql"
+        elif "maria" in self.__compose_services.items():
+            return "maria"
+
+    def get_db_dialect(self):
+        if "postgres" in self.__compose_services.items():
+            return "postgresql"
+        elif "mongo" in self.__compose_services.items():
+            return "mongo"
+        elif "mysql" in self.__compose_services.items() or "maria" in self.__compose_services.items():
+            return "mysql+pymysql"
 
     def get_domain(self):
         return self._domain
@@ -75,6 +106,12 @@ class Config(object):
 
     def get_user(self):
         return self._user
+
+    def get_table(self):
+        return self._table
+
+    def get_feature_count(self):
+        return self._feature_count
 
     def get_password(self):
         return self._password

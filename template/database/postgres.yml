@@ -9,3 +9,4 @@ database:
     POSTGRES_PASSWORD: ${PWD}
   volumes:
     - database:/var/lib/postgresql
+    - ./db/init:/docker-entrypoint-initdb.d/

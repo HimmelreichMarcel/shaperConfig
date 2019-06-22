@@ -15,3 +15,4 @@ database:
     # Where our data will be persisted
   volumes:
     - database:/var/lib/mysql
+    - ./db/init:/docker-entrypoint-initdb.d/

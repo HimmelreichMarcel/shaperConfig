@@ -10,11 +10,10 @@ class Config(object):
 
         if "security" in self.__config:
             self._security = True
-            self._email = self.__config["security"]["email"]
         else:
             self._security = False
-            self._email = ""
 
+        self._email = self.__config["admin"]["email"]
         if "monitoring" in self.__config:
             self._monitoring = True
         else:
@@ -57,6 +56,8 @@ class Config(object):
             self._cluster_name = self.__config["cluster"]["name"]
             self._manager = self.__config["cluster"]["manager"]
             self._worker = self.__config["cluster"]["worker"]
+            self._manager_ip = self.__config["cluster"]["manager_ip"]
+            self._worker_ip = self.__config["cluster"]["worker_ip"]
             self._ssh_user = self.__config["cluster"]["user"]
             self._ssh_password = self.__config["cluster"]["password"]
         else:
@@ -175,6 +176,12 @@ class Config(object):
 
     def get_worker(self):
         return self._worker
+
+    def get_manager_ip(self):
+        return self._manager_ip
+
+    def get_worker_ip(self):
+        return self._worker_ip
 
     def get_ssh_user(self):
         return self._ssh_user

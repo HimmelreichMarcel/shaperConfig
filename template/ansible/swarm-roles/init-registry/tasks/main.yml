@@ -11,6 +11,10 @@
   shell: sh -c "echo ' {{ hostvars['manager']['ansible_default_ipv4']['address'] }} {{ domain_name }}' >> /etc/hosts"
   ignore_errors: true
 
+- name: Change Host Name
+  shell: sh -c "echo '{{ domain_name }}' >> /etc/hostname"
+  ignore_errors: true
+
 - name: Clean Daemon
   file:
     state: absent

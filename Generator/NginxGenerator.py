@@ -24,10 +24,11 @@ class NGINX_Service_Generator(object):
 
 
 class NGINX_Generator(object):
-    def __init__(self, domain="", manager_list=[], ip_list=[]):
-        self._domain = domain
-        self._ip_list = ip_list
-        self._manager = manager_list
+    def __init__(self, config):
+        self._config = config
+        self._domain = config.get_domain()
+        self._worker_ip = config.get_worker_ip()
+        self._manager_ip = config.get_manager_ip()
 
     def create_ssl_path(self, domain):
         path = "/etc/letsencrypt/live/" + str(domain) + "/fullchain.pem;"
@@ -90,6 +91,10 @@ class NGINX_Generator(object):
         location = self.create_location("/prometheus", "prometheus", "9090")
         server.extend(location)
 
+        # Create Minio
+        location = self.create_location("/minio", "minio", "9000")
+        server.extend(location)
+
         server.append("}")
         return server
 
@@ -120,13 +125,15 @@ class NGINX_Generator(object):
         config.append("}")
 
         # Jupyter
-        config.extend(self.create_upstream("notebook", self._ip_list))
+        config.extend(self.create_upstream("notebook", self._worker_ip))
         # API
-        config.extend(self.create_upstream("api", self._ip_list))
+        config.extend(self.create_upstream("api", self._worker_ip))
         # Prometheus
-        config.extend(self.create_upstream("prometheus", self._manager))
+        config.extend(self.create_upstream("prometheus", self._manager_ip))
         # Grafana
-        config.extend(self.create_upstream("grafana", self._manager))
+        config.extend(self.create_upstream("grafana", self._manager_ip))
+        # Grafana
+        config.extend(self.create_upstream("minio", self._manager_ip))
 
         # 80 Server
         config.extend(self.create_server("http"))

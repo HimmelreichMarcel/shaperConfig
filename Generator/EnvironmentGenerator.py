@@ -12,6 +12,8 @@ class EnvironmentGenerator(object):
         environment.append("USER=" + self._shaper_config.get_config()["admin"]["user"])
         environment.append("PWD=" + self._shaper_config.get_config()["admin"]["password"])
         environment.append("DATABASE=" + self._shaper_config.get_config()["admin"]["database"])
+        environment.append("DOMAIN=" + self._shaper_config.get_domain())
+        environment.append("EMAIL=" + self._shaper_config.get_email())
         environment.append("DB_PORT=" + str(self._shaper_config.get_db_port()))
         environment.append("DB_ADRESS=" + str(self._shaper_config.get_db_adress()))
         environment.append("DB_DIALECT=" + str(self._shaper_config.get_db_dialect()))

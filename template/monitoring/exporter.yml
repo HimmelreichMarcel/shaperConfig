@@ -1,18 +1,17 @@
 exporter:
-  image: prom/node-exporter
-  user: root
-  privileged: true
+  image: stefanprodan/swarmprom-node-exporter:v0.16.0
+  networks:
+    - net
+  environment:
+    - NODE_ID={{.Node.ID}}
   volumes:
     - /proc:/host/proc:ro
     - /sys:/host/sys:ro
     - /:/rootfs:ro
+    - /etc/hostname:/etc/nodename
   command:
-    - '--path.procfs=/host/proc'
     - '--path.sysfs=/host/sys'
-    - '--collector.filesystem.ignored-mount-points'
-    - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
-  ports:
-    - 9100:9100
-  expose:
-    - 9100
-  restart: unless-stopped
+    - '--path.procfs=/host/proc'
+    - '--collector.textfile.directory=/etc/node-exporter/'
+    - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    - '--no-collector.ipvs'

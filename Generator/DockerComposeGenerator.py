@@ -39,6 +39,7 @@ class ComposeGenerator:
                     compose_service["deploy"]["placement"]['contraints"'] = "node.role == manager"
             else:
             """
+
             environment = []
             if key == "api":
                 compose_service["image"] = str(self.__config.get_docker_user())+"/api"
@@ -51,18 +52,18 @@ class ComposeGenerator:
             # Create Service Network
             compose_service["networks"] = self.create_service_network(key)
 
-            if self._proxy == "nginx" and key not in ["nginx", "exporter", "nginx_letsencrypt"]:
+            if key == "nginx" and key not in ["nginx", "exporter", "nginx_letsencrypt"]:
                 environment = environment + self.create_nginx_environment(key, compose_service)
             if len(environment) > 0:
                 compose_service["environment"] = environment
 
 
             #Create Deploy  Config
-            if config.get_cluster():
+            if config.get_cluster() and key != "consul-leader":
                 compose_service["deploy"] = self.create_deploy(key, value)
 
             #Create Traefik Labels
-            if self._proxy == "traefik" and not config.get_cluster():
+            if self._proxy == "traefik" and not config.get_cluster() and key is not "traefik":
                 if config.get_cluster():
                     labels = []
                     labels = self.create_traefik_labels(key, value)
@@ -75,6 +76,47 @@ class ComposeGenerator:
                     compose_service["labels"] = labels
             compose_services[key] = compose_service
         return compose_services
+
+    def create_short_traefik_command(self):
+        command = []
+
+        #Consul
+        command.append("--consul")
+        command.append("--consul.endpoint=consul:8500")
+        command.append("--consulk.prefix=traefik")
+
+        return command
+
+    def create_traefik_command(self):
+        command = []
+        command.append("storeconfig")
+        command.append("--api")
+
+        #Entrypoints
+        command.append("--entrypoints=Name: http Adress::80 Redirect.EntryPoint:https")
+        command.append("--entrypoints=Name:https Address::443 TLS")
+        command.append("--defaultentrypoints=http,https")
+
+        #ACME
+        command.append("--acme")
+        command.append("--acme.storage=traefik/acme/account")
+        command.append("--acme.entryPoint=https")
+        command.append("--acme.httpChallenge.entryPoint=http")
+        command.append("--acme.onHostRule=true")
+        command.append("--acme.onDemand=false")
+        command.append("--acme.email=" + str(self.__config.get_email()))
+
+        #Docker
+        command.append("--docker")
+        command.append("--docker.swarmMode")
+        command.append("--docker.watch")
+
+        #Consul
+        command.append("--consul")
+        command.append("--consul.endpoint=consul:8500")
+        command.append("--consulk.prefix=traefik")
+
+        return command
 
     def create_nginx_environment(self, key, service):
         environment = []
@@ -97,7 +139,7 @@ class ComposeGenerator:
             networks.append("proxy")
         elif key == "prometheus" or key == "grafana" or key == "cadvisor" or key == "registry":
             networks.append("web")
-        elif key == "consul":
+        elif key == "consul" or key == "traefik_init":
             networks.append("proxy")
         else:
             networks.append("web")
@@ -108,11 +150,15 @@ class ComposeGenerator:
         labels.append("traefik.enable=true")
         domain = self.__config.get_domain()
         labels.append("traefik.backend=" + name)
-        labels.append("traefik.frontend.rule=Host:" + name + "." + str(domain) + "\"")
-        if "network" in service:
-            labels.append("traefik.docker.network=" + service["network"])
+        labels.append("traefik.frontend.rule=Host:" + name + "." + str(domain))
+        #labels.append("traefik.redirectorservice.frontend.entryPoints=http")
+        #labels.append("traefik.redirectorservice.frontend.redirect.entryPoint=https")
+        if "networks" in service:
+            labels.append("traefik.docker.network=" + service["networks"][0])
         if "ports" in service:
-            labels.append("traefik.port=" + str(service["ports"][0]))
+            labels.append("traefik.port=" + str(service["ports"][0].split(":")[0]))
+        #labels.append("traefik.webservice.frontend.entryPoints=https")
+        #labels.append("traefik.frontend.auth.basic.users=${USER}:${PWD}")
         return labels
 
     def create_traefik_monitoring_service(self):
@@ -134,20 +180,24 @@ class ComposeGenerator:
         deploy["placement"] = {}
         if key == "api" or key == "notebook":
             deploy["replicas"] = self.__api_rep
+            deploy["mode"] = "replicated"
             deploy["placement"]["constraints"] = ["node.role==worker"]
         elif key== "traefik" or key == "nginx":
             deploy["placement"]["constraints"] = ["node.role==manager"]
-            deploy["replicas"] = self.__proxy_rep
+            deploy["replicas"] = self.__api_rep
             deploy["restart_policy"] = {}
             deploy["restart_policy"]["condition"] = "any"
-        elif key == "prometheus" or key == "grafana" or key == "cadvisor" or key == "registry":
+        elif key == "prometheus" or key == "grafana" or key == "registry":
             deploy["placement"]["constraints"] = ["node.role==manager"]
             deploy["replicas"] = 1
         elif key == "minio":
             deploy["placement"]["constraints"] = ["node.role==worker"]
             deploy["replicas"] = 1
+        elif key == "database" or key == "traefik_init":
+            deploy["placement"]["constraints"] = ["node.role==manager"]
         else:
             deploy["placement"]["constraints"] = ["node.role==manager"]
+            deploy["mode"] = "global"
 
         if self._proxy == "traefik":
             if self.__config.get_cluster():
@@ -181,8 +231,8 @@ class ComposeGenerator:
     def create_volumes(self):
         volumes = {}
         if self._proxy == "traefik" and self.__config.get_cluster():
-            volumes["consul-data"] = {}
-            volumes["consul-data"]["driver"] = "[not local]"
+            volumes["consul-data-leader"] = {}
+            volumes["consul-data-replica"] = {}
         volumes["prometheus_data"] = {}
         volumes["grafana_data"] = {}
         volumes["database"] = {}

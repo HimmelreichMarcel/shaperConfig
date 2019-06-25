@@ -1,0 +1,8 @@
+traefik_init:
+  image: traefik:latest
+  command:
+  deploy:
+    restart_policy:
+      condition: on-failure
+  depends_on:
+    - consul

@@ -34,3 +34,36 @@ Configuration Options
 Jupyter Token Output
 
 Learning Preparation
+
+
+  image: traefik:latest
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+  command:
+    --docker
+    --docker.swarmmode
+    --docker.watch
+    --docker.exposedbydefault=false
+    --entrypoints='Name:http Address::80'
+    --consul
+    --consul.endpoint="consul-leader:8500"
+    --logLevel=INFO
+    --accessLog
+    --api
+  ports:
+    - target: 80
+      published: 80
+      mode: host
+    - target: 8080
+      published: 8080
+      mode: host
+    --constraints=tag==traefik-public
+    --acme
+    --acme.email=${EMAIL}
+    --acme.storage="traefik/acme/account"
+    --acme.entryPoint=https
+    --acme.httpChallenge.entryPoint=http
+    --acme.onhostrule=true
+    --acme.acmelogging=true
+
+    --entrypoints='Name:https Address::443 TLS'

@@ -1,16 +1,19 @@
 [admin]
 user="admin"
 password="admin"
+email="test@gmail.com"
 database= "test"
-domain="platformexamplelearning.com"
+domain="platform.test"
 docker_user = "projectgades"
 docker_password = "ShadoWsong000"
 
 [monitoring]
 
 [cluster]
-name="MachineLearningPlatform"
-manager=["china.medien.uni-weimar.de"]
-worker=["peru.medien.uni-weimar.de"]
+name="mlstack"
+manager=["192.168.2.100"]
+worker=["192.168.2.103"]
+manager_ip=["192.168.2.100"]
+worker_ip=["192.168.2.103"]
 user= "marcel"
 password= "marcel!"

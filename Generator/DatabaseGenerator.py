@@ -11,6 +11,14 @@ class DatabaseGenerator(object):
     def create_mysql_scheme(self):
         scheme = []
         scheme.append("#!/bin/bash")
+        scheme.append("GRANT ALL PRIVILEGES ON *.* TO \'" + str(
+            self._shaper_config.get_user()) + "\'@\'%\' IDENTIFIED BY \'" + str(
+            self._shaper_config.get_password()) + "\' WITH GRANT OPTION;")
+
+        scheme.append("GRANT ALL PRIVILEGES ON *.* TO \'" + str(
+            self._shaper_config.get_user()) + "\'@\'database\' IDENTIFIED BY \'" + str(
+            self._shaper_config.get_password()) + "\' WITH GRANT OPTION;")
+        scheme.append("FLUSH PRIVILEGES;")
         scheme.append("USE " + str(self._database) + ";")
         scheme.append("CREATE TABLE " + str(self._table))
         scheme.append("(")

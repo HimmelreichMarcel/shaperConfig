@@ -1,40 +1,5 @@
 
 
-Tool:
-
-More Configuration
-
-
-Docker:
-
-Jupyter Exporter
-
-More Prometheus Exporter
-
-Check Exporter
-
-
-Jupyter:
-
-Save Token
-
-
-Ansible:
-
-
-
-Dienstag
-
-Jupyter Exporter
-
-SQL Exporter
-
-Configuration Options
-
-Jupyter Token Output
-
-Learning Preparation
-
 
   image: traefik:latest
   volumes:
@@ -67,3 +32,78 @@ Learning Preparation
     --acme.acmelogging=true
 
     --entrypoints='Name:https Address::443 TLS'
+
+
+
+
+!pip install minio
+!pip install sqlalchemy
+!pip install pymysql
+!pip install pandas
+!pip install sklearn
+
+#Scitkit
+from sklearn import svm
+from sklearn.model_selection import train_test_split
+import os
+from sklearn import metrics
+from sklearn.externals import joblib
+
+# Postgres
+import pandas as pd
+import sqlalchemy
+from sqlalchemy import create_engine
+
+# Postgres username, password, and database name
+DIALECT = "mysql+pymysql"
+DB_ADDRESS = "10.0.0.143"
+DB_PORT = "3306"
+DB_USERNAME = "root"
+DB_PASSWORD = "admin"
+DB_NAME = "test"
+# A long string that contains the necessary Postgres login information
+db_str = ('{dialect}://{username}:{password}@{ipaddress}/{dbname}'.format(dialect=DIALECT,
+                                                                                username=DB_USERNAME,
+                                                                                password=DB_PASSWORD,
+                                                                                ipaddress=DB_ADDRESS,
+                                                                                dbname=DB_NAME))
+print(db_str)
+# Create the connection
+cnx = create_engine(db_str)
+
+#Read
+data_frame = pd.read_sql_query('''SELECT * FROM train_table''', cnx)
+
+print(data_frame)
+#Train Model
+
+
+
+
+
+
+
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.165730Z 0 [Note] mysqld (mysqld 5.7.26) starting as process 1 ...
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.167658Z 0 [Note] InnoDB: PUNCH HOLE support available
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.167669Z 0 [Note] InnoDB: Mutexes and rw_locks use GCC atomic builtins
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.167672Z 0 [Note] InnoDB: Uses event mutexes
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.167674Z 0 [Note] InnoDB: GCC builtin __atomic_thread_fence() is used for memory barrier
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.167676Z 0 [Note] InnoDB: Compressed tables use zlib 1.2.11
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.167678Z 0 [Note] InnoDB: Using Linux native AIO
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.167822Z 0 [Note] InnoDB: Number of pools: 1
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.167886Z 0 [Note] InnoDB: Using CPU crc32 instructions
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.169170Z 0 [Note] InnoDB: Initializing buffer pool, total size = 128M, instances = 1, chunk size = 128M
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.174258Z 0 [Note] InnoDB: Completed initialization of buffer pool
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.175717Z 0 [Note] InnoDB: If the mysqld execution user is authorized, page cleaner thread priority can be changed. See the man page of setpriority().
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.187518Z 0 [Note] InnoDB: Highest supported file format is Barracuda.
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.187621Z 0 [ERROR] InnoDB: Unsupported redo log format. The redo log was created with MariaDB 10.4.6. Please follow the instructions at http://dev.mysql.com/doc/refman/5.7/en/upgrading-downgrading.html
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.187634Z 0 [ERROR] InnoDB: Plugin initialization aborted with error Generic error
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.788083Z 0 [ERROR] Plugin 'InnoDB' init function returned error.
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.788108Z 0 [ERROR] Plugin 'InnoDB' registration as a STORAGE ENGINE failed.
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.788113Z 0 [ERROR] Failed to initialize builtin plugins.
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.788116Z 0 [ERROR] Aborting
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    |
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.788130Z 0 [Note] Binlog end
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.788180Z 0 [Note] Shutting down plugin 'CSV'
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.789733Z 0 [Note] mysqld: Shutdown complete
+mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    |

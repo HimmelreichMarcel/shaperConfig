@@ -39,6 +39,9 @@ class ComposeGenerator:
                     compose_service["deploy"]["placement"]['contraints"'] = "node.role == manager"
             else:
             """
+            if key=="notebook":
+                compose_service["environment"] = []
+                compose_service["environment"].append("JUPYTER_TOKEN="+ self.__config.get_token())
 
             environment = []
             if key == "api":
@@ -181,7 +184,7 @@ class ComposeGenerator:
         if key == "api" or key == "notebook":
             deploy["replicas"] = self.__api_rep
             deploy["mode"] = "replicated"
-            deploy["placement"]["constraints"] = ["node.role==worker"]
+            deploy["placement"]["constraints"] = ["node.role==manager"]
         elif key== "traefik" or key == "nginx":
             deploy["placement"]["constraints"] = ["node.role==manager"]
             deploy["replicas"] = self.__api_rep

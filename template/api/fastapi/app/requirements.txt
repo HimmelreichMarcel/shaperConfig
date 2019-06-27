@@ -30,3 +30,7 @@ postgresql
 #MySQL MariaDB
 pymysql
 sqlalchemy
+
+sklearn
+minio
+numpy

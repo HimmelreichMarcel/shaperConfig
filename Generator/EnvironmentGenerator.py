@@ -22,7 +22,7 @@ class EnvironmentGenerator(object):
         environment.append("LOCAL_DATASETS=" + "./jupyter/dataset")
         environment.append("LOCAL_MODULES=" + "./jupyter/module")
         environment.append("LOCAL_SSL_CERTS=" + "./jupyter/ssl")
-        environment.append("ACCESS_TOKEN=" + IPython.lib.passwd(self._shaper_config.get_config()["admin"]["password"]))
+        environment.append("ACCESS_TOKEN=" + self._shaper_config.get_token())
         environment.append("ACCESS_KEY=" + self.generate_token(10))
         environment.append("SECRET_KEY=" + self.generate_token(10))
         return environment

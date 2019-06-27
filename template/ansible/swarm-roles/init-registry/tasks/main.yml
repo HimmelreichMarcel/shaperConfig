@@ -8,8 +8,17 @@
   ignore_errors: true
 
 - name: Change Host File
-  shell: sh -c "echo ' {{ hostvars['manager']['ansible_default_ipv4']['address'] }} {{ domain_name }}' >> /etc/hosts"
+  shell: sh -c "echo ' {{ hostvars['manager']['ansible_default_ipv4']['address'] }} {{item}}.{{domain_name}}' >> /etc/hosts"
   ignore_errors: true
+  loop:
+    - notebook
+    - traefik
+    - prometheus
+    - grafana
+    - minio
+    - portainer
+    - api
+    - database
 
 - name: Change Host Name
   shell: sh -c "echo '{{ domain_name }}' >> /etc/hostname"

@@ -1,6 +1,9 @@
+import random
+import string
+import IPython
 
 class Config(object):
-    def __init__(self, config, services, networks=[], volumes=[], replicas={}, metadata={}):
+    def __init__(self, config, services, networks=[], volumes=[], replicas={}, metadata=None):
         self.__config = config
         self.__compose_services = services
         self.__networks = networks
@@ -65,36 +68,34 @@ class Config(object):
             self._manager = []
             self._worker = []
 
+        if metadata:
+            self._db_port = self.__metadata["db_port"].split(':')[0]
+            self._db_adress = self.__metadata["db_adress"]
+        else:
+            self._db_port = None
+            self._db_adress = None
+
+        self._token = self.generate_token()
+
     def get_db_port(self):
-        if "postgres" in self.__compose_services.items():
-            return self.__compose_services["postgres"]["ports"].split(':')[0]
-        elif "mongo" in self.__compose_services.items():
-            return self.__compose_services["mongo"]["ports"].split(':')[0]
-        elif "mysql" in self.__compose_services.items():
-            return self.__compose_services["mysql"]["ports"].split(':')[0]
-        elif "maria" in self.__compose_services.items():
-            return self.__compose_services["maria"]["ports"].split(':')[0]
+        return self._db_port
 
     def get_db_adress(self):
-        if "postgres" in self.__compose_services.items():
-            return "postgres"
-        elif "mongo" in self.__compose_services.items():
-            return "mongo"
-        elif "mysql" in self.__compose_services.items():
-            return "mysql"
-        elif "maria" in self.__compose_services.items():
-            return "maria"
+        return self._db_adress
 
     def get_db_dialect(self):
-        if "postgres" in self.__compose_services.items():
+        if "postgres" == self._db_adress:
             return "postgresql"
-        elif "mongo" in self.__compose_services.items():
+        elif "mongo" == self._db_adress:
             return "mongo"
-        elif "mysql" in self.__compose_services.items() or "maria" in self.__compose_services.items():
+        elif "mysql" == self._db_adress or "maria" == self._db_adress:
             return "mysql+pymysql"
 
     def get_domain(self):
         return self._domain
+
+    def get_token(self):
+        return self._token
 
     def get_email(self):
         return self._email
@@ -210,3 +211,6 @@ class Config(object):
     def set_volumes(self, volumes):
         self.__volumes = volumes
 
+    def generate_token(self, stringLength=50):
+        letters = string.ascii_lowercase
+        return IPython.lib.passwd(''.join(random.choice(letters) for i in range(stringLength)))

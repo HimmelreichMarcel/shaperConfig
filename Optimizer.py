@@ -207,7 +207,13 @@ class Optimizer(object):
                             elif proxy_key == "nginx" and "security" in self._shaper_config:
                                 services.update(self.load_nginx_letsencrypt())
                             # Create Config Element
-                            config = Config(self._shaper_config, services)
+                            if database_key != "None":
+                                metadata = {}
+                                metadata["db_port"] = database_value["database"]["ports"][0]
+                                metadata["db_adress"] = database_key
+                                config = Config(self._shaper_config, services, metadata=metadata)
+                            else:
+                                config = Config(self._shaper_config, services)
 
                             # Create Compose File
                             compose_generator = composer(config=config, proxy=proxy_key,

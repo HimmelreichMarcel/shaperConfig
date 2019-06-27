@@ -249,3 +249,58 @@ print(data_frame)
 
 
 
+
+#Scitkit
+from sklearn import svm
+from sklearn.model_selection import train_test_split
+import os
+from sklearn import metrics
+from sklearn.externals import joblib
+
+# Postgres
+import pandas as pd
+import sqlalchemy
+from sqlalchemy import create_engine
+from pymongo import MongoClient
+
+send_frame = pd.read_csv("./datasets/small_dataset.csv")
+#print(send_frame.shape)
+
+new_frame = send_frame.iloc[:10000]
+#print(new_frame)
+
+# Postgres username, password, and database name
+DIALECT = "mongodb"
+DB_ADDRESS = "database"
+DB_PORT = "27017"
+DB_USERNAME = "admin"
+DB_PASSWORD = "admin"
+DB_NAME = "admin"
+# A long string that contains the necessary Postgres login information
+db_str = ('{dialect}://{username}:{password}@{ipaddress}/{dbname}'.format(dialect=DIALECT,
+                                                                                username=DB_USERNAME,
+                                                                                password=DB_PASSWORD,
+                                                                                ipaddress=DB_ADDRESS,
+                                                                                dbname=DB_NAME))
+print(db_str)
+# Create the connection
+
+client = MongoClient(db_str)
+db = client.test
+db = db.train_table
+db.insert_many(new_frame.to_dict('records'))
+
+print("Sent Frame")
+
+
+#select the collection within the database
+test = db.test
+#convert entire collection to Pandas dataframe
+data = pd.DataFrame(list(db.find()))
+
+print(data)
+#Read
+#data_frame = pd.read_sql_query('''SELECT * FROM train_table''', cnx)
+
+#print(data_frame)
+#Train Model

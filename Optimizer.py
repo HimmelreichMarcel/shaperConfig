@@ -227,9 +227,10 @@ class Optimizer(object):
 
                             self.create_directory(project_path + "/db")
                             self.create_directory(project_path + "/db/init")
-                            if database_key == "mysql" or database_key == "postgres" or database_key == "maria":
+                            if database_key == "mysql" or database_key == "maria":
                                 database.create_mysql_scheme()
-
+                            elif database_key == "postgres":
+                                database.create_postgres_scheme()
 
 
                             # PROXY

@@ -85,7 +85,7 @@ class Config(object):
 
     def get_db_dialect(self):
         if "postgres" == self._db_adress:
-            return "postgresql"
+            return "postgresql+psycopg2"
         elif "mongo" == self._db_adress:
             return "mongo"
         elif "mysql" == self._db_adress or "maria" == self._db_adress:

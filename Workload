@@ -41,7 +41,7 @@
 !pip install pymysql
 !pip install pandas
 !pip install sklearn
-
+!pip install psycopg2-binary
 #Scitkit
 from sklearn import svm
 from sklearn.model_selection import train_test_split
@@ -80,6 +80,46 @@ print(data_frame)
 
 
 
+#Scitkit
+from sklearn import svm
+from sklearn.model_selection import train_test_split
+import os
+from sklearn import metrics
+from sklearn.externals import joblib
+
+# Postgres
+import pandas as pd
+import sqlalchemy
+from sqlalchemy import create_engine
+
+send_frame = pd.read_csv("./datasets/small_dataset.csv")
+#print(send_frame.head(1))
+
+
+# Postgres username, password, and database name
+DIALECT = "postgresql"
+DB_ADDRESS = "database"
+DB_PORT = "5432"
+DB_USERNAME = "admin"
+DB_PASSWORD = "admin"
+DB_NAME = "test"
+# A long string that contains the necessary Postgres login information
+db_str = ('{dialect}://{username}:{password}@{ipaddress}/{dbname}'.format(dialect=DIALECT,
+                                                                                username=DB_USERNAME,
+                                                                                password=DB_PASSWORD,
+                                                                                ipaddress=DB_ADDRESS,
+                                                                                dbname=DB_NAME))
+print(db_str)
+# Create the connection
+cnx = create_engine(db_str)
+
+send_frame.to_sql("train_table" con=cnx, if_exists='replace')
+
+#Read
+data_frame = pd.read_sql_query('''SELECT * FROM train_table''', cnx)
+
+print(data_frame)
+#Train Model
 
 
 
@@ -107,3 +147,105 @@ mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.78
 mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.788180Z 0 [Note] Shutting down plugin 'CSV'
 mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    | 2019-06-27T00:59:01.789733Z 0 [Note] mysqld: Shutdown complete
 mlstack_database.1.orri4ar8icxq@standardheld-MS-7B78    |
+
+
+
+
+#Scitkit
+from sklearn import svm
+from sklearn.model_selection import train_test_split
+import os
+from sklearn import metrics
+from sklearn.externals import joblib
+
+# Postgres
+import pandas as pd
+import sqlalchemy
+from sqlalchemy import create_engine
+
+send_frame = pd.read_csv("./datasets/small_dataset.csv")
+#print(send_frame.head(1))
+
+new_frame = send_frame.iloc[:10]
+print(new_frame)
+
+# Postgres username, password, and database name
+DIALECT = "postgresql"
+DB_ADDRESS = "database"
+DB_PORT = "5432"
+DB_USERNAME = "admin"
+DB_PASSWORD = "admin"
+DB_NAME = "test"
+# A long string that contains the necessary Postgres login information
+db_str = ('{dialect}://{username}:{password}@{ipaddress}/{dbname}'.format(dialect=DIALECT,
+                                                                                username=DB_USERNAME,
+                                                                                password=DB_PASSWORD,
+                                                                                ipaddress=DB_ADDRESS,
+                                                                                dbname=DB_NAME))
+print(db_str)
+# Create the connection
+cnx = create_engine(db_str)
+d6tstack.utils.pd_to_psql(send_frame, db_str, 'train_table',if_exists='replace')
+
+new_frame.to_sql('train_table', con=cnx, if_exists='append')
+
+#Read
+data_frame = pd.read_sql_query('''SELECT * FROM train_table''', cnx)
+
+print(data_frame)
+#Train Model
+
+
+
+
+
+
+
+#Scitkit
+from sklearn import svm
+from sklearn.model_selection import train_test_split
+import os
+from sklearn import metrics
+from sklearn.externals import joblib
+
+# Postgres
+import pandas as pd
+import sqlalchemy
+from sqlalchemy import create_engine
+import d6tstack
+send_frame = pd.read_csv("./datasets/small_dataset.csv")
+print(send_frame.shape)
+
+#new_frame = send_frame.iloc[:10000]
+#print(new_frame)
+
+# Postgres username, password, and database name
+DIALECT = "postgresql+psycopg2"
+DB_ADDRESS = "database"
+DB_PORT = "5432"
+DB_USERNAME = "admin"
+DB_PASSWORD = "admin"
+DB_NAME = "test"
+# A long string that contains the necessary Postgres login information
+db_str = ('{dialect}://{username}:{password}@{ipaddress}/{dbname}'.format(dialect=DIALECT,
+                                                                                username=DB_USERNAME,
+                                                                                password=DB_PASSWORD,
+                                                                                ipaddress=DB_ADDRESS,
+                                                                                dbname=DB_NAME))
+print(db_str)
+# Create the connection
+cnx = create_engine(db_str)
+
+d6tstack.utils.pd_to_psql(send_frame, db_str, 'train_table',if_exists='replace')
+
+#new_frame.to_sql('train_table', con=cnx, if_exists='append')
+print("Sent Frame")
+#Read
+data_frame = pd.read_sql_query('''SELECT * FROM train_table''', cnx)
+
+print(data_frame)
+#Train Model
+
+
+
+

@@ -2,7 +2,7 @@ notebook:
     image:    jupyter/datascience-notebook
     volumes:
       - ./jupyter/working:/home/jovyan/work
-      - ./jupyter/dataset:/home/jovyan/work/datasets
+      - /home/marcel/data/:/home/jovyan/work/datasets
       - ./jupyter/module:/home/jovyan/work/modules
       - ./jupyter/ssl:/etc/ssl/notebook
     ports:

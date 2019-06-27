@@ -10,15 +10,15 @@ class DatabaseGenerator(object):
 
     def create_mysql_scheme(self):
         scheme = []
-        scheme.append("#!/bin/bash")
-        scheme.append("GRANT ALL PRIVILEGES ON *.* TO \'" + str(
-            self._shaper_config.get_user()) + "\'@\'%\' IDENTIFIED BY \'" + str(
-            self._shaper_config.get_password()) + "\' WITH GRANT OPTION;")
+        #scheme.append("#!/bin/bash")
+        #scheme.append("GRANT ALL PRIVILEGES ON *.* TO \'" + str(
+        #    self._shaper_config.get_user()) + "\'@\'%\' IDENTIFIED BY \'" + str(
+        #    self._shaper_config.get_password()) + "\' WITH GRANT OPTION;")
 
-        scheme.append("GRANT ALL PRIVILEGES ON *.* TO \'" + str(
-            self._shaper_config.get_user()) + "\'@\'database\' IDENTIFIED BY \'" + str(
-            self._shaper_config.get_password()) + "\' WITH GRANT OPTION;")
-        scheme.append("FLUSH PRIVILEGES;")
+        #scheme.append("GRANT ALL PRIVILEGES ON *.* TO \'" + str(
+        #    self._shaper_config.get_user()) + "\'@\'database\' IDENTIFIED BY \'" + str(
+        #    self._shaper_config.get_password()) + "\' WITH GRANT OPTION;")
+        #scheme.append("FLUSH PRIVILEGES;")
         scheme.append("USE " + str(self._database) + ";")
         scheme.append("CREATE TABLE " + str(self._table))
         scheme.append("(")
@@ -28,8 +28,8 @@ class DatabaseGenerator(object):
             counter = counter + 1
         scheme.append(")")
 
-        scheme.append("COPY " + str(self._table))
-        scheme.append("FROM " + str(self._file_path) + " DELIMITER \',\' CSV HEADER")
+        #scheme.append("COPY " + str(self._table))
+        #scheme.append("FROM " + str(self._file_path) + " DELIMITER \',\' CSV HEADER")
         self.export_file(scheme, self._project_path)
 
     def export_file(self, data, path):

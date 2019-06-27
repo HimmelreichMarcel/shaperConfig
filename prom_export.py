@@ -1,4 +1,4 @@
-import csv
+import csv_test
 import requests
 import sys
 def GetMetrixNames(url):
@@ -12,7 +12,7 @@ def GetMetrixNames(url):
 """
 Prometheus hourly data as csv.
 """
-writer = csv.writer(sys.stdout)
+writer = csv_test.writer(sys.stdout)
 
 if len(sys.argv) != 2:
     print('Usage: {0} http://localhost:9090'.format(sys.argv[0]))

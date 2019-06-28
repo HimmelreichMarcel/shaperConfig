@@ -4,6 +4,8 @@ import sklearn
 from sklearn.externals import joblib
 import numpy as np
 import os
+import nbformat
+from nbconvert.preprocessors import ExecuteProcessor
 app = FastAPI()
 
 
@@ -22,7 +24,18 @@ async def random_predict(bucket: str, filename: str, predict_size: int):
     except:
         return "Failed to predict"
 
+@app.route('/notebook/run/{notebook}')
+def run_notebook(notebook: str):
+    try:
+        file_path = "/home/jovyan/work/"
 
+        with open(file_path + notebook) as f:
+            nb = nbformat.read(f, as_version=4)
+        ep = ExecutePreprocessor(kernel_name='python3')
+        ep.preprocess(nb, {'metadata': {'path': 'work/' + str(notebook)}})
+        return "Run Notebook: " + str(notebook)
+    except:
+        return "Unable to run Notebook:" + str(notebook)
 
 
 

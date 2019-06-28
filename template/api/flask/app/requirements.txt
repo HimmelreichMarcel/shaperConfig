@@ -18,3 +18,5 @@ pytest-cov==2.4.0
 minio
 sklearn
 numpy
+nbformat
+nbconvert

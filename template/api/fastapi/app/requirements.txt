@@ -34,3 +34,6 @@ sqlalchemy
 sklearn
 minio
 numpy
+
+nbconvert
+nbformat

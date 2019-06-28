@@ -4,6 +4,10 @@ import sklearn
 from sklearn.externals import joblib
 import numpy as np
 import os
+import nbformat
+from nbconvert.preprocessors import ExecuteProcessor
+
+
 app = Flask(__name__)
 
 @app.route('/predict/<bucket>/<filename>/<predict_size>')
@@ -20,6 +24,19 @@ def random_predict(bucket, filename, predict_size):
         return loaded_model.predict(data)
     except:
         return "Failed to predict"
+
+@app.route('/notebook/run/<notebook>')
+def run_notebook(notebook):
+    try:
+        file_path = "/home/jovyan/work/"
+
+        with open(file_path + notebook) as f:
+            nb = nbformat.read(f, as_version=4)
+        ep = ExecutePreprocessor(kernel_name='python3')
+        ep.preprocess(nb, {'metadata': {'path': 'work/'+str(notebook)}})
+        return "Run Notebook: " + str(notebook)
+    except:
+        return "Unable to run Notebook:" + str(notebook)
 
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0')

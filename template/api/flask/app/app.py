@@ -5,10 +5,15 @@ from sklearn.externals import joblib
 import numpy as np
 import os
 import nbformat
-from nbconvert.preprocessors import ExecuteProcessor
-
+from nbconvert.preprocessors import ExecutePreprocessor
 
 app = Flask(__name__)
+
+
+@app.route("/")
+def test():
+    return "This is a test message"
+
 
 @app.route('/predict/<bucket>/<filename>/<predict_size>')
 def random_predict(bucket, filename, predict_size):
@@ -24,6 +29,7 @@ def random_predict(bucket, filename, predict_size):
         return loaded_model.predict(data)
     except:
         return "Failed to predict"
+
 
 @app.route('/notebook/run/<notebook>')
 def run_notebook(notebook):

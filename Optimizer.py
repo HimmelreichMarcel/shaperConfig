@@ -328,11 +328,11 @@ class Optimizer(object):
         # API
         self.create_directory(project_path_compose + "/api")
         self.create_directory(project_path_compose + "/api/app")
-        if api_key == "flask":
+        if api_key == "fastapi":
             copyfile("./template/api/fastapi/Dockerfile", project_path_compose + "/api/Dockerfile")
             copyfile("./template/api/fastapi/app/app.py", project_path_compose + "/api/app/app.py")
             copyfile("./template/api/fastapi/app/requirements.txt", project_path_compose + "/api/app/requirements.txt")
-        elif api_key == "fastapi":
+        elif api_key == "flask":
             copyfile("./template/api/flask/Dockerfile", project_path_compose + "/api/Dockerfile")
             copyfile("./template/api/flask/app/app.py", project_path_compose + "/api/app/app.py")
             copyfile("./template/api/flask/app/requirements.txt", project_path_compose + "/api/app/requirements.txt")

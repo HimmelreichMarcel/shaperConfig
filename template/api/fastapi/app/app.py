@@ -5,8 +5,14 @@ from sklearn.externals import joblib
 import numpy as np
 import os
 import nbformat
-from nbconvert.preprocessors import ExecuteProcessor
+from nbconvert.preprocessors import ExecutePreprocessor
+
 app = FastAPI()
+
+
+@app.get("/")
+async def test():
+    return "This is a test message"
 
 
 @app.get("/predict/{bucket}/{filename}/{predict_size}")
@@ -24,8 +30,9 @@ async def random_predict(bucket: str, filename: str, predict_size: int):
     except:
         return "Failed to predict"
 
-@app.route('/notebook/run/{notebook}')
-def run_notebook(notebook: str):
+
+@app.get('/notebook/run/{notebook}')
+async def run_notebook(notebook: str):
     try:
         file_path = "/home/jovyan/work/"
 
@@ -37,7 +44,8 @@ def run_notebook(notebook: str):
     except:
         return "Unable to run Notebook:" + str(notebook)
 
-
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
 
     """
 @app.get("/add_table/{database}")

@@ -25,7 +25,7 @@ pytest
 #Postgres
 psycopg2
 pygresql
-postgresql
+joblib
 
 #MySQL MariaDB
 pymysql

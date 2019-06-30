@@ -1,7 +1,7 @@
 from flask import Flask, request
 from minio import Minio
 import sklearn
-from sklearn.externals import joblib
+import joblib
 import numpy as np
 import os
 import nbformat

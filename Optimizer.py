@@ -62,13 +62,13 @@ class Optimizer(object):
     def load_api(self):
         api = {}
         if "services" in self._shaper_config and "api" in self._shaper_config["services"]:
-            if "fastapi" in self._shaper_config["services"]["api"]:
-                api["fastapi"] = self.import_yaml("./template/api/api.yml")
+            if "bottle" in self._shaper_config["services"]["api"]:
+                api["bottle"] = self.import_yaml("./template/api/api.yml")
             if "flask" in self._shaper_config["services"]["api"]:
                 api["flask"] = self.import_yaml("./template/api/api.yml")
         else:
             api["flask"] = self.import_yaml("./template/api/api.yml")
-            api["fastapi"] = self.import_yaml("./template/api/api.yml")
+            api["bottle"] = self.import_yaml("./template/api/api.yml")
         return api
 
     def load_proxy(self):
@@ -328,10 +328,10 @@ class Optimizer(object):
         # API
         self.create_directory(project_path_compose + "/api")
         self.create_directory(project_path_compose + "/api/app")
-        if api_key == "fastapi":
-            copyfile("./template/api/fastapi/Dockerfile", project_path_compose + "/api/Dockerfile")
-            copyfile("./template/api/fastapi/app/app.py", project_path_compose + "/api/app/app.py")
-            copyfile("./template/api/fastapi/app/requirements.txt", project_path_compose + "/api/app/requirements.txt")
+        if api_key == "bottle":
+            copyfile("./template/api/bottle/Dockerfile", project_path_compose + "/api/Dockerfile")
+            copyfile("./template/api/bottle/app/app.py", project_path_compose + "/api/app/app.py")
+            copyfile("./template/api/bottle/app/requirements.txt", project_path_compose + "/api/app/requirements.txt")
         elif api_key == "flask":
             copyfile("./template/api/flask/Dockerfile", project_path_compose + "/api/Dockerfile")
             copyfile("./template/api/flask/app/app.py", project_path_compose + "/api/app/app.py")

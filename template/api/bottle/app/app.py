@@ -1,22 +1,21 @@
-from fastapi import FastAPI
+from bottle import route, run, template
+import bottle
 from minio import Minio
 import sklearn
-from sklearn.externals import joblib
+import joblib
 import numpy as np
 import os
 import nbformat
 from nbconvert.preprocessors import ExecutePreprocessor
 
-app = FastAPI()
+app = bottle.default_app()
 
+@route('/')
+def hello_world():
+    return "Hello, world! (From Full Stack Python)"
 
-@app.get("/")
-async def test():
-    return "This is a test message"
-
-
-@app.get("/predict/{bucket}/{filename}/{predict_size}")
-async def random_predict(bucket: str, filename: str, predict_size: int):
+@route('/predict/<bucket>/<filename>/<predict_size>')
+def random_predict(bucket, filename, predict_size):
     try:
         minio_client = Minio(
             endpoint="minio:9000",
@@ -31,21 +30,21 @@ async def random_predict(bucket: str, filename: str, predict_size: int):
         return "Failed to predict"
 
 
-@app.get('/notebook/run/{notebook}')
-async def run_notebook(notebook: str):
+@route('/notebook/run/<notebook>')
+def run_notebook(notebook):
     try:
         file_path = "/home/jovyan/work/"
 
         with open(file_path + notebook) as f:
             nb = nbformat.read(f, as_version=4)
         ep = ExecutePreprocessor(kernel_name='python3')
-        ep.preprocess(nb, {'metadata': {'path': 'work/' + str(notebook)}})
+        ep.preprocess(nb, {'metadata': {'path': 'work/'+str(notebook)}})
         return "Run Notebook: " + str(notebook)
     except:
         return "Unable to run Notebook:" + str(notebook)
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+if __name__ == "__main__":
+    run(host="0.0.0.0", port=8000, debug=True, reloader=True)
 
     """
 @app.get("/add_table/{database}")

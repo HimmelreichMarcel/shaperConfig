@@ -1,4 +1,7 @@
     command: uvicorn main:app --host 0.0.0.0 --port 8000
+http://api.platform.test/db/write/small_dataset.csv/postgres/test/train_table
+http://api.platform.test/learn/train/postgres/test/train_table
+http://api.platform.test/predict/test-bucket/model.sav/499
 
 
   image: traefik:latest

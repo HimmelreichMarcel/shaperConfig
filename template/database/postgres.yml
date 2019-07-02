@@ -4,9 +4,9 @@ database:
   ports:
     - "5432:5432"
   environment:
-    POSTGRES_DB: ${DATABASE}
-    POSTGRES_USER: ${USER}
-    POSTGRES_PASSWORD: ${PWD}
+    POSTGRES_DB: test
+    POSTGRES_USER: admin
+    POSTGRES_PASSWORD: admin
   volumes:
     - database:/var/lib/postgresql
     - ./db/init:/docker-entrypoint-initdb.d/

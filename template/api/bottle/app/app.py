@@ -14,7 +14,11 @@ app = bottle.default_app()
 def hello_world():
     return "Hello, world! (From Full Stack Python)"
 
-@route('/predict/<bucket>/<filename>/<predict_size>')
+@route('/test')
+def hello_world():
+    return "Test Page"
+
+@get('/predict/<bucket>/<filename>/<predict_size>')
 def random_predict(bucket, filename, predict_size):
     try:
         minio_client = Minio(
@@ -30,7 +34,7 @@ def random_predict(bucket, filename, predict_size):
         return "Failed to predict"
 
 
-@route('/notebook/run/<notebook>')
+@get('/notebook/run/<notebook>')
 def run_notebook(notebook):
     try:
         file_path = "/home/jovyan/work/"

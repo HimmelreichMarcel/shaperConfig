@@ -5,11 +5,13 @@ traefik:
     --docker.swarmmode \
     --docker.domain=${DOMAIN} \
     --docker.watch \
-    --logLevel=DEBUG
+    --logLevel=DEBUG\
+    --web.metrics.prometheus \
+    --web.address=:8088
   networks:
     - traefik-net
   ports:
-    - "8080:8080"
+    - "8088:8088"
     - "80:80"
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock

@@ -10,12 +10,15 @@ class DatabaseGenerator(object):
 
     def create_postgres_scheme(self):
         scheme = []
-        scheme.append("USE " + str(self._database) + ";")
+        scheme.append("\c " + str(self._database) + ";")
         scheme.append("CREATE TABLE " + str(self._table))
         scheme.append("(")
         counter = 0
         while counter < self._feature_count:
-            scheme.append("feature" + str(counter) + " INTEGER,")
+            if counter == self._feature_count - 1:
+                scheme.append("feature" + str(counter) + " INTEGER")
+            else:
+                scheme.append("feature" + str(counter) + " INTEGER,")
             counter = counter + 1
         scheme.append(")")
         self.export_file(scheme, self._project_path)

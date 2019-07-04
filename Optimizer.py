@@ -261,6 +261,9 @@ class Optimizer(object):
 
                             self.create_directory(project_path + "/roles/deploy-docker-stack/")
                             self.create_directory(project_path + "/roles/deploy-docker-stack/tasks")
+
+                            self.create_directory(project_path + "/roles/collect-metrics/")
+                            self.create_directory(project_path + "/roles/collect-metrics/tasks")
                             ansible = Ansible(config, project_path, network, project_name, self._output_path + "/small_dataset.csv")
                             ansible.generate()
 

@@ -18,6 +18,7 @@ from nbconvert.preprocessors import CellExecutionError
 import d6tstack
 from pymongo import MongoClient
 import pymysql
+
 app = Flask(__name__)
 
 
@@ -38,17 +39,27 @@ def random_predict(bucket, filename, predict_size):
             secret_key="testtest",
             secure=False)
         model = minio_client.get_object(bucket, filename)
-        #model = joblib.dump(model, filename)
-        #loaded_model = joblib.load(model)
-        #data = np.random.randint(0, 2, size=(100, int(predict_size)))
-        #predict = model.predict(data)
-        return "Predict success"+ "\n" + str(model)
+        with open(filename, 'wb') as file_data:
+            for d in model.stream(32 * 1024):
+                file_data.write(d)
+        loaded_model = None
+        with open(filename, 'rb') as file:
+            loaded_model = joblib.load(file)
+        data = np.random.randint(0, 2, size=(100, int(predict_size)))
+        predict = loaded_model.predict(data)
+        return "Predict success" + "\n" + str(loaded_model) + "\n" + str(predict)
     except Exception as error:
-        return "Failed to predict \n " + str(error) + "\n" + str(model)
+        msg = []
+        msg.append("Failed to Predict \n")
+        if hasattr(error, 'message'):
+            msg.append(error.message)
+        else:
+            msg.append(error)
+        return str(msg)
 
 
 @app.route('/db/write/<filename>/<db>/<db_name>/<table>')
-def write_db_data(filename,db , db_name, table):
+def write_db_data(filename, db, db_name, table):
     try:
         dataframe = pd.read_csv("/data/" + filename)
         db_str = get_db_str(db, db_name)

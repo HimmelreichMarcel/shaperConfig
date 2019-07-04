@@ -1,0 +1,20 @@
+---
+- name: Upload Data to Database
+  uri:
+    url: "http://api.platform.test/db/write/small_dataset.csv/postgres/test/train_table"
+    timeout: 6000
+
+- name: Train Machine Learning Models
+  uri:
+    url: "http://api.platform.test/learn/train/postgres/test/train_table"
+    timeout: 60000
+
+- name: Predict Data from trained Models
+  uri:
+    url: "http://api.platform.test/predict/test-bucket/model.joblib/499"
+    timeout: 6000
+  retries: 10
+  with_sequence: start=0 end=50000
+  async: 1000
+  poll: 0
+

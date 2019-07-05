@@ -333,7 +333,7 @@ class Optimizer(object):
         self.create_directory(project_path_compose + "/api/app")
         if api_key == "bottle":
             copyfile("./template/api/bottle/Dockerfile", project_path_compose + "/api/Dockerfile")
-            copyfile("./template/api/bottle/app/app.py", project_path_compose + "/api/app/app.py")
+            copyfile("./template/api/bottle/app/app.py", project_path_compose + "/api/app/main.py")
             copyfile("./template/api/bottle/app/requirements.txt", project_path_compose + "/api/app/requirements.txt")
         elif api_key == "flask":
             copyfile("./template/api/flask/Dockerfile", project_path_compose + "/api/Dockerfile")

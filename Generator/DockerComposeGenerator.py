@@ -2,13 +2,15 @@
 from Config import Config
 
 class ComposeGenerator:
-    def __init__(self, config=None, proxy="nginx", cluster=True, proxy_replica=1, api_replica=1, https=False):
+    def __init__(self, config=None, proxy="nginx", cluster=True, proxy_replica=1, api_replica=1, cpu=0.1, memory="100M",https=False):
         self.__config = config
         self._proxy = proxy
         self._cluster = cluster
         self.__api_rep = api_replica
         self.__proxy_rep = proxy_replica
         self._https = https
+        self._cpu = cpu
+        self._memory = memory
 
     def generate(self):
         compose = {}
@@ -55,11 +57,10 @@ class ComposeGenerator:
             # Create Service Network
             compose_service["networks"] = self.create_service_network(key)
 
-            if key == "nginx" and key not in ["nginx", "exporter", "nginx_letsencrypt"]:
+            if key == "nginx" and key not in [ "exporter", "nginx_letsencrypt"]:
                 environment = environment + self.create_nginx_environment(key, compose_service)
             if len(environment) > 0:
                 compose_service["environment"] = environment
-
 
             #Create Deploy  Config
             if config.get_cluster() and key != "consul-leader":
@@ -126,11 +127,13 @@ class ComposeGenerator:
         environment.append("VIRTUAL_HOST=" + str(key) + "." + str(self.__config.get_domain()))
         if self._https:
             environment.append("VIRTUAL_PROTO=https")
+        """
         if "ports" in service:
             if len(service["ports"]) > 1 or len(service["ports"]) == 1:
                 environment.append("VIRTUAL_PORT=" + str(service["ports"][0]))
             elif not isinstance(service["ports"], list):
                 environment.append("VIRTUAL_PORT=" + str(service["ports"]))
+        """
         return environment
 
     def create_service_network(self, key):
@@ -159,7 +162,10 @@ class ComposeGenerator:
         if "networks" in service:
             labels.append("traefik.docker.network=" + service["networks"][0])
         if "ports" in service:
-            labels.append("traefik.port=" + str(service["ports"][0].split(":")[0]))
+            if name == "traefik":
+                labels.append("traefik.port=8088")
+            else:
+                labels.append("traefik.port=" + str(service["ports"][0].split(":")[0]))
         #labels.append("traefik.webservice.frontend.entryPoints=https")
         #labels.append("traefik.frontend.auth.basic.users=${USER}:${PWD}")
         return labels
@@ -184,7 +190,7 @@ class ComposeGenerator:
         if key == "api" or key == "notebook":
             deploy["replicas"] = self.__api_rep
             deploy["mode"] = "replicated"
-            deploy["placement"]["constraints"] = ["node.role==manager"]
+            deploy["placement"]["constraints"] = ["node.role==worker"]
         elif key== "traefik" or key == "nginx":
             deploy["placement"]["constraints"] = ["node.role==manager"]
             deploy["replicas"] = self.__api_rep
@@ -201,6 +207,16 @@ class ComposeGenerator:
         else:
             deploy["placement"]["constraints"] = ["node.role==manager"]
             deploy["mode"] = "global"
+
+
+        if self._cpu is not None and self._memory is not None:
+            if key=="api" or key=="notebook" or key=="database":
+                deploy["resources"] = {}
+                deploy["resources"]["limits"] = {}
+                if self._cpu is not None:
+                    deploy["resources"]["limits"]["cpus"] = self._cpu
+                if self._memory is not None:
+                    deploy["resources"]["limits"]["memory"] = self._memory
 
         if self._proxy == "traefik":
             if self.__config.get_cluster():

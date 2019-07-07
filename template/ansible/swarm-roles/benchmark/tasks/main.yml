@@ -1,20 +1,29 @@
 ---
-- name: Upload Data to Database
-  uri:
-    url: "http://api.platform.test/db/write/small_dataset.csv/postgres/test/train_table"
-    timeout: 6000
+- name: Wait for Start Up
+  wait_for: timeout=300
 
 - name: Train Machine Learning Models
+  command: "curl http://api.platform.test/learn/train/postgres/test/train_table"
+  retries: 10
+  with_sequence: start=0 end=10
+  register: _train_job
+  async: 50
+  poll: 0
+  ignore_errors: true
+
+- name: Wait for Training to finish
   uri:
-    url: "http://api.platform.test/learn/train/postgres/test/train_table"
-    timeout: 60000
+    url: http://api.platform.test/learn/status/test-bucket/model.joblib
+    return_content: yes
+  register: response
+  until: response.content == "true"
+  retries: 1000
+  delay: 60
 
 - name: Predict Data from trained Models
-  uri:
-    url: "http://api.platform.test/predict/test-bucket/model.joblib/499"
-    timeout: 6000
+  command: "curl http://api.platform.test/predict/test-bucket/model.joblib/499"
   retries: 10
-  with_sequence: start=0 end=50000
-  async: 1000
+  with_sequence: start=0 end=500
+  async: 50
   poll: 0
-
+  ignore_errors: true

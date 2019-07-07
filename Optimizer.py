@@ -39,14 +39,17 @@ class Optimizer(object):
                 databases["mysql"] = self.import_yaml("./template/database/maria.yml")
             if "mongo" in self._shaper_config["services"]["database"]:
                 databases["mysql"] = self.import_yaml("./template/database/mongo.yml")
-            if "None" in self._shaper_config["services"]["database"]:
+            if "None" in self._shaper_config["services"]["database"] or "none" in self._shaper_config["services"]["database"]:
                 databases["None"] = None
+            if "minio" in self._shaper_config["services"]["database"]:
+                databases["minio"] = None
         else:
             databases["postgres"] = self.import_yaml("./template/database/postgres.yml")
-            databases["maria"] = self.import_yaml("./template/database/mariadb.yml")
+            #databases["maria"] = self.import_yaml("./template/database/mariadb.yml")
             databases["mongo"] = self.import_yaml("./template/database/mongodb.yml")
-            databases["mysql"] = self.import_yaml("./template/database/mysql.yml")
-            databases["None"] = None
+            #databases["mysql"] = self.import_yaml("./template/database/mysql.yml")
+            databases["None"] = {}
+            databases["minio"] = {}
         return databases
 
     def load_monitoring(self):
@@ -155,136 +158,142 @@ class Optimizer(object):
         #ip_list = self.get_ip_list()
 
         #Cluster Replica Config
-        replica = {"proxy": [1, 5, 10], "api": [1, 10, 25]}
+        replica = {"proxy": [1, 3, 5], "api": [1, 3, 5]}
+        cpus = [None]#,"0.1", "0.3", "0.5"]
+        memories = [None]#, "100M",  "500M", "1000M"]
         config_list = []
         for database_key, database_value in databases.items():
             for proxy_key, proxy_value in proxy.items():
                 for api_key, api_value in apis.items():
                     for proxy_replica in replica["proxy"]:
                         for api_replica in replica["api"]:
-                            print("Generate Config")
-                            print("Reverse Proxy:\t" + str(proxy_key))
-                            print("Replica;\t" + str(proxy_replica))
-                            print("Database:\t" + str(database_key))
-                            print("API:\t" + str(api_key))
-                            print("Replica:\t" + str(api_replica))
+                            for cpu in cpus:
+                                for mem in memories:
+                                    print("Generate Config")
+                                    print("Reverse Proxy:\t" + str(proxy_key))
+                                    print("Replica;\t" + str(proxy_replica))
+                                    print("Database:\t" + str(database_key))
+                                    print("API:\t" + str(api_key))
+                                    print("Replica:\t" + str(api_replica))
 
 
-                            project_name = "config_" + str(database_key) + "_" + str(proxy_key) + "_" + str(api_key) + "_" + str(proxy_replica) + "_" + str(api_replica)
-                            config_list.append(project_name)
-                            #project_path = self._output_path+configuration_name+str(configuration_sample)
-                            project_path = self._output_path + project_name
-                            project_path_compose = project_path
-                            self.create_directory(project_path)
-                            self.create_directory(project_path_compose)
-                            configuration_sample = configuration_sample + 1
+                                    project_name = "config_" + str(database_key) + "_" + str(proxy_key) + "_" + str(api_key) + "_" + str(proxy_replica) + "_" + str(api_replica) + "_" + str(cpu) + "_" + str(mem)
+                                    config_list.append(project_name)
+                                    #project_path = self._output_path+configuration_name+str(configuration_sample)
+                                    project_path = self._output_path + project_name
+                                    project_path_compose = project_path
+                                    self.create_directory(project_path)
+                                    self.create_directory(project_path_compose)
+                                    configuration_sample = configuration_sample + 1
 
-                            """
-                            services = {}
-                            services.update(self.load_registry())
-                            # Create Config Element
-                            config = Config(self._shaper_config, services)
+                                    """
+                                    services = {}
+                                    services.update(self.load_registry())
+                                    # Create Config Element
+                                    config = Config(self._shaper_config, services)
+        
+                                    # Create Compose File
+                                    compose_generator = composer(config=config, proxy=proxy_key,
+                                                                 proxy_replica=proxy_replica, api_replica=api_replica)
+                                    compose_file = compose_generator.generate()
+                                    network = compose_generator.create_network()
+                                    self.export_yaml(compose_file, project_path_compose + '/docker-requirements.yaml')
+                                    """
+                                    # Create Services
+                                    services = {}
+                                    if database_key != "None":
+                                        services.update(database_value)
+                                    services.update(proxy_value)
+                                    services.update(api_value)
+                                    services.update(monitoring)
+                                    services.update(notebook)
+                                    services.update(self.load_minio())
+                                    if proxy_key == "traefik" and "cluster" in self._shaper_config:
+                                        services.update(self.load_consul())
+                                        services.update(self.load_consul_leader())
+                                    elif proxy_key == "nginx" and "security" in self._shaper_config:
+                                        services.update(self.load_nginx_letsencrypt())
+                                    # Create Config Element
+                                    if database_key != "None" and "database" in database_value or database_key != "minio" and "database" in database_value:
+                                        metadata = {}
+                                        metadata["db_port"] = database_value["database"]["ports"][0]
+                                        metadata["db_adress"] = database_key
+                                        config = Config(self._shaper_config, services, metadata=metadata)
+                                    else:
+                                        config = Config(self._shaper_config, services)
 
-                            # Create Compose File
-                            compose_generator = composer(config=config, proxy=proxy_key,
-                                                         proxy_replica=proxy_replica, api_replica=api_replica)
-                            compose_file = compose_generator.generate()
-                            network = compose_generator.create_network()
-                            self.export_yaml(compose_file, project_path_compose + '/docker-requirements.yaml')
-                            """
-                            # Create Services
-                            services = {}
-                            if database_key != "None":
-                                services.update(database_value)
-                            services.update(proxy_value)
-                            services.update(api_value)
-                            services.update(monitoring)
-                            services.update(notebook)
-                            services.update(self.load_minio())
-                            if proxy_key == "traefik" and "cluster" in self._shaper_config:
-                                services.update(self.load_consul())
-                                services.update(self.load_consul_leader())
-                            elif proxy_key == "nginx" and "security" in self._shaper_config:
-                                services.update(self.load_nginx_letsencrypt())
-                            # Create Config Element
-                            if database_key != "None":
-                                metadata = {}
-                                metadata["db_port"] = database_value["database"]["ports"][0]
-                                metadata["db_adress"] = database_key
-                                config = Config(self._shaper_config, services, metadata=metadata)
-                            else:
-                                config = Config(self._shaper_config, services)
+                                    # Create Compose File
+                                    compose_generator = composer(config=config, proxy=proxy_key,
+                                                                 proxy_replica=proxy_replica, api_replica=api_replica,cpu=cpu, memory=mem)
+                                    compose_file = compose_generator.generate()
+                                    network = compose_generator.create_network()
+                                    self.export_yaml(compose_file, project_path_compose + '/docker-compose.yaml')
 
-                            # Create Compose File
-                            compose_generator = composer(config=config, proxy=proxy_key,
-                                                         proxy_replica=proxy_replica, api_replica=api_replica)
-                            compose_file = compose_generator.generate()
-                            network = compose_generator.create_network()
-                            self.export_yaml(compose_file, project_path_compose + '/docker-compose.yaml')
+                                    #Database Schema
+                                    database = DB(config, project_path)
 
-                            #Database Schema
-                            database = DB(config, project_path)
-
-                            self.create_directory(project_path + "/db")
-                            self.create_directory(project_path + "/db/init")
-                            if database_key == "mysql" or database_key == "maria":
-                                database.create_mysql_scheme()
-                            elif database_key == "postgres":
-                                database.create_postgres_scheme()
-
-
-                            # PROXY
-                            self.generate_proxy(config, proxy_key, project_path_compose)
-
-                            #Monitoring
-                            self.generate_monitoring(proxy_key, project_path_compose)
-
-                            # API
-                            self.generate_API(api_key, project_path_compose)
-
-                            # Environment File
-                            environment_gen = environment(config)
-                            environment_data = environment_gen.generate()
-                            #print("Environment Data:")
-                            #print(environment_data)
-                            self.export_environment(environment_data, project_path_compose)
+                                    self.create_directory(project_path + "/db")
+                                    self.create_directory(project_path + "/db/init")
+                                    if database_key == "mysql" or database_key == "maria":
+                                        database.create_mysql_scheme()
+                                    elif database_key == "postgres":
+                                        database.create_postgres_scheme()
 
 
-                            #Create Ansible Project
-                            self.create_directory(project_path + "/roles/")
-                            self.create_directory(project_path + "/group_vars/")
-                            self.create_directory(project_path + "/roles/create-network/")
-                            self.create_directory(project_path + "/roles/create-network/tasks")
+                                    # PROXY
+                                    self.generate_proxy(config, proxy_key, project_path_compose)
 
-                            self.create_directory(project_path + "/roles/copy-docker-stack/")
-                            self.create_directory(project_path + "/roles/copy-docker-stack/tasks")
+                                    #Monitoring
+                                    self.generate_monitoring(proxy_key, project_path_compose)
 
-                            self.create_directory(project_path + "/roles/deploy-docker-stack/")
-                            self.create_directory(project_path + "/roles/deploy-docker-stack/tasks")
+                                    # API
+                                    self.generate_API(api_key, project_path_compose)
 
-                            self.create_directory(project_path + "/roles/collect-metrics/")
-                            self.create_directory(project_path + "/roles/collect-metrics/tasks")
-                            ansible = Ansible(config, project_path, network, project_name, self._output_path + "/small_dataset.csv")
-                            ansible.generate()
+                                    # Environment File
+                                    environment_gen = environment(config)
+                                    environment_data = environment_gen.generate()
+                                    #print("Environment Data:")
+                                    #print(environment_data)
+                                    self.export_environment(environment_data, project_path_compose)
 
-                            #Create Volume Directories
-                            self.create_directory(project_path + "/jupyter/")
-                            self.create_directory(project_path + "/jupyter/working/")
-                            copyfile("./template/example/train.ipynb", project_path + "/jupyter/working/train.ipynb")
-                            self.create_directory(project_path + "/jupyter/dataset/")
-                            self.create_directory(project_path + "/jupyter/module/")
-                            self.create_directory(project_path + "/jupyter/ssl/")
 
-                            self.create_directory(project_path + "/grafana/")
-                            self.create_directory(project_path + "/grafana/provisioning")
+                                    #Create Ansible Project
+                                    self.create_directory(project_path + "/roles/")
+                                    self.create_directory(project_path + "/group_vars/")
+                                    self.create_directory(project_path + "/roles/create-network/")
+                                    self.create_directory(project_path + "/roles/create-network/tasks")
 
-                            #Create Daemon File
-                            daemon = []
-                            daemon.append("{")
-                            daemon.append("\"metrics-addr\": \"127.0.0.1:9323\",")
-                            daemon.append("\"experimental\": true")
-                            daemon.append("}")
-                            self.export_daemon(daemon, project_path)
+                                    self.create_directory(project_path + "/roles/copy-docker-stack/")
+                                    self.create_directory(project_path + "/roles/copy-docker-stack/tasks")
+
+                                    self.create_directory(project_path + "/roles/deploy-docker-stack/")
+                                    self.create_directory(project_path + "/roles/deploy-docker-stack/tasks")
+
+                                    self.create_directory(project_path + "/roles/collect-metrics/")
+                                    self.create_directory(project_path + "/roles/collect-metrics/tasks")
+                                    ansible = Ansible(config, project_path, network, project_name, self._output_path + "/small_dataset.csv")
+                                    ansible.generate()
+
+                                    #Create Volume Directories
+                                    self.create_directory(project_path + "/jupyter/")
+                                    self.create_directory(project_path + "/jupyter/working/")
+                                    copyfile("./template/example/train.ipynb", project_path + "/jupyter/working/train.ipynb")
+                                    self.create_directory(project_path + "/jupyter/dataset/")
+                                    self.create_directory(project_path + "/jupyter/module/")
+                                    self.create_directory(project_path + "/jupyter/ssl/")
+
+                                    self.create_directory(project_path + "/grafana/")
+                                    self.create_directory(project_path + "/grafana/provisioning")
+
+                                    self.create_directory(project_path + "/metric")
+
+                                    #Create Daemon File
+                                    daemon = []
+                                    daemon.append("{")
+                                    daemon.append("\"metrics-addr\": \"127.0.0.1:9323\",")
+                                    daemon.append("\"experimental\": true")
+                                    daemon.append("}")
+                                    self.export_daemon(daemon, project_path)
 
         print("Create Ansible for Testing All Configs")
         inventory = ansible.create_inventory()

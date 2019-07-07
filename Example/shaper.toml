@@ -9,6 +9,9 @@ docker_password = "ShadoWsong000"
 
 [monitoring]
 
+[services]
+proxy="traefik"
+
 [cluster]
 name="mlstack"
 manager=["192.168.2.100"]

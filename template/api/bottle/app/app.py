@@ -58,22 +58,119 @@ def random_predict(bucket, filename, predict_size):
         return str(msg)
 
 
+
+def get_minio_data(bucket, filename):
+    try:
+        minio_client = Minio(
+            endpoint="minio:9000",
+            access_key="test",
+            secret_key="testtest",
+            secure=False)
+
+        model = minio_client.get_object(bucket, filename)
+        with open(filename, 'wb') as file_data:
+            for d in model.stream(32 * 1024):
+                file_data.write(d)
+
+        with open(filename, 'rb') as file:
+            return str(file)
+    except Exception as error:
+        return error
+
+
+
+def write_minio_data(bucket, path, filename):
+    try:
+        minio_client = Minio(
+            endpoint="minio:9000",
+            access_key="test",
+            secret_key="testtest",
+            secure=False)
+
+        with open(path, 'rb') as file_data:
+            file_stat = os.stat(path)
+            minio_client.put_object("test-bucket", filename, file_data, file_stat.st_size)
+            return str(file_data)
+    except Exception as error:
+        return error
+
 @route('/db/write/<filename>/<db>/<db_name>/<table>')
 def write_db_data(filename, db, db_name, table):
     try:
-        dataframe = pd.read_csv("/data/" + filename)
-        db_str = get_db_str(db, db_name)
-        write_data_to_database(db,db_str, table, dataframe)
-        return str(dataframe.head(10))
+        if db == "minio":
+            dataframe = write_minio_data("test-bucket", "/data/" + str(filename), filename)
+        else:
+            dataframe = pd.read_csv("/data/" + filename)
+            db_str = get_db_str(db, db_name)
+            write_data_to_database(db,db_str, table, dataframe)
+        return str(dataframe)
     except Exception as error:
         return "Error Writing Data to Database" + str(error)
 
+@route('/learn/status/<bucket>/<filename>')
+def status(bucket, filename):
+    found = False
+    try:
+        minio_client = Minio(
+            endpoint="minio:9000",
+            access_key="test",
+            secret_key="testtest",
+            secure=False)
+        model = minio_client.stat_object(bucket, filename)
+        found = True
+    except Exception as error:
+        #data = read_db_data(db, db_str, table)
+        return "!!!Failed to check Data in Minio!!!" + str(error)# +
+    if found:
+        return "true"
+    else:
+        return "false"
+
+@route('/db/table/<db>/<db_name>/<table>/<count>')
+def create_table(db, db_name, table, count):
+    try:
+        cnx = create_engine(get_db_str(db, db_name))
+        con = cnx.connect()
+        sql_command = "CREATE TABLE " + str(db_name) + "." + str(table) + " ("
+        counter = 0
+        while counter < int(count):
+            if counter == int(count) - 1:
+                sql_command += "feature" + str(counter) + " INTEGER"
+            else:
+                sql_command += "feature" + str(counter) + " INTEGER,"
+            counter = counter + 1
+        sql_command += ")"
+        msg = con.execute(sql_command)
+        return str(msg)
+    except Exception as error:
+        return "Failed to Create Table" + str(error)
+
+
+@route('/db/permission/<db>/<db_name>')
+def permission(db, db_name):
+    try:
+        cnx = create_engine(get_db_str(db, db_name))
+        con = cnx.connect()
+        sql_command = []
+        sql_command.append("GRANT ALL PRIVILEGES ON *.* TO \'admin\'@\'%\' IDENTIFIED BY \'admin\' WITH GRANT OPTION; "
+                   "GRANT ALL PRIVILEGES ON *.* TO \'admin'@'database\' IDENTIFIED BY \'admin\' WITH GRANT OPTION; "
+                   "FLUSH PRIVILEGES;")
+        sql_command.append("GRANT ALL PRIVILEGES ON *.* TO \'root\'@\'%\' IDENTIFIED BY \'admin\' WITH GRANT OPTION; "
+                   "GRANT ALL PRIVILEGES ON *.* TO \'root'@'database\' IDENTIFIED BY \'admin\' WITH GRANT OPTION; "
+                   "FLUSH PRIVILEGES;")
+        msg = con.execute(sql_command)
+        return str(msg)
+    except Exception as error:
+        return "Failed to Create Table" + str(error)
 
 @route('/learn/train/<db>/<db_name>/<table>')
 def train_model(db, db_name, table):
     try:
         db_str = get_db_str(db,db_name)
-        data = read_db_data(db, db_str, table)
+        if db == "minio" or db == "None":
+            data = pd.read_csv("/data/small_dataset.csv")
+        else:
+            data = read_db_data(db, db_str, table)
 
         classifier = svm.SVC(gamma=0.001, C=100.)
 
@@ -91,7 +188,9 @@ def train_model(db, db_name, table):
 
         return "Training Done" + str(metric) + str(data)
     except Exception as error:
-        return "!!!Failed Train Model!!!" + str(error)
+        #data = read_db_data(db, db_str, table)
+        return "!!!Failed Train Model!!!" + str(error)# + str(data)
+
 
 def store_data(classifier, filename):
     minio_client = Minio(
@@ -114,6 +213,7 @@ def store_data(classifier, filename):
         file_stat = os.stat(filename)
         minio_client.put_object("test-bucket", filename, file_data, file_stat.st_size)
 
+
 def get_db_str(database, db_name):
     if database == "postgres":
         DIALECT = "postgresql+psycopg2"
@@ -126,7 +226,7 @@ def get_db_str(database, db_name):
         DIALECT = "mysql+pymysql"
         DB_ADDRESS = "database"
         DB_PORT = "3306"
-        DB_USERNAME = "root"
+        DB_USERNAME = "admin"
         DB_PASSWORD = "admin"
         DB_NAME = db_name
     elif database == "mongo":
@@ -135,13 +235,22 @@ def get_db_str(database, db_name):
         DB_PORT = "27017"
         DB_USERNAME = "admin"
         DB_PASSWORD = "admin"
-        DB_NAME = "admin"
+        DB_NAME = db_name
+    else:
+        DIALECT = "mongodb"
+        DB_ADDRESS = "database"
+        DB_PORT = "27017"
+        DB_USERNAME = "admin"
+        DB_PASSWORD = "admin"
+        DB_NAME = db_name
+
     db_str = ('{dialect}://{username}:{password}@{ipaddress}/{dbname}'.format(dialect=DIALECT,
                                                                               username=DB_USERNAME,
                                                                               password=DB_PASSWORD,
                                                                               ipaddress=DB_ADDRESS,
                                                                               dbname=DB_NAME))
     return db_str
+
 
 def read_db_data(database, db_str, table):
     try:
@@ -159,6 +268,7 @@ def read_db_data(database, db_str, table):
         return data
     except Exception as error:
         return "!!!Failed read Data!!!" + str(error)
+
 
 def write_data_to_database(database, db_str, table, data):
     try:

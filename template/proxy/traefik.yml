@@ -11,8 +11,12 @@ traefik:
   networks:
     - traefik-net
   ports:
-    - "8088:8088"
-    - "80:80"
+      - target: 80
+        published: 80
+        mode: host
+      - target: 8088
+        published: 8088
+        mode: host
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     - /dev/null:/traefik.toml

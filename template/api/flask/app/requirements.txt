@@ -26,3 +26,4 @@ pymongo
 d6tstack==0.1.9
 pymysql
 psycopg2-binary
+cryptography

@@ -38,3 +38,4 @@ pymongo
 nbconvert
 nbformat
 d6tstack==0.1.9
+cryptography

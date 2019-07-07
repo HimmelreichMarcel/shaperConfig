@@ -1,0 +1,12 @@
+---
+- name: Start Bechmark Test
+  become: true
+  hosts: manager
+  roles:
+    - benchmark
+
+- name: Collect Metrics
+  become: true
+  hosts: manager
+  roles:
+    - collect-metrics

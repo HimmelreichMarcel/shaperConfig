@@ -1,10 +1,10 @@
 database:
   image: mariadb:latest
   environment:
-    MYSQL_ROOT_PASSWORD: ${PWD}
-    MYSQL_DATABASE: ${DATABASE}
-    MYSQL_USER: ${USER}
-    MYSQL_PASSWORD: ${PWD}
+    MYSQL_ROOT_PASSWORD: admin
+    MYSQL_DATABASE: test
+    MYSQL_USER: admin
+    MYSQL_PASSWORD: admin
   ports:
     - 3306:3306
   logging:
@@ -14,3 +14,4 @@ database:
   restart: on-failure
   volumes:
     - database:/var/lib/mysql
+    - ./db/init/setup.sql:/docker-entrypoint-initdb.d/setup.sql

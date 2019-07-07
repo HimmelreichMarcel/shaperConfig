@@ -5,7 +5,7 @@
     password: "{{ dockerhub_password }}"
 
 - name: Build Image
-  shell: cd /home/{{ansible_user}}/deploy/{{project_path}}/ && docker build ./api -t {{dockerhub_user}}/api
+  shell: cd /home/{{ansible_user}}/deploy/{{project_path}}/ && docker build ./api -t {{dockerhub_user}}/api:latest
 
 - name: Push Image
-  shell: docker push {{dockerhub_user}}/api
+  shell: docker push {{dockerhub_user}}/api:latest

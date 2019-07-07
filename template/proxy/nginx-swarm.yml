@@ -1,0 +1,11 @@
+nginx:
+  image: jwilder/nginx-proxy:alpine
+  container_name: nginx
+  ports:
+    - "80:80"
+  volumes:
+    - proxy:/etc/nginx/certs
+    - proxy:/etc/nginx/vhost.d
+    - proxy:/usr/share/nginx/html
+    - '/var/run/docker.sock:/tmp/docker.sock:ro'
+

@@ -1,4 +1,6 @@
 api:
   restart: always
+  volumes:
+    - /home/marcel/data/:/data/
   ports:
-    - 8000:8000
+    - 5000:5000

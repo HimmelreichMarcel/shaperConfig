@@ -2,13 +2,15 @@
 from Config import Config
 
 class ComposeGenerator:
-    def __init__(self, config=None, proxy="nginx", cluster=True, proxy_replica=1, api_replica=1, https=False):
+    def __init__(self, config=None, proxy="nginx", cluster=True, proxy_replica=1, api_replica=1, cpu=0.1, memory="100M",https=False):
         self.__config = config
         self._proxy = proxy
         self._cluster = cluster
         self.__api_rep = api_replica
         self.__proxy_rep = proxy_replica
         self._https = https
+        self._cpu = cpu
+        self._memory = memory
 
     def generate(self):
         compose = {}
@@ -17,7 +19,7 @@ class ComposeGenerator:
         compose["services"] = self.create_services()
         compose["networks"] = self.create_network()
         compose["volumes"] = self.create_volumes()
-        compose["secrets"] = self.create_secrets()
+        #compose["secrets"] = self.create_secrets()
         return compose
 
     def create_services(self):
@@ -39,6 +41,10 @@ class ComposeGenerator:
                     compose_service["deploy"]["placement"]['contraints"'] = "node.role == manager"
             else:
             """
+            if key=="notebook":
+                compose_service["environment"] = []
+                compose_service["environment"].append("JUPYTER_TOKEN="+ self.__config.get_token())
+
             environment = []
             if key == "api":
                 compose_service["image"] = str(self.__config.get_docker_user())+"/api"
@@ -51,18 +57,17 @@ class ComposeGenerator:
             # Create Service Network
             compose_service["networks"] = self.create_service_network(key)
 
-            if self._proxy == "nginx" and key not in ["nginx", "exporter", "nginx_letsencrypt"]:
+            if key == "nginx" and key not in [ "exporter", "nginx_letsencrypt"]:
                 environment = environment + self.create_nginx_environment(key, compose_service)
             if len(environment) > 0:
                 compose_service["environment"] = environment
 
-
             #Create Deploy  Config
-            if config.get_cluster():
+            if config.get_cluster() and key != "consul-leader":
                 compose_service["deploy"] = self.create_deploy(key, value)
 
             #Create Traefik Labels
-            if self._proxy == "traefik" and not config.get_cluster():
+            if self._proxy == "traefik" and not config.get_cluster() and key is not "traefik":
                 if config.get_cluster():
                     labels = []
                     labels = self.create_traefik_labels(key, value)
@@ -76,16 +81,59 @@ class ComposeGenerator:
             compose_services[key] = compose_service
         return compose_services
 
+    def create_short_traefik_command(self):
+        command = []
+
+        #Consul
+        command.append("--consul")
+        command.append("--consul.endpoint=consul:8500")
+        command.append("--consulk.prefix=traefik")
+
+        return command
+
+    def create_traefik_command(self):
+        command = []
+        command.append("storeconfig")
+        command.append("--api")
+
+        #Entrypoints
+        command.append("--entrypoints=Name: http Adress::80 Redirect.EntryPoint:https")
+        command.append("--entrypoints=Name:https Address::443 TLS")
+        command.append("--defaultentrypoints=http,https")
+
+        #ACME
+        command.append("--acme")
+        command.append("--acme.storage=traefik/acme/account")
+        command.append("--acme.entryPoint=https")
+        command.append("--acme.httpChallenge.entryPoint=http")
+        command.append("--acme.onHostRule=true")
+        command.append("--acme.onDemand=false")
+        command.append("--acme.email=" + str(self.__config.get_email()))
+
+        #Docker
+        command.append("--docker")
+        command.append("--docker.swarmMode")
+        command.append("--docker.watch")
+
+        #Consul
+        command.append("--consul")
+        command.append("--consul.endpoint=consul:8500")
+        command.append("--consulk.prefix=traefik")
+
+        return command
+
     def create_nginx_environment(self, key, service):
         environment = []
         environment.append("VIRTUAL_HOST=" + str(key) + "." + str(self.__config.get_domain()))
         if self._https:
             environment.append("VIRTUAL_PROTO=https")
+        """
         if "ports" in service:
             if len(service["ports"]) > 1 or len(service["ports"]) == 1:
                 environment.append("VIRTUAL_PORT=" + str(service["ports"][0]))
             elif not isinstance(service["ports"], list):
                 environment.append("VIRTUAL_PORT=" + str(service["ports"]))
+        """
         return environment
 
     def create_service_network(self, key):
@@ -97,7 +145,7 @@ class ComposeGenerator:
             networks.append("proxy")
         elif key == "prometheus" or key == "grafana" or key == "cadvisor" or key == "registry":
             networks.append("web")
-        elif key == "consul":
+        elif key == "consul" or key == "traefik_init":
             networks.append("proxy")
         else:
             networks.append("web")
@@ -108,11 +156,18 @@ class ComposeGenerator:
         labels.append("traefik.enable=true")
         domain = self.__config.get_domain()
         labels.append("traefik.backend=" + name)
-        labels.append("traefik.frontend.rule=Host:" + name + "." + str(domain) + "\"")
-        if "network" in service:
-            labels.append("traefik.docker.network=" + service["network"])
+        labels.append("traefik.frontend.rule=Host:" + name + "." + str(domain))
+        #labels.append("traefik.redirectorservice.frontend.entryPoints=http")
+        #labels.append("traefik.redirectorservice.frontend.redirect.entryPoint=https")
+        if "networks" in service:
+            labels.append("traefik.docker.network=" + service["networks"][0])
         if "ports" in service:
-            labels.append("traefik.port=" + str(service["ports"][0]))
+            if name == "traefik":
+                labels.append("traefik.port=8088")
+            else:
+                labels.append("traefik.port=" + str(service["ports"][0].split(":")[0]))
+        #labels.append("traefik.webservice.frontend.entryPoints=https")
+        #labels.append("traefik.frontend.auth.basic.users=${USER}:${PWD}")
         return labels
 
     def create_traefik_monitoring_service(self):
@@ -134,17 +189,34 @@ class ComposeGenerator:
         deploy["placement"] = {}
         if key == "api" or key == "notebook":
             deploy["replicas"] = self.__api_rep
+            deploy["mode"] = "replicated"
             deploy["placement"]["constraints"] = ["node.role==worker"]
         elif key== "traefik" or key == "nginx":
             deploy["placement"]["constraints"] = ["node.role==manager"]
-            deploy["replicas"] = self.__proxy_rep
+            deploy["replicas"] = self.__api_rep
             deploy["restart_policy"] = {}
             deploy["restart_policy"]["condition"] = "any"
-        elif key == "prometheus" or key == "grafana" or key == "cadvisor" or key == "registry":
+        elif key == "prometheus" or key == "grafana" or key == "registry":
             deploy["placement"]["constraints"] = ["node.role==manager"]
             deploy["replicas"] = 1
+        elif key == "minio":
+            deploy["placement"]["constraints"] = ["node.role==worker"]
+            deploy["replicas"] = 1
+        elif key == "database" or key == "traefik_init":
+            deploy["placement"]["constraints"] = ["node.role==manager"]
         else:
             deploy["placement"]["constraints"] = ["node.role==manager"]
+            deploy["mode"] = "global"
+
+
+        if self._cpu is not None and self._memory is not None:
+            if key=="api" or key=="notebook" or key=="database":
+                deploy["resources"] = {}
+                deploy["resources"]["limits"] = {}
+                if self._cpu is not None:
+                    deploy["resources"]["limits"]["cpus"] = self._cpu
+                if self._memory is not None:
+                    deploy["resources"]["limits"]["memory"] = self._memory
 
         if self._proxy == "traefik":
             if self.__config.get_cluster():
@@ -178,18 +250,19 @@ class ComposeGenerator:
     def create_volumes(self):
         volumes = {}
         if self._proxy == "traefik" and self.__config.get_cluster():
-            volumes["consul-data"] = {}
-            volumes["consul-data"]["driver"] = "[not local]"
+            volumes["consul-data-leader"] = {}
+            volumes["consul-data-replica"] = {}
         volumes["prometheus_data"] = {}
         volumes["grafana_data"] = {}
         volumes["database"] = {}
         volumes["proxy"] = {}
         volumes["notebook"] = {}
         volumes["registry"] = {}
+        volumes["minio"] = {}
         return volumes
 
     def create_secrets(self):
         secrets = {}
-        secrets["builder_domain.crt"]= {"file": "/etc/ssl/crt/" + str(self.__config.get_domain()) + ".crt"}
-        secrets["builder_domain.key"]= {"file": "/etc/ssl/private/" + str(self.__config.get_domain()) + ".pem"}
+        secrets["builder_domain.crt"] = {"file": "/etc/ssl/crt/" + str(self.__config.get_domain()) + ".crt"}
+        secrets["builder_domain.key"] = {"file": "/etc/ssl/private/" + str(self.__config.get_domain()) + ".pem"}
         return secrets

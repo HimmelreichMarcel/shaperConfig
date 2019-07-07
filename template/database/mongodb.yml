@@ -2,13 +2,12 @@ database:
     image: mongo:latest
     container_name: "mongodb"
     environment:
-      - MONGO_INITDB_ROOT_USERNAME: ${USER}
-      - MONGO_INITDB_ROOT_PASSWORD: ${PWD}
-      - MONGO_INITDB_DATABASE: ${DATABASE}
-      - MONGO_DATA_DIR=/data/db
-      - MONGO_LOG_DIR=/dev/null
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: test
     volumes:
       - database:/data/db
+      - ./db/init:/docker-entrypoint-initdb.d/
     ports:
         - 27017:27017
     command: mongod --smallfiles --logpath=/dev/null # --quiet

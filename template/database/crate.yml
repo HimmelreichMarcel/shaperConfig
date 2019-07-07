@@ -1,0 +1,10 @@
+crate:
+  image: crate
+  ports:
+    - "4200:4200"
+    - "5432:5432"
+  volumes:
+    - /mnt/data/crate:/data
+  environment:
+    CRATE_HEAP_SIZE: 16g
+  command: crate -Cnode.name=crate-1

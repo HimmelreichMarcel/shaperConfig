@@ -12,7 +12,7 @@ import yaml
 
 def main():
     compose_path = "/home/standardheld/Documents/Github/shaperConfig/Example/docker-compose.yml"
-    shaper_path = "/home/standardheld/Documents/Github/shaperConfig/Example/shaper.toml"
+    shaper_path = "/home/standardheld/Documents/Github/shaperConfig/Example/shaper_ssh.toml"
     output_path = "/home/standardheld/CONFIGS/"
     #parser = ParserYAML(shaper_path, compose_path)
     #config = parser.create_config()

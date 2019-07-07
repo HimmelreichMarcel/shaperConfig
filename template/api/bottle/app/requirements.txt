@@ -21,10 +21,21 @@ ujson
 # Automated tests
 pytest
 pytest
-
+pandas
 #Postgres
 psycopg2
 pygresql
+joblib
 
 #MySQL MariaDB
+pymysql
+sqlalchemy
 
+sklearn
+minio
+numpy
+pymongo
+nbconvert
+nbformat
+d6tstack==0.1.9
+cryptography

@@ -1,6 +1,6 @@
 ---
 - name: Get Docker Meta Data
-  shell: docker system df
+  shell: docker stack down {{swarm_name}}
   register: swarm_meta
   ignore_errors: true
   tags: swarm

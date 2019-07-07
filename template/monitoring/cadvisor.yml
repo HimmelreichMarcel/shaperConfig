@@ -1,11 +1,13 @@
 cadvisor:
   image: google/cadvisor
+  command: -logtostderr -docker_only
   volumes:
+    - /var/run/docker.sock:/var/run/docker.sock:ro
     - /:/rootfs:ro
-    - /var/run:/var/run:rw
+    - /var/run:/var/run
     - /sys:/sys:ro
     - /var/lib/docker/:/var/lib/docker:ro
   ports:
-    - 8088:8088
+    - 8080:8080
   restart: always
 

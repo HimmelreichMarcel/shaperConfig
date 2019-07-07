@@ -1,0 +1,10 @@
+minio:
+  image: minio/minio:latest
+  volumes:
+   - minio:/data
+  ports:
+   - "9000:9000"
+  command: server /data
+  environment:
+   MINIO_ACCESS_KEY: test
+   MINIO_SECRET_KEY: testtest

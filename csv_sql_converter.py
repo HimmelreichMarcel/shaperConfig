@@ -9,7 +9,7 @@
 #	3) Save as file type .CSV
 # -------------------------------------------------------------------------
 
-import csv, os, string, sys
+import csv_test, os, string, sys
 
 if len(sys.argv) < 2:
     print
@@ -43,7 +43,7 @@ for i in range(255):
 deltable = string.maketrans(' ', '_')
 
 # Create list of column [names],[widths]
-reader = csv.reader(file(datafile), dialect='excel')
+reader = csv_test.reader(file(datafile), dialect='excel')
 row = reader.next()
 nc = len(row)
 cols = []

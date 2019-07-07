@@ -17,7 +17,7 @@ def curve_shift(df, shift_by):
     Inputs:
     df       A pandas dataframe with a binary labeled column.
              This labeled column should be named as 'y'.
-    shift_by An integer denoting the number of rows to shift.
+    shift_by An   denoting the number of rows to shift.
 
     Output
     df       A dataframe with the binary labels shifted by shift.

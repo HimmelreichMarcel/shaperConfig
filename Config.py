@@ -1,6 +1,9 @@
+import random
+import string
+import IPython
 
 class Config(object):
-    def __init__(self, config, services, networks=[], volumes=[], replicas={}, metadata={}):
+    def __init__(self, config, services, networks=[], volumes=[], replicas={}, metadata=None):
         self.__config = config
         self.__compose_services = services
         self.__networks = networks
@@ -10,11 +13,10 @@ class Config(object):
 
         if "security" in self.__config:
             self._security = True
-            self._email = self.__config["security"]["email"]
         else:
             self._security = False
-            self._email = ""
 
+        self._email = self.__config["admin"]["email"]
         if "monitoring" in self.__config:
             self._monitoring = True
         else:
@@ -49,11 +51,16 @@ class Config(object):
             self._password = "admin"
             self._database = "database"
 
+        self._feature_count = 500
+        self._table = "train_table"
+
         if "cluster" in self.__config:
             self._cluster = True
             self._cluster_name = self.__config["cluster"]["name"]
             self._manager = self.__config["cluster"]["manager"]
             self._worker = self.__config["cluster"]["worker"]
+            self._manager_ip = self.__config["cluster"]["manager_ip"]
+            self._worker_ip = self.__config["cluster"]["worker_ip"]
             self._ssh_user = self.__config["cluster"]["user"]
             self._ssh_password = self.__config["cluster"]["password"]
         else:
@@ -61,8 +68,34 @@ class Config(object):
             self._manager = []
             self._worker = []
 
+        if metadata:
+            self._db_port = self.__metadata["db_port"].split(':')[0]
+            self._db_adress = self.__metadata["db_adress"]
+        else:
+            self._db_port = None
+            self._db_adress = None
+
+        self._token = self.generate_token()
+
+    def get_db_port(self):
+        return self._db_port
+
+    def get_db_adress(self):
+        return self._db_adress
+
+    def get_db_dialect(self):
+        if "postgres" == self._db_adress:
+            return "postgresql+psycopg2"
+        elif "mongo" == self._db_adress:
+            return "mongo"
+        elif "mysql" == self._db_adress or "maria" == self._db_adress:
+            return "mysql+pymysql"
+
     def get_domain(self):
         return self._domain
+
+    def get_token(self):
+        return self._token
 
     def get_email(self):
         return self._email
@@ -75,6 +108,12 @@ class Config(object):
 
     def get_user(self):
         return self._user
+
+    def get_table(self):
+        return self._table
+
+    def get_feature_count(self):
+        return self._feature_count
 
     def get_password(self):
         return self._password
@@ -139,6 +178,12 @@ class Config(object):
     def get_worker(self):
         return self._worker
 
+    def get_manager_ip(self):
+        return self._manager_ip
+
+    def get_worker_ip(self):
+        return self._worker_ip
+
     def get_ssh_user(self):
         return self._ssh_user
 
@@ -166,3 +211,6 @@ class Config(object):
     def set_volumes(self, volumes):
         self.__volumes = volumes
 
+    def generate_token(self, stringLength=50):
+        letters = string.ascii_lowercase
+        return IPython.lib.passwd(''.join(random.choice(letters) for i in range(stringLength)))

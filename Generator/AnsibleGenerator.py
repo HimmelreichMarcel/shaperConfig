@@ -6,11 +6,12 @@ import os
 from distutils.dir_util import copy_tree
 
 class AnsibleGenerator(object):
-    def __init__(self, config, project_path, networks, project_name):
+    def __init__(self, config, project_path, networks, project_name, file_path):
         self._config = config
         self._project_path = project_path
         self._networks = networks
         self._project_name = project_name
+        self._file_path = file_path
 
     def deploy_swarm(self):
         print()
@@ -27,11 +28,13 @@ class AnsibleGenerator(object):
         if self._config.get_cluster():
             up_path = ""#os.path.dirname(os.getcwd())
             path = self._project_path + "/roles/"
+            copyfile(up_path + "./metric.txt", self._project_path + "/metric.txt")
             copyfile(up_path + "./template/ansible/swarm-roles/deploy-stack.yml", self._project_path + "/deploy-stack.yml")
             copyfile(up_path + "./template/ansible/swarm-roles/leave-swarm.yml", self._project_path + "/leave-swarm.yml")
             copyfile(up_path + "./template/ansible/swarm-roles/clear-stack.yml", self._project_path + "/clear-stack.yml")
             copyfile(up_path + "./template/ansible/swarm-roles/install-requirements.yml", self._project_path + "/install-requirements.yml")
             copyfile(up_path + "./template/ansible/swarm-roles/main.yml", self._project_path + "/main.yml")
+            copyfile(up_path + "./template/ansible/swarm-roles/benchmark.yml", self._project_path + "/benchmark.yml")
 
             network = self.create_network()
             self.export_file(network, path + "/create-network/tasks/main.yml")
@@ -41,6 +44,9 @@ class AnsibleGenerator(object):
 
             deploy = self.deploy_stack()
             self.export_file(deploy, path + "/deploy-docker-stack/tasks/main.yml")
+
+            metric = self.store_metrics()
+            self.export_file(metric, path + "/collect-metrics/tasks/main.yml")
 
             copy_tree(up_path + "./template/ansible/swarm-roles/install-modules", path + "/install-modules/")
             copy_tree(up_path + "./template/ansible/swarm-roles/docker-installation", path + "/docker-installation/")
@@ -54,6 +60,7 @@ class AnsibleGenerator(object):
             copy_tree(up_path + "./template/ansible/swarm-roles/generate-certificate", path + "/generate-certificate/")
             copy_tree(up_path + "./template/ansible/swarm-roles/push-image", path + "/push-image/")
             copy_tree(up_path + "./template/ansible/swarm-roles/deploy-docker-requirements", path + "/deploy-docker-requirements/")
+            copy_tree(up_path + "./template/ansible/swarm-roles/benchmark", path + "/benchmark/")
 
             #Generate Nodes Group Vars
             nodes_var = self.create_nodes_vars()
@@ -79,6 +86,9 @@ class AnsibleGenerator(object):
             config.append("- name: Deploy " + str(config_name))
             config.append("  import_playbook: " + path + "/" + config_name + "/deploy-stack.yml")
             config.append("\n")
+            config.append("- name: Benchmark Test " + str(config_name))
+            config.append("  import_playbook: " + path + "/" + config_name + "/benchmark.yml")
+            config.append("\n")
             config.append("- name: Clear Stack")
             config.append("  import_playbook: " + path + "/" + config_name + "/clear-stack.yml")
             config.append("\n")
@@ -90,21 +100,86 @@ class AnsibleGenerator(object):
     def copy_stack(self):
         stack = list()
         stack.append("---")
-        stack.append("- name: Create a directory")
+        stack.append("- name: Create a directory user")
+        stack.append("  file:")
+        stack.append("    path: /home/" + str(self._config.get_ssh_user()))
+        stack.append("    state: directory")
+        stack.append("\n")
+        stack.append("- name: Create a directory data")
+        stack.append("  file:")
+        stack.append("    path: /home/" + str(self._config.get_ssh_user()) + "/data")
+        stack.append("    state: directory")
+        stack.append("\n")
+        stack.append("- name: Create a directory deploy folder")
         stack.append("  file:")
         stack.append("    path: /home/" + str(self._config.get_ssh_user()) + "/deploy")
+        stack.append("    state: directory")
+        stack.append("\n")
+        stack.append("- name: Create a directory docker volumes")
+        stack.append("  file:")
+        stack.append("    path: /opt/docker/volumes")
+        stack.append("    state: directory")
+        stack.append("\n")
+        stack.append("- name: Create a directory docker volumes mysql")
+        stack.append("  file:")
+        stack.append("    path: /opt/docker/volumes/mysql")
+        stack.append("    state: directory")
+        stack.append("\n")
+        stack.append("- name: Create a NGINX directory")
+        stack.append("  file:")
+        stack.append("    path: /etc/nginx/")
         stack.append("    state: directory")
         stack.append("\n")
         stack.append("- name: Copy docker stack")
         stack.append("  copy:")
         stack.append("    src: " + str(self._project_path))
         stack.append("    dest: /home/" + str(self._config.get_ssh_user()) + "/deploy")
+        stack.append("\n")
+        stack.append("- name: Copy Train Data")
+        stack.append("  copy:")
+        stack.append("    src: " + str(self._file_path))
+        stack.append("    dest: /home/" + str(self._config.get_ssh_user()) + "/data")
+        stack.append("\n")
+        stack.append("- name: Copy daemon json")
+        stack.append("  copy:")
+        stack.append("    src: " + str(self._project_path) + "/daemon.json")
+        stack.append("    dest: /etc/docker/daemon.json")
+        stack.append("\n")
+        stack.append("- name: Copy Config")
+        stack.append("  copy:")
+        stack.append("    src: " + str(self._project_path) + "/nginx/nginx.conf")
+        stack.append("    dest: /etc/nginx/nginx.conf")
+        stack.append("  ignore_errors: true")
         return stack
+
+    def store_metrics(self):
+        metrics = []
+        metrics.append("- name: Create a metric directory for config ")
+        metrics.append("  file:")
+        metrics.append("    path: " + self._project_path + "/metric")
+        metrics.append("    state: directory")
+        metrics.append("\n")
+        with open("./metric.txt", "r") as file:
+            data = file.read().splitlines()
+        for line in data:
+            metrics.append("- name: Get Metric " + str(line))
+            metrics.append("  uri:")
+            metrics.append("    url: http://prometheus.platform.test/api/v1/query?query=" + line +"[1h]")
+            metrics.append("    timeout: 600")
+            metrics.append("    return_content: yes")
+            metrics.append("    body_format: json")
+            metrics.append("  register: metric_json_" + str(line))
+            metrics.append("  retries: 5")
+            metrics.append("\n")
+            metrics.append("- name: Save Metric " + str(line))
+            metrics.append("  local_action: copy content=\"{{metric_json_" + str(line) + "}}\" dest=\"" + self._project_path + "/metric/metric_json_" + str(line) + ".json\"")
+            metrics.append("  ignore_errors: true")
+            metrics.append("\n")
+        return metrics
 
     def deploy_stack(self):
         deploy = []
         deploy.append("---")
-
         deploy.append("- name: Deploy on Swarm")
         deploy.append("  shell: cd /home/" + str(self._config.get_ssh_user()) + "/deploy/" + str(self._project_name) + " && docker stack deploy -c docker-compose.yaml {{ swarm_name }}")
         deploy.append("  register: stack_deploy")

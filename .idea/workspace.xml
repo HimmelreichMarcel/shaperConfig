@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="71615109-a2c5-4914-b583-bc6c6600613f" name="Default Changelist" comment="">
 <<<<<<< HEAD
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/Config.py" beforeDir="false" afterPath="$PROJECT_DIR$/Config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/template/ansible/swarm-roles/init-registry/tasks/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/template/ansible/swarm-roles/init-registry/tasks/main.yml" afterDir="false" />
 =======
@@ -10,6 +11,28 @@
       <change afterPath="$PROJECT_DIR$/template/ansible/swarm-roles/start-jupyter-notebook/tasks/main.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Workload" beforeDir="false" afterPath="$PROJECT_DIR$/Workload" afterDir="false" />
+>>>>>>> master
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Example/shaper.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Example/shaper.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Example/shaper_ssh.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Example/shaper_ssh.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Generator/AnsibleGenerator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Generator/AnsibleGenerator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Generator/DatabaseGenerator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Generator/DatabaseGenerator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Generator/DockerComposeGenerator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Generator/DockerComposeGenerator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Generator/NginxGenerator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Generator/NginxGenerator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Optimizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimizer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/ansible/swarm-roles/benchmark/tasks/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/template/ansible/swarm-roles/benchmark/tasks/main.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/ansible/swarm-roles/clear-stack/tasks/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/template/ansible/swarm-roles/clear-stack/tasks/main.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/api/bottle/app/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/template/api/bottle/app/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/api/bottle/app/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/template/api/bottle/app/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/api/flask/app/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/template/api/flask/app/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/api/flask/app/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/template/api/flask/app/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/database/mariadb.yml" beforeDir="false" afterPath="$PROJECT_DIR$/template/database/mariadb.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/database/mongodb.yml" beforeDir="false" afterPath="$PROJECT_DIR$/template/database/mongodb.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/proxy/nginx-swarm.yml" beforeDir="false" afterPath="$PROJECT_DIR$/template/proxy/nginx-swarm.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/proxy/nginx.yml" beforeDir="false" afterPath="$PROJECT_DIR$/template/proxy/nginx.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/template/proxy/traefik.yml" beforeDir="false" afterPath="$PROJECT_DIR$/template/proxy/traefik.yml" afterDir="false" />
 >>>>>>> master
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,22 +44,30 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Generator/DockerComposeGenerator.py">
+        <entry file="file://$PROJECT_DIR$/template/api/flask/app/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="148">
-              <caret line="132" column="19" lean-forward="true" selection-start-line="132" selection-start-column="19" selection-end-line="132" selection-end-column="19" />
+            <state relative-caret-position="238">
+              <caret line="155" column="34" lean-forward="true" selection-start-line="155" selection-start-column="34" selection-end-line="155" selection-end-column="34" />
+              <folding>
+                <element signature="e#0#32#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/template/frontend/notebook.yml">
-          <provider selected="true" editor-type-id="text-editor" />
+        <entry file="file://$PROJECT_DIR$/template/database/mariadb.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="8" selection-start-line="8" selection-end-line="8" />
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/csv_sql_converter.py">
+        <entry file="file://$PROJECT_DIR$/Optimizer.py">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
 <<<<<<< HEAD
             <state relative-caret-position="285">
               <caret line="19" column="51" lean-forward="true" selection-start-line="19" selection-start-column="51" selection-end-line="19" selection-end-column="51" />
@@ -44,10 +75,18 @@
             <state relative-caret-position="630">
               <caret line="42" column="37" lean-forward="true" selection-start-line="42" selection-start-column="37" selection-end-line="42" selection-end-column="37" />
 >>>>>>> master
+=======
+            <state>
+              <caret line="258" lean-forward="true" selection-start-line="258" selection-end-line="258" />
+              <folding>
+                <element signature="e#0#66#0" expanded="true" />
+              </folding>
+>>>>>>> master
             </state>
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
 <<<<<<< HEAD
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/install-requirements.yml">
@@ -61,29 +100,39 @@
             <state relative-caret-position="120">
               <caret line="8" column="20" lean-forward="true" selection-start-line="8" selection-start-column="20" selection-end-line="8" selection-end-column="20" />
 >>>>>>> master
+=======
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Generator/AnsibleGenerator.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="58">
+              <caret line="147" column="42" selection-start-line="147" selection-start-column="42" selection-end-line="147" selection-end-column="42" />
+>>>>>>> master
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/benchmark/tasks/main.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="10" column="9" lean-forward="true" selection-start-line="10" selection-start-column="9" selection-end-line="10" selection-end-column="9" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Features">
+        <entry file="file://$PROJECT_DIR$/Example/shaper_ssh.toml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-583" />
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Workload">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" column="8" selection-start-line="21" selection-start-column="8" selection-end-line="21" selection-end-column="8" />
+            <state>
+              <caret column="7" lean-forward="true" selection-start-column="7" selection-end-column="7" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/clear-stack/tasks/main.yml">
+        <entry file="file://$PROJECT_DIR$/Generator/DockerComposeGenerator.py">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
 <<<<<<< HEAD
             <state relative-caret-position="75">
               <caret line="5" column="50" selection-start-line="5" selection-start-column="50" selection-end-line="5" selection-end-column="50" />
@@ -91,11 +140,16 @@
             <state relative-caret-position="60">
               <caret line="4" column="21" lean-forward="true" selection-start-line="4" selection-start-column="2" selection-end-line="4" selection-end-column="21" />
 >>>>>>> master
+=======
+            <state relative-caret-position="180">
+              <caret line="159" column="77" lean-forward="true" selection-start-line="159" selection-start-column="77" selection-end-line="159" selection-end-column="77" />
+>>>>>>> master
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+<<<<<<< HEAD
 <<<<<<< HEAD
         <entry file="file://$PROJECT_DIR$/Example/shaper.toml">
           <provider selected="true" editor-type-id="text-editor">
@@ -107,11 +161,18 @@
             <state relative-caret-position="285">
               <caret line="19" column="25" lean-forward="true" selection-start-line="19" selection-start-column="25" selection-end-line="19" selection-end-column="25" />
 >>>>>>> master
+=======
+        <entry file="file://$PROJECT_DIR$/template/proxy/traefik.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="17" column="23" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
+>>>>>>> master
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+<<<<<<< HEAD
 <<<<<<< HEAD
         <entry file="file://$PROJECT_DIR$/Config.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -119,18 +180,29 @@
               <caret line="50" column="32" lean-forward="true" selection-start-line="50" selection-start-column="32" selection-end-line="50" selection-end-column="32" />
 =======
         <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/deploy-docker-stack/tasks/main.yml">
+=======
+        <entry file="file://$PROJECT_DIR$/main.py">
+>>>>>>> master
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="28" lean-forward="true" selection-start-line="9" selection-start-column="11" selection-end-line="9" selection-end-column="28" />
+            <state relative-caret-position="255">
+              <caret line="24" column="40" lean-forward="true" selection-start-line="24" selection-start-column="40" selection-end-line="24" selection-end-column="40" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/main.yml">
+        <entry file="file://$PROJECT_DIR$/template/api/bottle/app/app.py">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="405">
               <caret line="27" column="16" lean-forward="true" selection-start-line="27" selection-start-column="16" selection-end-line="27" selection-end-column="16" />
+>>>>>>> master
+=======
+            <state relative-caret-position="223">
+              <caret line="111" column="17" lean-forward="true" selection-start-line="111" selection-start-column="17" selection-end-line="111" selection-end-column="17" />
+              <folding>
+                <element signature="e#0#39#0" expanded="true" />
+              </folding>
 >>>>>>> master
             </state>
           </provider>
@@ -145,12 +217,24 @@
       </list>
     </option>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>INTEGER</find>
+      <find>fast</find>
+      <find>,</find>
+    </findStrings>
+    <replaceStrings>
+      <replace />
+      <replace />
+    </replaceStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/template/ansible/swarm-roles/install-requirements.yml" />
         <option value="$PROJECT_DIR$/template/ansible/swarm-roles/deploy-docker-stack/tasks/main.yml" />
@@ -162,27 +246,71 @@
         <option value="$PROJECT_DIR$/docker-commands" />
         <option value="$PROJECT_DIR$/template/proxy/registry.yml" />
         <option value="$PROJECT_DIR$/template/ansible/swarm-roles/deploy-docker-requirements/tasks/main.yml" />
-        <option value="$PROJECT_DIR$/Config.py" />
-        <option value="$PROJECT_DIR$/Example/shaper.toml" />
-        <option value="$PROJECT_DIR$/Generator/AnsibleGenerator.py" />
+=======
+        <option value="$PROJECT_DIR$/template/ansible/swarm-roles/docker-installation/tasks/main.yml" />
+        <option value="$PROJECT_DIR$/template/ansible/swarm-roles/install-modules/tasks/main.yml" />
+        <option value="$PROJECT_DIR$/template/proxy/consul.yml" />
+        <option value="$PROJECT_DIR$/template/proxy/consul-leader.yml" />
+        <option value="$PROJECT_DIR$/template/ansible/swarm-roles/init-registry/tasks/main.yml" />
+        <option value="$PROJECT_DIR$/Generator/EnvironmentGenerator.py" />
+        <option value="$PROJECT_DIR$/template/monitoring/prometheus/prometheus_nginx.yml" />
+        <option value="$PROJECT_DIR$/template/monitoring/prometheus.yml" />
         <option value="$PROJECT_DIR$/template/ansible/swarm-roles/push-image/tasks/main.yml" />
-        <option value="$PROJECT_DIR$/Optimizer.py" />
-        <option value="$PROJECT_DIR$/template/ansible/swarm-roles/main.yml" />
-        <option value="$PROJECT_DIR$/template/ansible/swarm-roles/deploy-stack.yml" />
+        <option value="$PROJECT_DIR$/csv.py" />
+        <option value="$PROJECT_DIR$/csv_test.py" />
+        <option value="$PROJECT_DIR$/template/frontend/notebook.yml" />
+>>>>>>> master
+        <option value="$PROJECT_DIR$/Config.py" />
+        <option value="$PROJECT_DIR$/template/api/fastapi/app/requirements.txt" />
+        <option value="$PROJECT_DIR$/template/api/fastapi/Dockerfile" />
+        <option value="$USER_HOME$/CONFIGS/config_mysql_traefik_fastapi_1_1/api/app/main.py" />
+        <option value="$PROJECT_DIR$/template/api/fastapi/app/app.py" />
+        <option value="$PROJECT_DIR$/template/api/api.yml" />
+        <option value="$PROJECT_DIR$/template/api/flask/Dockerfile" />
+        <option value="$PROJECT_DIR$/template/database/postgres.yml" />
+        <option value="$PROJECT_DIR$/template/database/minio.yml" />
+        <option value="$PROJECT_DIR$/Workload" />
+        <option value="$PROJECT_DIR$/template/monitoring/prometheus/prometheus_traefik.yml" />
+        <option value="$PROJECT_DIR$/template/monitoring/cadvisor_cluster.yml" />
+        <option value="$PROJECT_DIR$/template/monitoring/cadvisor.yml" />
+        <option value="$USER_HOME$/Downloads/values.json" />
+        <option value="$PROJECT_DIR$/template/ansible/swarm-roles/benchmark/tasks/transform.py" />
+        <option value="$PROJECT_DIR$/transform.py" />
+        <option value="$PROJECT_DIR$/template/ansible/swarm-roles/benchmark.yml" />
+        <option value="$PROJECT_DIR$/template/api/bottle/Dockerfile" />
+        <option value="$PROJECT_DIR$/template/proxy/nginx-swarm.yml" />
+        <option value="$PROJECT_DIR$/template/proxy/nginx.yml" />
+        <option value="$PROJECT_DIR$/template/api/flask/app/requirements.txt" />
+        <option value="$PROJECT_DIR$/template/api/bottle/app/requirements.txt" />
+        <option value="$PROJECT_DIR$/Generator/DatabaseGenerator.py" />
+        <option value="$PROJECT_DIR$/template/database/mysql.yml" />
+        <option value="$PROJECT_DIR$/Generator/NginxGenerator.py" />
+        <option value="$PROJECT_DIR$/Example/shaper.toml" />
+        <option value="$USER_HOME$/CONFIGS/config_mongo_traefik_flask_6_3_None_None/api/app/app.py" />
+        <option value="$PROJECT_DIR$/template/database/mongodb.yml" />
+        <option value="$PROJECT_DIR$/template/database/mariadb.yml" />
         <option value="$PROJECT_DIR$/template/ansible/swarm-roles/clear-stack/tasks/main.yml" />
+<<<<<<< HEAD
 >>>>>>> master
         <option value="$PROJECT_DIR$/template/ansible/swarm-roles/init-registry/tasks/main.yml" />
+=======
+        <option value="$PROJECT_DIR$/Generator/AnsibleGenerator.py" />
+        <option value="$PROJECT_DIR$/Example/shaper_ssh.toml" />
+        <option value="$PROJECT_DIR$/template/proxy/traefik.yml" />
+>>>>>>> master
         <option value="$PROJECT_DIR$/Generator/DockerComposeGenerator.py" />
-        <option value="$PROJECT_DIR$/csv_sql_converter.py" />
-        <option value="$PROJECT_DIR$/Workload" />
-        <option value="$PROJECT_DIR$/template/ansible/swarm-roles/start-jupyter-notebook/tasks/main.yml" />
+        <option value="$PROJECT_DIR$/Optimizer.py" />
+        <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/template/api/flask/app/app.py" />
+        <option value="$PROJECT_DIR$/template/api/bottle/app/app.py" />
+        <option value="$PROJECT_DIR$/template/ansible/swarm-roles/benchmark/tasks/main.yml" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1920" />
-    <option name="width" value="1920" />
-    <option name="height" value="1080" />
+    <option name="x" value="2071" />
+    <option name="width" value="1657" />
+    <option name="height" value="931" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -192,6 +320,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -202,53 +331,73 @@
             <path>
               <item name="shaperConfig" type="b2602c69:ProjectViewProjectNode" />
               <item name="shaperConfig" type="462c0819:PsiDirectoryNode" />
+              <item name="Example" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="shaperConfig" type="b2602c69:ProjectViewProjectNode" />
+              <item name="shaperConfig" type="462c0819:PsiDirectoryNode" />
+              <item name="Generator" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="shaperConfig" type="b2602c69:ProjectViewProjectNode" />
+              <item name="shaperConfig" type="462c0819:PsiDirectoryNode" />
               <item name="template" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="shaperConfig" type="b2602c69:ProjectViewProjectNode" />
               <item name="shaperConfig" type="462c0819:PsiDirectoryNode" />
               <item name="template" type="462c0819:PsiDirectoryNode" />
-              <item name="ansible" type="462c0819:PsiDirectoryNode" />
+              <item name="api" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="shaperConfig" type="b2602c69:ProjectViewProjectNode" />
               <item name="shaperConfig" type="462c0819:PsiDirectoryNode" />
               <item name="template" type="462c0819:PsiDirectoryNode" />
-              <item name="ansible" type="462c0819:PsiDirectoryNode" />
-              <item name="swarm-roles" type="462c0819:PsiDirectoryNode" />
+              <item name="api" type="462c0819:PsiDirectoryNode" />
+              <item name="flask" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="shaperConfig" type="b2602c69:ProjectViewProjectNode" />
               <item name="shaperConfig" type="462c0819:PsiDirectoryNode" />
               <item name="template" type="462c0819:PsiDirectoryNode" />
-              <item name="ansible" type="462c0819:PsiDirectoryNode" />
-              <item name="swarm-roles" type="462c0819:PsiDirectoryNode" />
-              <item name="push-image" type="462c0819:PsiDirectoryNode" />
+              <item name="api" type="462c0819:PsiDirectoryNode" />
+              <item name="flask" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="shaperConfig" type="b2602c69:ProjectViewProjectNode" />
               <item name="shaperConfig" type="462c0819:PsiDirectoryNode" />
               <item name="template" type="462c0819:PsiDirectoryNode" />
-              <item name="ansible" type="462c0819:PsiDirectoryNode" />
-              <item name="swarm-roles" type="462c0819:PsiDirectoryNode" />
-              <item name="push-image" type="462c0819:PsiDirectoryNode" />
-              <item name="tasks" type="462c0819:PsiDirectoryNode" />
+              <item name="proxy" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="shaperConfig" type="b2602c69:ProjectViewProjectNode" />
+              <item name="shaperConfig" type="462c0819:PsiDirectoryNode" />
+              <item name="template" type="462c0819:PsiDirectoryNode" />
+              <item name="proxy" type="462c0819:PsiDirectoryNode" />
+              <item name="traefik" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/template/ansible/swarm-roles/start-jupyter-notebook/tasks" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/template/ansible/swarm-roles" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/template/ansible/swarm-roles/start-jupyter-notebook/tasks" />
       <recent name="$PROJECT_DIR$/template/ansible/swarm-roles" />
+      <recent name="$PROJECT_DIR$/template/ansible/swarm-roles/benchmark" />
+      <recent name="$PROJECT_DIR$/template/notebook_api" />
+      <recent name="$PROJECT_DIR$/Example" />
+      <recent name="$PROJECT_DIR$/template/proxy" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -264,6 +413,36 @@
     </option>
   </component>
   <component name="RunManager" selected="Python.main">
+    <configuration name="DatasetGenerator" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="shaper" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="$USER_HOME$/anaconda3/envs/GadesML/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" />
+        </ENTRIES>
+      </EXTENSION>
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DatasetGenerator.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="Unnamed" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="shaper" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -306,6 +485,36 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="csv" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="shaper" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="$USER_HOME$/anaconda3/envs/GadesML/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" />
+        </ENTRIES>
+      </EXTENSION>
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/csv_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="shaper" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -336,13 +545,40 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="transform" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="shaper" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="$USER_HOME$/anaconda3/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/transform.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Python.Unnamed" />
       <item itemvalue="Python.main" />
+      <item itemvalue="Python.DatasetGenerator" />
+      <item itemvalue="Python.csv" />
+      <item itemvalue="Python.transform" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.transform" />
+        <item itemvalue="Python.csv" />
+        <item itemvalue="Python.DatasetGenerator" />
       </list>
     </recent_temporary>
   </component>
@@ -364,6 +600,7 @@
     <editor active="true" />
     <layout>
 <<<<<<< HEAD
+<<<<<<< HEAD
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24881391" />
 =======
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25453576" />
@@ -378,6 +615,15 @@
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.8465999" weight="0.34322035" />
 >>>>>>> master
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39906102" />
+=======
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17182498" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49733192" weight="0.32838982" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.8465999" visible="true" weight="0.34322035" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.3983051" />
+>>>>>>> master
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3298122" />
@@ -416,156 +662,297 @@
     </layout-to-restore>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/stress-test.yml">
+    <entry file="file://$PROJECT_DIR$/template/api/flask/flask.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/template/api/bottle/fastapi.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="27" lean-forward="true" selection-start-line="12" selection-start-column="27" selection-end-line="12" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/CONFIGS/config_mysql_traefik_fastapi_1_1/api/app/app.py" />
+    <entry file="file://$USER_HOME$/CONFIGS/config_mysql_traefik_fastapi_1_1/api/app/main.py" />
+    <entry file="file://$PROJECT_DIR$/template/frontend/notebook.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" selection-start-line="4" selection-end-line="4" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/template/api/api.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="10" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/template/api/flask/Dockerfile">
       <provider selected="true" editor-type-id="text-editor">
         <state>
-          <caret column="3" lean-forward="true" selection-start-column="3" selection-end-column="3" />
+          <caret column="18" selection-start-column="18" selection-end-column="18" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Example/shapercluster.toml">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/template/example/train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" selection-start-line="4" selection-end-line="4" selection-end-column="27" />
+        </state>
+      </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/docker-swarm-add-manager/tasks/main.yml">
+    <entry file="file://$USER_HOME$/Downloads/values.json" />
+    <entry file="file://$PROJECT_DIR$/csv_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="67" selection-start-line="3" selection-start-column="67" selection-end-line="3" selection-end-column="67" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/csv_sql_converter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-112">
+          <caret line="42" column="37" selection-start-line="42" selection-start-column="37" selection-end-line="42" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/template/monitoring/cadvisor_cluster.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
-          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+          <caret line="11" column="16" lean-forward="true" selection-start-line="11" selection-start-column="16" selection-end-line="11" selection-end-column="16" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/create-network/tasks/main.yml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
+    <entry file="file://$PROJECT_DIR$/template/monitoring/prometheus.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
-          <caret line="7" column="9" lean-forward="true" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="9" />
+          <caret line="7" column="41" lean-forward="true" selection-start-line="7" selection-start-column="41" selection-end-line="7" selection-end-column="41" />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
 <<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/deploy-stack.yml">
 =======
     <entry file="file://$PROJECT_DIR$/template/proxy/certbot.yml">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/template/proxy/traefik.yml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/template/monitoring/prometheus.yml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/template/monitoring/grafana.yml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/inventory.ini">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/template/api/api.yml">
+=======
+    <entry file="file://$PROJECT_DIR$/template/monitoring/prometheus/prometheus_traefik.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="17" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
+        <state relative-caret-position="555">
+          <caret line="37" lean-forward="true" selection-start-line="37" selection-end-line="37" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/docker-swarm-init/tasks/main.yml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/docker-installation/tasks/main.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="23" column="14" lean-forward="true" selection-start-line="23" selection-start-column="14" selection-end-line="23" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docker-commands">
 >>>>>>> master
+    </entry>
+    <entry file="file://$PROJECT_DIR$/template/monitoring/cadvisor.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="110" selection-start-line="11" selection-start-column="87" selection-end-line="11" selection-end-column="110" />
+        <state relative-caret-position="60">
+          <caret line="4" column="50" selection-start-line="4" selection-start-column="50" selection-end-line="4" selection-end-column="50" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/template/proxy/registry.yml">
+    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/benchmark.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="14" lean-forward="true" selection-start-line="7" selection-start-column="14" selection-end-line="7" selection-end-column="14" />
+        <state relative-caret-position="120">
+          <caret line="8" column="14" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/values.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metric.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/transform.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" selection-start-line="2" selection-end-line="3" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/CONFIGS/config_postgres_traefik_bottle_1_1/api/app/main.py" />
+    <entry file="file://$PROJECT_DIR$/template/api/bottle/Dockerfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="25" lean-forward="true" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/template/proxy/nginx.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="4" lean-forward="true" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
         </state>
       </provider>
     </entry>
 <<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/docker-commands">
+>>>>>>> master
+=======
+    <entry file="file://$PROJECT_DIR$/template/api/bottle/app/requirements.txt">
+>>>>>>> master
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="533">
+          <caret line="40" column="12" selection-start-line="40" selection-start-column="12" selection-end-line="40" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/template/api/flask/app/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="28" column="5" lean-forward="true" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/docker-installation/tasks/main.yml">
 =======
     <entry file="file://$PROJECT_DIR$/Example/shaper.toml">
+=======
+    <entry file="file://$PROJECT_DIR$/template/proxy/nginx-swarm.yml">
+>>>>>>> master
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="28" lean-forward="true" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="28" />
+        <state relative-caret-position="60">
+          <caret line="4" column="13" lean-forward="true" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Workload">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2137">
+          <caret line="97" selection-start-line="97" selection-end-line="97" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Generator/MonitoringGenerator.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Generator/DatabaseGenerator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="28" column="64" lean-forward="true" selection-start-line="28" selection-start-column="64" selection-end-line="28" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/install-requirements.yml">
+>>>>>>> master
+=======
+    <entry file="file://$PROJECT_DIR$/Generator/TraefikGenerator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-495" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Example/shaper.toml">
+>>>>>>> master
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="28" lean-forward="true" selection-start-line="6" selection-start-column="28" selection-end-line="6" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Generator/NginxGenerator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="130" column="51" lean-forward="true" selection-start-line="130" selection-start-column="51" selection-end-line="130" selection-end-column="51" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Config.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="178">
-          <caret line="37" lean-forward="true" selection-start-line="37" selection-end-line="37" />
+        <state relative-caret-position="1717">
+          <caret line="195" column="34" lean-forward="true" selection-start-line="195" selection-start-column="34" selection-end-line="195" selection-end-column="34" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/install-modules/tasks/main.yml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/push-image/tasks/main.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="40" selection-start-line="4" selection-start-column="40" selection-end-line="4" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/install-requirements.yml">
->>>>>>> master
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="23" column="19" selection-start-line="23" selection-start-column="19" selection-end-line="23" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/deploy-docker-requirements/tasks/main.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="24" lean-forward="true" selection-start-line="10" selection-start-column="24" selection-end-line="10" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/docker-swarm-add-worker/tasks/main.yml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/leave-swarm.yml">
+    <entry file="file://$USER_HOME$/CONFIGS/config_mongo_traefik_flask_6_3_None_None/api/app/app.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
-          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
+          <caret line="66" column="28" selection-start-line="66" selection-start-column="28" selection-end-line="66" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/clear-stack.yml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/docker-swarm-leave/tasks/main.yml">
+    <entry file="file://$PROJECT_DIR$/template/database/postgres.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+        <state relative-caret-position="105">
+          <caret line="7" column="24" selection-start-line="7" selection-start-column="24" selection-end-line="7" selection-end-column="24" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/generate-certificate/tasks/main.yml">
+    <entry file="file://$PROJECT_DIR$/template/database/minio.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" column="51" lean-forward="true" selection-start-line="26" selection-start-column="51" selection-end-line="26" selection-end-column="51" />
+        <state relative-caret-position="15">
+          <caret line="1" column="27" selection-start-line="1" selection-start-column="27" selection-end-line="1" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/CONFIGS/config_None_traefik_bottle_1_1_None_None/api/app/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1035">
+          <caret line="9" column="17" lean-forward="true" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/init-registry/tasks/main.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" selection-start-line="7" selection-end-line="7" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/clear-stack/tasks/main.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/template/database/mongodb.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="33" lean-forward="true" selection-start-line="6" selection-start-column="33" selection-end-line="6" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/template/database/mysql.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="8" lean-forward="true" selection-start-line="7" selection-start-column="8" selection-end-line="7" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/template/proxy/traefik.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="23" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Optimizer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1815">
-          <caret line="135" column="51" selection-start-line="135" selection-start-column="51" selection-end-line="135" selection-end-column="51" />
+        <state>
+          <caret line="258" lean-forward="true" selection-start-line="258" selection-end-line="258" />
           <folding>
             <element signature="e#0#66#0" expanded="true" />
           </folding>
@@ -574,63 +961,36 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Generator/AnsibleGenerator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="900">
-          <caret line="65" column="64" lean-forward="true" selection-start-line="65" selection-start-column="64" selection-end-line="65" selection-end-column="64" />
+        <state relative-caret-position="58">
+          <caret line="147" column="42" selection-start-line="147" selection-start-column="42" selection-end-line="147" selection-end-column="42" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/init-registry/tasks/main.yml">
+    <entry file="file://$PROJECT_DIR$/template/database/mariadb.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+        <state relative-caret-position="120">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/clear-stack/tasks/main.yml">
+    <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="21" lean-forward="true" selection-start-line="4" selection-start-column="2" selection-end-line="4" selection-end-column="21" />
+        <state relative-caret-position="255">
+          <caret line="24" column="40" lean-forward="true" selection-start-line="24" selection-start-column="40" selection-end-line="24" selection-end-column="40" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/deploy-stack.yml">
+    <entry file="file://$PROJECT_DIR$/template/api/bottle/app/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="25" lean-forward="true" selection-start-line="19" selection-start-column="25" selection-end-line="19" selection-end-column="25" />
+        <state relative-caret-position="223">
+          <caret line="111" column="17" lean-forward="true" selection-start-line="111" selection-start-column="17" selection-end-line="111" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/deploy-docker-stack/tasks/main.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="28" lean-forward="true" selection-start-line="9" selection-start-column="11" selection-end-line="9" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/main.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="27" column="16" lean-forward="true" selection-start-line="27" selection-start-column="16" selection-end-line="27" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Generator/DockerComposeGenerator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="148">
-          <caret line="132" column="19" lean-forward="true" selection-start-line="132" selection-start-column="19" selection-end-line="132" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/template/frontend/notebook.yml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/csv_sql_converter.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="42" column="37" lean-forward="true" selection-start-line="42" selection-start-column="37" selection-end-line="42" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
+<<<<<<< HEAD
 <<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/Example/shaper.toml">
       <provider selected="true" editor-type-id="text-editor">
@@ -663,22 +1023,49 @@
         <state relative-caret-position="315">
           <caret line="21" column="8" selection-start-line="21" selection-start-column="8" selection-end-line="21" selection-end-column="8" />
 >>>>>>> master
+=======
+    <entry file="file://$PROJECT_DIR$/template/api/flask/app/app.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="155" column="34" lean-forward="true" selection-start-line="155" selection-start-column="34" selection-end-line="155" selection-end-column="34" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Features">
+    <entry file="file://$PROJECT_DIR$/Example/shaper_ssh.toml">
       <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="7" lean-forward="true" selection-start-column="7" selection-end-column="7" />
+>>>>>>> master
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Generator/DockerComposeGenerator.py">
+      <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
 <<<<<<< HEAD
         <state relative-caret-position="75">
           <caret line="5" column="50" selection-start-line="5" selection-start-column="50" selection-end-line="5" selection-end-column="50" />
 =======
         <state relative-caret-position="-583" />
+=======
+        <state relative-caret-position="180">
+          <caret line="159" column="77" lean-forward="true" selection-start-line="159" selection-start-column="77" selection-end-line="159" selection-end-column="77" />
+        </state>
+>>>>>>> master
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/start-jupyter-notebook/tasks/main.yml">
+    <entry file="file://$PROJECT_DIR$/template/ansible/swarm-roles/benchmark/tasks/main.yml">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="120">
           <caret line="8" column="20" lean-forward="true" selection-start-line="8" selection-start-column="20" selection-end-line="8" selection-end-column="20" />
+>>>>>>> master
+=======
+        <state relative-caret-position="150">
+          <caret line="10" column="9" lean-forward="true" selection-start-line="10" selection-start-column="9" selection-end-line="10" selection-end-column="9" />
 >>>>>>> master
         </state>
       </provider>

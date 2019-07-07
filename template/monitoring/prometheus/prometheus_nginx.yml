@@ -9,20 +9,6 @@ global:
   external_labels:
       monitor: 'my-project'
 
-# Load and evaluate rules in this file every 'evaluation_interval' seconds.
-rule_files:
-  - 'alert.rules'
-  # - "first.rules"
-  # - "second.rules"
-
-# alert
-alerting:
-  alertmanagers:
-  - scheme: http
-    static_configs:
-    - targets:
-      - "alertmanager:9093"
-
 # A scrape configuration containing exactly one endpoint to scrape:
 # Here it's Prometheus itself.
 scrape_configs:
@@ -34,7 +20,7 @@ scrape_configs:
     scrape_interval: 5s
 
     static_configs:
-         - targets: ['prometheus:9090']
+         - targets: ['localhost:9090']
 
 
   - job_name: 'cadvisor'
@@ -64,3 +50,11 @@ scrape_configs:
 
     static_configs:
       - targets: ['node-exporter:9100']
+
+
+  - job_name: 'dockerd-exporter'
+    dns_sd_configs:
+      - names:
+          - 'tasks.dockerd-exporter'
+        type: 'A'
+        port: 9323

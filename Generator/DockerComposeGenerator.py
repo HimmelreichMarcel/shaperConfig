@@ -200,7 +200,7 @@ class ComposeGenerator:
             deploy["placement"]["constraints"] = ["node.role==manager"]
             deploy["replicas"] = 1
         elif key == "minio":
-            deploy["placement"]["constraints"] = ["node.role==worker"]
+            deploy["placement"]["constraints"] = ["node.role==manager"]
             deploy["replicas"] = 1
         elif key == "database" or key == "traefik_init":
             deploy["placement"]["constraints"] = ["node.role==manager"]

@@ -3,7 +3,7 @@
   wait_for: timeout=300
 
 - name: Train Machine Learning Models
-  command: "curl http://api.platform.test/learn/train/postgres/test/train_table/100000"
+  command: "curl http://api.platform.test/learn/train/postgres/test/train_table/25000"
   retries: 10
   with_sequence: start=0 end=10
   register: _train_job

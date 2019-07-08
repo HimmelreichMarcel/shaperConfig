@@ -163,8 +163,8 @@ def permission(db, db_name):
     except Exception as error:
         return "Failed to Create Table" + str(error)
 
-@route('/learn/train/<db>/<db_name>/<table>')
-def train_model(db, db_name, table):
+@route('/learn/train/<db>/<db_name>/<table>/size')
+def train_model(db, db_name, table, size):
     try:
         db_str = get_db_str(db,db_name)
         if db == "minio" or db == "None":
@@ -174,8 +174,8 @@ def train_model(db, db_name, table):
 
         classifier = svm.SVC(gamma=0.001, C=100.)
 
-        Y = data.iloc[ -1]
-        X = data.iloc[ :-1]
+        Y = data.iloc[:int(size), -1]
+        X = data.iloc[:int(size), :-1]
         Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, test_size=0.3, random_state=4)
 
         classifier.fit(Xtrain, Ytrain)

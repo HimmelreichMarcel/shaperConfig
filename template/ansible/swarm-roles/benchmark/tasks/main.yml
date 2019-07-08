@@ -3,7 +3,7 @@
   wait_for: timeout=300
 
 - name: Train Machine Learning Models
-  command: "curl http://api.platform.test/learn/train/postgres/test/train_table"
+  command: "curl http://api.platform.test/learn/train/postgres/test/train_table/100000"
   retries: 10
   with_sequence: start=0 end=10
   register: _train_job
@@ -21,7 +21,7 @@
   delay: 60
 
 - name: Predict Data from trained Models
-  command: "curl http://api.platform.test/predict/test-bucket/model.joblib/499"
+  command: "curl http://api.platform.test/predict/test-bucket/model.joblib/49"
   retries: 10
   with_sequence: start=0 end=500
   async: 50

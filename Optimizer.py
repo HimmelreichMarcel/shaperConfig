@@ -271,7 +271,7 @@ class Optimizer(object):
 
                                     self.create_directory(project_path + "/roles/collect-metrics/")
                                     self.create_directory(project_path + "/roles/collect-metrics/tasks")
-                                    ansible = Ansible(config, project_path, network, project_name, self._output_path + "/small_dataset.csv")
+                                    ansible = Ansible(config, project_path, network, project_name, self._output_path + "small_dataset.csv")
                                     ansible.generate()
 
                                     #Create Volume Directories

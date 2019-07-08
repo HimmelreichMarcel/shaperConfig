@@ -255,6 +255,7 @@ class AnsibleGenerator(object):
             inventory.append("ansible_user=" + self._config.get_ssh_user())
             inventory.append("ansible_password=" + self._config.get_ssh_password())
             inventory.append("ansible_sudo_pass=" + self._config.get_ssh_password())
+            inventory.append("ansible_python_interpreter=/usr/bin/python3")
         else:
             inventory = ["localhost"]
         return inventory

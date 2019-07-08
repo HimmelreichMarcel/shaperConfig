@@ -193,7 +193,7 @@ class ComposeGenerator:
             deploy["placement"]["constraints"] = ["node.role==worker"]
         elif key== "traefik" or key == "nginx":
             deploy["placement"]["constraints"] = ["node.role==manager"]
-            deploy["replicas"] = self.__api_rep
+            deploy["replicas"] = self.__proxy_rep
             deploy["restart_policy"] = {}
             deploy["restart_policy"]["condition"] = "any"
         elif key == "prometheus" or key == "grafana" or key == "registry":

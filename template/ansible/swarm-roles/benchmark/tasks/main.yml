@@ -5,7 +5,7 @@
 - name: Train Machine Learning Models
   command: "curl http://api.platform.test/learn/train/postgres/test/train_table/25000"
   retries: 10
-  with_sequence: start=0 end=10
+  with_sequence: start=0 end=0
   register: _train_job
   async: 50
   poll: 0

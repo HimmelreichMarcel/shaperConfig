@@ -163,7 +163,7 @@ def permission(db, db_name):
     except Exception as error:
         return "Failed to Create Table" + str(error)
 
-@route('/learn/train/<db>/<db_name>/<table>/size')
+@route('/learn/train/<db>/<db_name>/<table>/<size>')
 def train_model(db, db_name, table, size):
     try:
         db_str = get_db_str(db,db_name)

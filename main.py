@@ -11,8 +11,8 @@ import yaml
 
 
 def main():
-    compose_path = "/home/marcel/shaper/shaperConfig/Example/docker-compose.yml"
-    shaper_path = "/home/marcel/shaper/shaperConfig/Example/shaper_ssh.toml"
+    compose_path = "/home/marcel/Documents/Github/shaperConfig/Example/docker-compose.yml"
+    shaper_path = "/home/marcel/Documents/Github/shaperConfig/Example/shaper_ssh.toml"
     output_path = "/home/marcel/CONFIGS/"
     #parser = ParserYAML(shaper_path, compose_path)
     #config = parser.create_config()

@@ -174,8 +174,8 @@ def train_model(db, db_name, table):
 
         classifier = svm.SVC(gamma=0.001, C=100.)
 
-        Y = data.iloc[:1000, -1]
-        X = data.iloc[:1000, :-1]
+        Y = data.iloc[ -1]
+        X = data.iloc[ :-1]
         Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, test_size=0.3, random_state=4)
 
         classifier.fit(Xtrain, Ytrain)

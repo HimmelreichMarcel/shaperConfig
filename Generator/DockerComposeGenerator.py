@@ -190,7 +190,7 @@ class ComposeGenerator:
         if key == "api" or key == "notebook":
             deploy["replicas"] = self.__api_rep
             deploy["mode"] = "replicated"
-            deploy["placement"]["constraints"] = ["node.role==manager"]
+            deploy["placement"]["constraints"] = ["node.role==worker"]
         elif key== "traefik" or key == "nginx":
             deploy["placement"]["constraints"] = ["node.role==manager"]
             deploy["replicas"] = self.__api_rep
@@ -200,7 +200,7 @@ class ComposeGenerator:
             deploy["placement"]["constraints"] = ["node.role==manager"]
             deploy["replicas"] = 1
         elif key == "minio":
-            deploy["placement"]["constraints"] = ["node.role==manager"]
+            deploy["placement"]["constraints"] = ["node.role==worker"]
             deploy["replicas"] = 1
         elif key == "database" or key == "traefik_init":
             deploy["placement"]["constraints"] = ["node.role==manager"]

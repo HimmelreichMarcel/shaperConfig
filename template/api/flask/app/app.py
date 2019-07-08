@@ -167,7 +167,7 @@ def status(bucket, filename):
 
 
 
-@route('/learn/train/<db>/<db_name>/<table>/size')
+@app.route('/learn/train/<db>/<db_name>/<table>/size')
 def train_model(db, db_name, table, size):
     try:
         db_str = get_db_str(db,db_name)

@@ -158,7 +158,7 @@ class Optimizer(object):
         #ip_list = self.get_ip_list()
 
         #Cluster Replica Config
-        replica = {"proxy": [1, 3, 5], "api": [1, 3, 5]}
+        replica = {"proxy": [1, 3, 5], "api": [3, 5, 10]}
         cpus = [None]#,"0.1", "0.3", "0.5"]
         memories = [None]#, "100M",  "500M", "1000M"]
         config_list = []

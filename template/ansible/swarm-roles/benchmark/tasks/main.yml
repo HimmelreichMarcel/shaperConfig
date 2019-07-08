@@ -2,10 +2,15 @@
 - name: Wait for Start Up
   wait_for: timeout=300
 
+- name: Upload Data to Database
+  uri:
+    url: "http://api.platform.test/db/write/small_dataset.csv/postgres/test/train_table"
+    timeout: 6000
+
 - name: Train Machine Learning Models
   command: "curl http://api.platform.test/learn/train/postgres/test/train_table/25000"
   retries: 10
-  with_sequence: start=0 end=0
+  with_sequence: start=0 end=10
   register: _train_job
   async: 50
   poll: 0

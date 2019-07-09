@@ -265,7 +265,7 @@ class AnsibleGenerator(object):
         benchmark.append("    return_content: yes")
         benchmark.append("  register: response")
         benchmark.append("  retries: 1000")
-        benchmark.append("  until: response.content == true")
+        benchmark.append("  until: \"\'Failed\' not in response and response.content.find(\'true\')\"")
         benchmark.append("  delay: 60")
         benchmark.append("  ignore_errors: true")
         benchmark.append("\n")

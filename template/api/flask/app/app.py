@@ -30,6 +30,23 @@ def test():
 def hello_world():
     return "Test Page"
 
+@app.route('/db/make_bucket/<bucket_name>')
+def make_bucket(bucket_name):
+    minio_client = Minio(
+        endpoint="minio:9000",
+        access_key="test",
+        secret_key="testtest",
+        secure=False)
+    try:
+        minio_client.make_bucket(str(bucket_name))
+    except BucketAlreadyOwnedByYou as err:
+        pass
+    except BucketAlreadyExists as err:
+        pass
+    except ResponseError as err:
+        raise
+    return "success"
+
 @app.route('/predict/<bucket>/<filename>/<predict_size>')
 def random_predict(bucket, filename, predict_size):
     try:

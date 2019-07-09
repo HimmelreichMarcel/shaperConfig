@@ -51,7 +51,7 @@ class Config(object):
             self._password = "admin"
             self._database = "database"
 
-        self._feature_count = 500
+        self._feature_count = 50
         self._table = "train_table"
 
         if "cluster" in self.__config:

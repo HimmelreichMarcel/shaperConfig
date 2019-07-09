@@ -103,7 +103,8 @@ def write_db_data(filename, db, db_name, table):
             dataframe = pd.read_csv("/data/" + filename)
             db_str = get_db_str(db, db_name)
             write_data_to_database(db,db_str, table, dataframe)
-        return str(dataframe)
+            data = read_db_data(db, db_str, table)
+        return str(data)
     except Exception as error:
         return "Error Writing Data to Database" + str(error)
 
@@ -134,13 +135,13 @@ def make_bucket(bucket_name):
         secret_key="testtest",
         secure=False)
     try:
-        minio_client.make_bucket(str(bucket_name))
+        minio_client.make_bucket(str(bucket_name), location="eu-central-1")
     except BucketAlreadyOwnedByYou as err:
-        pass
+        return err
     except BucketAlreadyExists as err:
-        pass
+        return err
     except ResponseError as err:
-        raise
+        return err
     return "success"
 
 
@@ -217,7 +218,7 @@ def store_data(classifier, filename):
         secret_key="testtest",
         secure=False)
     try:
-        minio_client.make_bucket("test-bucket")
+        minio_client.make_bucket("test-bucket", location="eu-central-1")
     except BucketAlreadyOwnedByYou as err:
         pass
     except BucketAlreadyExists as err:

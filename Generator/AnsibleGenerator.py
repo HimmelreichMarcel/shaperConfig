@@ -168,7 +168,7 @@ class AnsibleGenerator(object):
         for line in data:
             metrics.append("- name: Get Metric " + str(line))
             metrics.append("  uri:")
-            metrics.append("    url: http://prometheus.platform.test/api/v1/query?query=" + line +"[1h]")
+            metrics.append("    url: http://prometheus.platform.test/api/v1/query?query=" + line +"[6h]")
             metrics.append("    timeout: 600")
             metrics.append("    return_content: yes")
             metrics.append("    body_format: json")

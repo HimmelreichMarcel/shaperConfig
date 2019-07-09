@@ -2,6 +2,11 @@
 - name: Wait for Start Up
   wait_for: timeout=300
 
+- name: Create Table
+  uri:
+    url: "http://api.platform.test/db/table/<db>/test/train_table/50"
+    timeout: 6000
+
 - name: Upload Data to Database
   uri:
     url: "http://api.platform.test/db/write/small_dataset.csv/postgres/test/train_table"
@@ -29,6 +34,7 @@
   until: response.content == "true"
   retries: 1000
   delay: 60
+  ignore_errors: true
 
 - name: Predict Data from trained Models
   command: "curl http://api.platform.test/predict/test-bucket/model.joblib/49"

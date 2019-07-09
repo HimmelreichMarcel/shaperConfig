@@ -158,7 +158,7 @@ class Optimizer(object):
         #ip_list = self.get_ip_list()
 
         #Cluster Replica Config
-        replica = {"proxy": [1, 3, 5], "api": [3, 5, 10]}
+        replica = {"proxy": [1], "api": [3, 5, 10]}
         cpus = [None]#,"0.1", "0.3", "0.5"]
         memories = [None]#, "100M",  "500M", "1000M"]
         config_list = []
@@ -271,7 +271,11 @@ class Optimizer(object):
 
                                     self.create_directory(project_path + "/roles/collect-metrics/")
                                     self.create_directory(project_path + "/roles/collect-metrics/tasks")
-                                    ansible = Ansible(config, project_path, network, project_name, self._output_path + "small_dataset.csv")
+
+                                    self.create_directory(project_path + "/roles/benchmark/")
+                                    self.create_directory(project_path + "/roles/benchmark/tasks")
+
+                                    ansible = Ansible(config, project_path, network, project_name, self._output_path + "small_dataset.csv",database_key)
                                     ansible.generate()
 
                                     #Create Volume Directories

@@ -6,12 +6,13 @@ import os
 from distutils.dir_util import copy_tree
 
 class AnsibleGenerator(object):
-    def __init__(self, config, project_path, networks, project_name, file_path):
+    def __init__(self, config, project_path, networks, project_name, file_path, db):
         self._config = config
         self._project_path = project_path
         self._networks = networks
         self._project_name = project_name
         self._file_path = file_path
+        self._db = db
 
     def deploy_swarm(self):
         print()
@@ -48,6 +49,9 @@ class AnsibleGenerator(object):
             metric = self.store_metrics()
             self.export_file(metric, path + "/collect-metrics/tasks/main.yml")
 
+            benchmark = self.create_benchmark()
+            self.export_file(benchmark, path + "/benchmark/tasks/main.yml")
+
             copy_tree(up_path + "./template/ansible/swarm-roles/install-modules", path + "/install-modules/")
             copy_tree(up_path + "./template/ansible/swarm-roles/docker-installation", path + "/docker-installation/")
             copy_tree(up_path + "./template/ansible/swarm-roles/docker-swarm-add-manager", path + "/docker-swarm-add-manager/")
@@ -60,7 +64,7 @@ class AnsibleGenerator(object):
             copy_tree(up_path + "./template/ansible/swarm-roles/generate-certificate", path + "/generate-certificate/")
             copy_tree(up_path + "./template/ansible/swarm-roles/push-image", path + "/push-image/")
             copy_tree(up_path + "./template/ansible/swarm-roles/deploy-docker-requirements", path + "/deploy-docker-requirements/")
-            copy_tree(up_path + "./template/ansible/swarm-roles/benchmark", path + "/benchmark/")
+            #copy_tree(up_path + "./template/ansible/swarm-roles/benchmark", path + "/benchmark/")
 
             #Generate Nodes Group Vars
             nodes_var = self.create_nodes_vars()
@@ -224,6 +228,56 @@ class AnsibleGenerator(object):
         config.append("timeout = 10")
         #config.append("stdout_callback=minimal")
         return config
+
+    def create_benchmark(self):
+        benchmark = []
+        benchmark.append("---")
+        benchmark.append("- name: Wait for Start Up ")
+        benchmark.append("  wait_for: timeout=300")
+        benchmark.append("\n")
+        benchmark.append("- name: Create Table ")
+        benchmark.append("  uri:")
+        benchmark.append("    url: http://api.platform.test/db/table/" + str(self._db) + "/test/train_table/50")
+        benchmark.append("    timeout: 6000")
+        benchmark.append("\n")
+        benchmark.append("- name: Upload Data to Database ")
+        benchmark.append("  uri:")
+        benchmark.append("    url: http://api.platform.test/db/write/small_dataset.csv/" + str(self._db) + "/test/train_table")
+        benchmark.append("    timeout: 6000")
+        benchmark.append("\n")
+        benchmark.append("- name: Create Minio Bucket ")
+        benchmark.append("  uri:")
+        benchmark.append("    url: http://api.platform.test/db/write/small_dataset.csv/" + str(self._db) + "/test/train_table")
+        benchmark.append("    timeout: 6000")
+        benchmark.append("\n")
+        benchmark.append("- name: Train ML Model ")
+        benchmark.append("  command: curl http://api.platform.test/learn/train/"+ str(self._db) + "/test/train_table/25000")
+        benchmark.append("  retries: 10")
+        benchmark.append("  with_sequence: start=0 end=5")
+        benchmark.append("  register: _train_job")
+        benchmark.append("  async: 50")
+        benchmark.append("  poll: 0")
+        benchmark.append("  ignore_errors: true")
+        benchmark.append("\n")
+        benchmark.append("- name: Wait for Training to finish ")
+        benchmark.append("  uri:")
+        benchmark.append("    url: http://api.platform.test/learn/status/test-bucket/model.joblib")
+        benchmark.append("    return_content: yes")
+        benchmark.append("  register: response")
+        benchmark.append("  retries: 1000")
+        benchmark.append("  until: response.content == true")
+        benchmark.append("  delay: 60")
+        benchmark.append("  ignore_errors: true")
+        benchmark.append("\n")
+        benchmark.append("- name: Predict Data from trained Model ")
+        benchmark.append("  command: curl curl http://api.platform.test/predict/test-bucket/model.joblib/49")
+        benchmark.append("  retries: 10")
+        benchmark.append("  with_sequence: start=0 end=500")
+        benchmark.append("  async: 50")
+        benchmark.append("  poll: 0")
+        benchmark.append("  ignore_errors: true")
+        benchmark.append("\n")
+        return benchmark
 
     def create_inventory(self):
         if not self._config.get_cluster():

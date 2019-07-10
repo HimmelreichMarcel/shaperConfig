@@ -248,7 +248,7 @@ class AnsibleGenerator(object):
         benchmark.append("\n")
         benchmark.append("- name: Create Minio Bucket ")
         benchmark.append("  uri:")
-        benchmark.append("    url: http://api.platform.test/db/write/small_dataset.csv/" + str(self._db) + "/test/train_table")
+        benchmark.append("    url: http://api.platform.test/db/make_bucket/test-bucket")
         benchmark.append("    timeout: 6000")
         benchmark.append("\n")
         benchmark.append("- name: Train ML Model ")

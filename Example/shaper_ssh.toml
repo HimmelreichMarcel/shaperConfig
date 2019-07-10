@@ -13,8 +13,8 @@ proxy = "traefik"
 [cluster]
 name="mlstack"
 manager=["china.medien.uni-weimar.de"]
-worker=["zerg.medien.uni-weimar.de", "peru.medien.uni-weimar.de"]
+worker=["peru.medien.uni-weimar.de"]
 manager_ip=["141.54.159.91"]
-worker_ip=["141.54.159.140", "141.54.159.97"]
+worker_ip=["141.54.159.97"]
 user= "marcel"
 password= "marcel!"

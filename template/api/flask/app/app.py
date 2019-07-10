@@ -47,6 +47,23 @@ def make_bucket(bucket_name):
         return err
     return "success"
 
+@app.route('/db/remove/<filename>')
+def remove_object(filename):
+    minio_client = Minio(
+        endpoint="minio:9000",
+        access_key="test",
+        secret_key="testtest",
+        secure=False)
+    try:
+        minio_client.remove_object("test-bucket", filename)
+    except BucketAlreadyOwnedByYou as err:
+        return err
+    except BucketAlreadyExists as err:
+        return err
+    except ResponseError as err:
+        return err
+    return "success removing file" + str(filename)
+
 @app.route('/predict/<bucket>/<filename>/<predict_size>')
 def random_predict(bucket, filename, predict_size):
     try:

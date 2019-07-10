@@ -252,7 +252,7 @@ class AnsibleGenerator(object):
         benchmark.append("    timeout: 6000")
         benchmark.append("\n")
         benchmark.append("- name: Train ML Model ")
-        benchmark.append("  command: curl http://api.platform.test/learn/train/"+ str(self._db) + "/test/train_table/50000")
+        benchmark.append("  command: curl http://api.platform.test/learn/train/"+ str(self._db) + "/test/train_table/100000")
         benchmark.append("  retries: 10")
         benchmark.append("  with_sequence: start=0 end=10")
         benchmark.append("  register: _train_job")
@@ -277,6 +277,14 @@ class AnsibleGenerator(object):
         benchmark.append("  async: 50")
         benchmark.append("  poll: 0")
         benchmark.append("  ignore_errors: true")
+        benchmark.append("\n")
+        benchmark.append("- name: Wait for Prediction ")
+        benchmark.append("  wait_for: timeout=300")
+        benchmark.append("\n")
+        benchmark.append("- name: Remove Trained Model ")
+        benchmark.append("  uri:")
+        benchmark.append("    url: http://api.platform.test/db/remove/model.joblib")
+        benchmark.append("    timeout: 6000")
         benchmark.append("\n")
         return benchmark
 

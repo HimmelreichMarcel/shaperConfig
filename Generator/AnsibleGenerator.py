@@ -234,7 +234,7 @@ class AnsibleGenerator(object):
         benchmark = []
         benchmark.append("---")
         benchmark.append("- name: Wait for Start Up ")
-        benchmark.append("  wait_for: timeout=6")
+        benchmark.append("  wait_for: timeout=600")
         benchmark.append("\n")
         benchmark.append("- name: Create Table ")
         benchmark.append("  uri:")

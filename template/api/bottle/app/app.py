@@ -67,11 +67,11 @@ def remove_object(filename):
     try:
         minio_client.remove_object("test-bucket", filename)
     except BucketAlreadyOwnedByYou as err:
-        return err
+        return str(err)
     except BucketAlreadyExists as err:
-        return err
+        return str(err)
     except ResponseError as err:
-        return err
+        return str(err)
     return "success removing file" + str(filename)
 
 def get_minio_data(bucket, filename):
@@ -151,12 +151,12 @@ def make_bucket(bucket_name):
         secure=False)
     try:
         minio_client.make_bucket(str(bucket_name), location="eu-central-1")
-    except BucketAlreadyOwnedByYou as err:
-        return err
+        except BucketAlreadyOwnedByYou as err:
+        return str(err)
     except BucketAlreadyExists as err:
-        return err
+        return str(err)
     except ResponseError as err:
-        return err
+        return str(err)
     return "success"
 
 

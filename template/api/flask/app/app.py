@@ -40,11 +40,11 @@ def make_bucket(bucket_name):
     try:
         minio_client.make_bucket(str(bucket_name))
     except BucketAlreadyOwnedByYou as err:
-        return err
+        return str(err)
     except BucketAlreadyExists as err:
-        return err
+        return str(err)
     except ResponseError as err:
-        return err
+        return str(err)
     return "success"
 
 @app.route('/db/remove/<filename>')
@@ -57,11 +57,11 @@ def remove_object(filename):
     try:
         minio_client.remove_object("test-bucket", filename)
     except BucketAlreadyOwnedByYou as err:
-        return err
+        return str(err)
     except BucketAlreadyExists as err:
-        return err
+        return str(err)
     except ResponseError as err:
-        return err
+        return str(err)
     return "success removing file" + str(filename)
 
 @app.route('/predict/<bucket>/<filename>/<predict_size>')

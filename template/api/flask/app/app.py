@@ -218,14 +218,10 @@ def train_model(db, db_name, table, size):
         Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, test_size=0.3, random_state=4)
 
         classifier.fit(Xtrain, Ytrain)
-        Ypred = classifier.predict(Xtest)
-
-        #Get Metrics
-        metric = metrics.accuracy_score(Ytest, Ypred)
 
         store_data(classifier, "model.joblib")
 
-        return "Training Done" + str(metric) + str(data)
+        return "Training Done" + str(data)
     except Exception as error:
         #data = read_db_data(db, db_str, table)
         return "!!!Failed Train Model!!!" + str(error)# + str(data)

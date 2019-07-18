@@ -7,14 +7,15 @@ domain="platform.test"
 docker_user = "projectgades"
 docker_password = "ShadoWsong000"
 
+
 [services]
-proxy = "traefik"
+proxy="traefik"
 
 [cluster]
 name="mlstack"
-manager=["china.medien.uni-weimar.de"]
-worker=["peru.medien.uni-weimar.de"]
-manager_ip=["141.54.159.91"]
-worker_ip=["141.54.159.97"]
+manager=["tibet.medien.uni-weimar.de"]
+worker=["141.54.139.89"]
+manager_ip=["141.54.159.95"]
+worker_ip=["141.54.139.89"]
 user= "marcel"
 password= "marcel!"

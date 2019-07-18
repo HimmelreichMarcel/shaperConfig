@@ -4,20 +4,22 @@ from Config import Config
 from Parser import ParserYAML
 from LoadBalancer.Traefik_Generator import TraefikGenerator
 from ComposeGenerator import ComposeGenerator
-from Optimizer import Optimizer
+from ConfigurationManager import ConfigurationManager
 import os
 import toml
 import yaml
 
 
 def main():
-    compose_path = "/home/marcel/shaper/shaperConfig/Example/docker-compose.yml"
-    shaper_path = "/home/marcel/shaper/shaperConfig/Example/shaper_ssh.toml"
-    output_path = "/home/marcel/CONFIGS/"
+    shaper_path = "/home/standardheld/Documents/Github/shaperConfig/Example/shaper_ssh.toml"
+    output_path = "/home/standardheld/CLUSTER2/"
+    #compose_path = "/home/marcel/shaper/shaperConfig/Example/docker-compose.yml"
+    #shaper_path = "/home/marcel/shaper/shaperConfig/Example/shaper_ssh.toml"
+    #output_path = "/home/marcel/CONFIGS/"
     #parser = ParserYAML(shaper_path, compose_path)
     #config = parser.create_config()
 
-    generator = Optimizer(load_shaper_config(shaper_path), output_path)
+    generator = ConfigurationManager(load_shaper_config(shaper_path), output_path)
     print("Done.")
     generator.create_projects()
 

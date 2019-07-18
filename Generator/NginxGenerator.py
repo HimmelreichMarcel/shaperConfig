@@ -45,6 +45,8 @@ class NGINX_Generator(object):
         proxy_pass = "proxy_pass http://" + str(name).lower() + ";"
         proxy_http = "proxy_http_version 1.1;"
         proxy_set_header_connection = "proxy_set_header Connection \"\";"
+        proxy_forward = "proxy_set_header   X-Forwarded-Host $server_name;"
+        proxy_add_header = "add_header X-Upstream $upstream_addr;"
         proxy_buffering = "proxy_buffering off;"
         end = "}"
         x_real = "proxy_set_header X-Real-IP $remote_addr;"
@@ -87,11 +89,11 @@ class NGINX_Generator(object):
         location = self.create_location("/notebook", "notebook", "8888")
         server.extend(location)
         # Create API
-        location = self.create_location("/api", "api", "80")
+        location = self.create_location("/api", "api", "5000")
         server.extend(location)
 
         # Create Monitoring
-        location = self.create_location("/grafana", "grafana", "3333")
+        location = self.create_location("/grafana", "grafana", "3000")
         server.extend(location)
         location = self.create_location("/prometheus", "prometheus", "9090")
         server.extend(location)
@@ -103,13 +105,13 @@ class NGINX_Generator(object):
         server.append("}")
         return server
 
-    def create_upstream(self, name, ip_list, port,  ip_hash=True):
+    def create_upstream(self, name, ip_list, port,  ip_hash=False):
         upstream = []
         upstream.append("upstream " + name + "{")
         if ip_hash:
             upstream.append("ip_hash;")
         for ip in ip_list:
-            upstream.append("server " + str(ip) + ";")# + str(port) + ";")
+            upstream.append("server " + str(ip) + ":"+str(port) + ";")
         upstream.append("}")
         return upstream
 

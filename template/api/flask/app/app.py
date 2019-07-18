@@ -130,6 +130,7 @@ def write_minio_data(bucket, path, filename):
 @app.route('/db/write/<filename>/<db>/<db_name>/<table>')
 def write_db_data(filename, db, db_name, table):
     try:
+        data = ""
         if db == "minio":
             dataframe = write_minio_data("test-bucket", "/data/" + str(filename), filename)
         else:
@@ -206,7 +207,18 @@ def status(bucket, filename):
 def train_model(db, db_name, table, size):
     try:
         db_str = get_db_str(db,db_name)
-        if db == "minio" or db == "None":
+        if db == "minio":
+            minio_client = Minio(
+                endpoint="minio:9000",
+                access_key="test",
+                secret_key="testtest",
+                secure=False)
+            model = minio_client.get_object("test-bucket", "small_dataset.csv")
+            with open("small_dataset.csv", 'wb') as file_data:
+                for d in model.stream(32 * 1024):
+                    file_data.write(d)
+            data = pd.read_csv("small_dataset.csv")
+        elif db == "None":
             data = pd.read_csv("/data/small_dataset.csv")
         else:
             data = read_db_data(db, db_str, table)

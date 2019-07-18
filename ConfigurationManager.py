@@ -23,7 +23,7 @@ except ImportError:
     from yaml import Loader, Dumper
 
 
-class Optimizer(object):
+class ConfigurationManager(object):
     def __init__(self, shaper_config, output_path):
         self._shaper_config = shaper_config
         self._output_path = output_path
@@ -46,7 +46,7 @@ class Optimizer(object):
         else:
             databases["postgres"] = self.import_yaml("./template/database/postgres.yml")
             #databases["maria"] = self.import_yaml("./template/database/mariadb.yml")
-            databases["mongo"] = self.import_yaml("./template/database/mongodb.yml")
+            #databases["mongo"] = self.import_yaml("./template/database/mongodb.yml")
             #databases["mysql"] = self.import_yaml("./template/database/mysql.yml")
             databases["None"] = {}
             databases["minio"] = {}
@@ -158,9 +158,16 @@ class Optimizer(object):
         #ip_list = self.get_ip_list()
 
         #Cluster Replica Config
-        replica = {"proxy": [1], "api": [3, 5, 10]}
-        cpus = [None]#,"0.1", "0.3", "0.5"]
-        memories = [None]#, "100M",  "500M", "1000M"]
+        replica = {"proxy": [1], "api": [10, 25]}
+        if "services" in self._shaper_config and "cpu_usage" in  self._shaper_config["services"]:
+            cpus = self._shaper_config["services"]["cpu_usage"]
+        else:
+            cpus = [None, "0.1", "0.3", "0.5"]
+
+        if "services" in self._shaper_config and "memory_usage" in self._shaper_config["services"]:
+            memory = self._shaper_config["services"]["memory_usage"]
+        else:
+            memory = [None, "100M",  "500M", "1000M"]
         config_list = []
         for database_key, database_value in databases.items():
             for proxy_key, proxy_value in proxy.items():
@@ -168,7 +175,7 @@ class Optimizer(object):
                     for proxy_replica in replica["proxy"]:
                         for api_replica in replica["api"]:
                             for cpu in cpus:
-                                for mem in memories:
+                                for mem in memory:
                                     print("Generate Config")
                                     print("Reverse Proxy:\t" + str(proxy_key))
                                     print("Replica;\t" + str(proxy_replica))
@@ -206,7 +213,7 @@ class Optimizer(object):
                                     services.update(proxy_value)
                                     services.update(api_value)
                                     services.update(monitoring)
-                                    services.update(notebook)
+                                    #services.update(notebook)
                                     services.update(self.load_minio())
                                     if proxy_key == "traefik" and "cluster" in self._shaper_config:
                                         services.update(self.load_consul())
